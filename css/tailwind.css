@@ -892,7 +892,9 @@ video {
 .w-9 {
   width: 2.25rem;
 }
-
+.w-32{
+  width: 8rem;
+}
 .w-fit {
   width: -moz-fit-content;
   width: fit-content;
