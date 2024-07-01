@@ -987,3 +987,8 @@ button {
     background: rgba(0, 0, 0, 0.5);
 }
 }
+
+.gallerySliderItemImg{
+    height: 100% !important;
+    width: 100% !important;
+}
