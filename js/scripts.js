@@ -109,6 +109,23 @@
 		popup.classList.remove("show");
 	});
 
+	$('.accordion__header').on('click', function() {
+        var accordion = $(this).parent();
+        accordion.toggleClass('open');
+        var icon = $(this).find('.fa');
+        if (icon.hasClass('fa-plus')) {
+            icon.removeClass('fa-plus').addClass('fa-minus');
+        } else {
+            icon.removeClass('fa-minus').addClass('fa-plus');
+        }
+        var content = accordion.find('.accordion__content');
+        if (accordion.hasClass('open')) {
+            content.css('height', content.prop('scrollHeight') + 'px');
+        } else {
+            content.css('height', '0');
+        }
+    });
+	
 	});
 
 
