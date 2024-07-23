@@ -697,6 +697,9 @@ a:hover.back-to-top {
         background-image: url('../assets/beat/beat_main.JPG');
 
     }
+    .hybrid{
+        background-image: url('../assets/hybrid/hybrid-main.JPG');
+    }
     .card-a {
         background-image: url(../assets/beat45.webp)
     }
@@ -768,12 +771,17 @@ a:hover.back-to-top {
 
 /* //New Styles for training page */
 .pred-cover{
-    background-image: url(../assets/predators/finish_it.jpg);
+    background-image: url("../assets/predators/finish_it.jpg");
 
 }
 .beat-cover{
-    background-image: url(../assets/beat/beat_it.JPG);
+    background-image: url("../assets/beat/beat_it.JPG");
 
+}
+
+.hybrid-cover{
+    background-image: url("../assets/hybrid/hybrid.JPG");
+    
 }
 .training-cover-block {
     height: 550px;
@@ -808,6 +816,26 @@ a:hover.back-to-top {
         background-image: url("../assets/predators/girl_with_weights.jpg");
     }
 }
+
+.training-sessions .hybrid{
+    .card-block{
+        background-position: 50% 0 !important;
+    }
+    .card-1 {
+        background-image: url("../assets/hybrid/pulling.jpg") !important;
+
+    }
+
+    .card-2 {
+        background-image: url("../assets/hybrid/weight_hold.JPG")
+
+    }
+
+    .card-3 {
+        background-image: url("../assets/hybrid/battle_rope.JPG");
+    }
+}
+
 
 
 footer{
