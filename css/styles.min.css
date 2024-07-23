@@ -700,6 +700,10 @@ a:hover.back-to-top {
     .hybrid{
         background-image: url('../assets/hybrid/hybrid-main.JPG');
     }
+    .reshape{
+        background-image: url('../assets/reshape/reshape-main.jpg');
+    }
+
     .card-a {
         background-image: url(../assets/beat45.webp)
     }
@@ -782,6 +786,10 @@ a:hover.back-to-top {
 .hybrid-cover{
     background-image: url("../assets/hybrid/hybrid.JPG");
     
+}
+.reshape-cover{
+    background-image: url("../assets/reshape/reshape.jpg");
+
 }
 .training-cover-block {
     height: 550px;
