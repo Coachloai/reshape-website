@@ -684,6 +684,19 @@ a:hover.back-to-top {
 }
 
 .section-sessions{
+    .trainer-pic-block{
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .predators{
+        background-image: url('../assets/predators/predator_main.jpg');
+
+    }
+    .beat{
+        background-image: url('../assets/beat/beat_main.jpg');
+
+    }
     .card-a {
         background-image: url(../assets/beat45.webp)
     }
@@ -756,6 +769,10 @@ a:hover.back-to-top {
 /* //New Styles for training page */
 .pred-cover{
     background-image: url(../assets/predators/finish_it.jpg);
+
+}
+.beat-cover{
+    background-image: url(../assets/beat/beat_it.JPG);
 
 }
 .training-cover-block {
@@ -1003,6 +1020,6 @@ button {
     height: 100% !important;
     width: 100% !important;
 }
-.h-500{
-    height: 500px;
+.h-550{
+    height: 550px;
 }
