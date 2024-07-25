@@ -703,6 +703,10 @@ a:hover.back-to-top {
     .reshape{
         background-image: url('../assets/reshape/reshape-main.jpg');
     }
+    .elite{
+        background-image: url('../assets/elite/elite_main.jpg');
+
+    }
 
     .card-a {
         background-image: url(../assets/beat45.webp)
@@ -844,6 +848,24 @@ a:hover.back-to-top {
     }
 }
 
+.training-sessions .elite{
+    .card-block{
+        background-position: 50% 0 !important;
+    }
+    .card-1 {
+        background-image: url("../assets/elite/girl_chinup.jpg") !important;
+
+    }
+
+    .card-2 {
+        background-image: url("../assets/elite/man_with_rod.jpg")
+
+    }
+
+    .card-3 {
+        background-image: url("../assets/elite/girl_weights.JPG");
+    }
+}
 
 
 footer{
