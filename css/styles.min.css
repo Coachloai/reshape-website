@@ -1093,6 +1093,7 @@ button {
     padding: 1em;
     display: none;
     z-index: 1000;
+    opacity: 0.8;
 }
 
 .cookie-banner p {
