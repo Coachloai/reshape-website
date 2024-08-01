@@ -282,7 +282,7 @@ a:hover.back-to-top {
 }
 
 .carousel-1 {
-    background-image: url(../assets/hero.jpg)
+    background-image: url(../assets/back_training.jpg)
 }
 
 .carousel-2 {
@@ -460,11 +460,11 @@ a:hover.back-to-top {
 }
 
 .card-5 {
-    background-image: url(../assets/equipment.webp)
+    background-image: url(../assets/equipment.JPG)
 }
 
 .card-6 {
-    background-image: url(../assets/playing.avif)
+    background-image: url(../assets/playing.JPG)
 }
 
 .card-inner-block {
@@ -1081,3 +1081,31 @@ button {
 .h-550{
     height: 550px;
 }
+
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1em;
+    display: none;
+    z-index: 1000;
+}
+
+.cookie-banner p {
+    margin: 0;
+    display: inline-block;
+}
+
+.cookie-button {
+    background-color: var(--brand-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+

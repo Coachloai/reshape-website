@@ -125,6 +125,26 @@
             content.css('height', '0');
         }
     });
+	//Adding cookies Setting
+	$('body').append(`
+	<div id="cookie-banner" class="cookie-banner">
+		<p>We use cookies to ensure you get the best experience on our website. <a href="/privacy.html">Learn more</a>.</p>
+		<button id="accept-cookies" class="cookie-button">Accept</button>
+	</div>
+`);
+
+var $banner = $('#cookie-banner');
+var $acceptButton = $('#accept-cookies');
+
+// Check if the user has already accepted cookies
+if (!localStorage.getItem('cookiesAccepted')) {
+	$banner.show();
+}
+
+$acceptButton.on('click', function() {
+	localStorage.setItem('cookiesAccepted', 'true');
+	$banner.hide();
+});
 	
 	});
 
