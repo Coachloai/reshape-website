@@ -129,7 +129,7 @@
 	$('body').append(`
 	<div id="cookie-banner" class="cookie-banner">
 		<p>We use cookies to ensure you get the best experience on our website. <a href="/privacy.html">Learn more</a>.</p>
-		<button id="accept-cookies" class="cookie-button">Accept</button>
+		<button id="accept-cookies" class="cookie-button rounded-full">Accept</button>
 	</div>
 `);
 
