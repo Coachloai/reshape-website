@@ -127,16 +127,9 @@
     });
 	//Adding cookies Setting
 	$('body').append(`
-<div id="cookie-banner" class="cookie-banner flex items-center justify-between p-4 bg-gray-800 text-white">
-    <p class="flex-1">
-        We use cookies to ensure you get the best experience on our website. 
-        <a href="/privacy.html" class="underline" aria-label="Read our privacy policy to learn more about how we use cookies">
-            Read our privacy policy
-        </a>.
-    </p>
-    <button id="close-cookie-banner" class="flex-shrink-0 bg-transparent border-0 p-2 ml-4 align-middle" aria-label="Close cookie banner">
-      <i class="fa fa-times" aria-hidden="true"></i>
-    </button>
+<div id="cookie-banner" class="cookie-banner">
+    <p>We use cookies to ensure you get the best experience on our website. <a href="/privacy.html">Learn more about our privacy policy</a>.</p>
+    <button id="accept-cookies" class="cookie-button rounded-full">OK</button>
 </div>
 
 `);
