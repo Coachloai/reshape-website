@@ -666,11 +666,15 @@ video {
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
+.ml-3{
+  margin-left: 0.75rem;
+}
 
 .my-5 {
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
 }
+
 
 .my-auto {
   margin-top: auto;
@@ -804,6 +808,9 @@ video {
 .h-32 {
   height: 8rem;
 }
+.h-48 {
+  height: 12rem;
+}
 
 .h-5 {
   height: 1.25rem;
@@ -900,6 +907,9 @@ video {
   width: fit-content;
 }
 
+.max-w-7xl {
+  max-width: 80rem;
+}
 .w-full {
   width: 100%;
 }
@@ -1681,7 +1691,9 @@ video {
   .lg\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
   .lg\:grid-cols-5 {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
@@ -1745,4 +1757,10 @@ video {
     --tw-ring-opacity: 1;
     --tw-ring-color: rgb(234 88 12 / var(--tw-ring-opacity));
   }
+}
+
+.shadow-md {
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }

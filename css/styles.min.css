@@ -1125,3 +1125,10 @@ button {
     cursor: pointer;
 }
 
+/* Blog Styles Starts Here */
+.page-banner-section .blogs-banner{
+    background-image: url('../assets/reshape/reshape-main.jpg');
+    background-size: cover;
+    background-position: center;
+
+}
