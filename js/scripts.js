@@ -8,6 +8,7 @@
 	// On Scroll Function
 	$(window).on('scroll load', function () {
 		const $logoImage = $('#logo-image');
+		const $logoBlog = $('#logo-image-blog');
 		const navbarTop = $(".navbar").offset().top;
 
 		if (navbarTop > 60) {
@@ -15,12 +16,16 @@
 				$(".fixed-top").addClass("top-nav-collapse");
 				$(".nav-link").removeClass("text-white");
 				$logoImage.attr('src', 'assets/reshape_color.webp'); // Change the image source
+				$logoBlog.attr('src', '../assets/reshape_color.webp'); // Change the image source
+
 			}
 		} else {
 			if ($(".fixed-top").hasClass("top-nav-collapse")) {
 				$(".fixed-top").removeClass("top-nav-collapse");
 				$(".nav-link").addClass("text-white");
 				$logoImage.attr('src', 'assets/reshape_white.webp'); // Change the image source
+				$logoBlog.attr('src', '../assets/reshape_white.webp'); // Change the image source
+
 			}
 		}
 	});

@@ -68,12 +68,12 @@
     <!-- End Google Tag Manager (noscript) -->
 
     <!-- Navigation -->
-    <nav class="navbar fixed-top">
+    <nav class="navbar-blog fixed-top">
         <div class="sm:px-4 lg:px-8 flex flex-wrap items-center justify-between lg:flex-nowrap">
             <a id="logo"
                 class="inline-block mr-4 py-0.5 text-xl whitespace-nowrap hover:no-underline focus:no-underline"
                 href="index.html">
-                <img id="logo-image" src="../assets/reshape_white.webp" alt="Brand Logo" class="h-16 w-32">
+                <img id="logo-image-blog" src="../assets/reshape_color.webp" alt="Brand Logo" class="h-16 w-32">
             </a>
             <button
                 class="background-transparent rounded text-xl leading-none hover:no-underline focus:no-underline lg:hidden lg:text-gray-400"
@@ -87,20 +87,20 @@
                 <ul
                     class="pl-0 mt-24 md:mt-40 md:mb-2 m-auto flex flex-col list-none lg:mt-0 lg:mb-0 lg:flex-row text-3xl">
                     <li class="navbar-item">
-                        <a class="nav-link page-scroll text-center text-white" href="mission.html">OUR MISSION</a>
+                        <a class="nav-link page-scroll text-center" href="mission.html">OUR MISSION</a>
                     </li>
                     <li class="navbar-item">
-                        <a class="nav-link page-scroll text-center text-white" href="experience.html">YOUR
+                        <a class="nav-link page-scroll text-center" href="experience.html">YOUR
                             EXPERIENCE</a>
                     </li>
                     <li class="navbar-item">
-                        <a class="nav-link page-scroll text-center text-white" href="result.html">RESULTS</a>
+                        <a class="nav-link page-scroll text-center" href="result.html">RESULTS</a>
                     </li>
                     <li class="navbar-item">
-                        <a class="nav-link page-scroll text-center text-white" href="faq.html">FAQs</a>
+                        <a class="nav-link page-scroll text-center" href="faq.html">FAQs</a>
                     </li>
                     <li class="navbar-item">
-                        <a class="nav-link page-scroll text-center text-white"
+                        <a class="nav-link page-scroll text-center"
                             href="https://team.reshapeclub.com/">LOGIN</a>
                     </li>
                 </ul>
@@ -115,102 +115,90 @@
         </div> <!-- end of container -->
     </nav>
     <!-- End of navigation -->
+   
 
-    <section class="page-banner-section">
-        <div class="h-[75vh] md:h-[80vh] lg:h-[80vh] w-full relative blogs-banner">
-            <div class="inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute table h-full w-full">
-                <div class="text-white text-center table-cell align-middle">
-                    <h1 class="text-3xl md:text-4xl mb-5 text-brand fade-in fade-in-1">
-                        Blog Title Here
-                    </h1>
-                    <p class="p-large text-4xl md:text-6xl text-white mb-8 fade-in fade-in-2 uppercase ">
-                        Transform your <strong class="text-brand">body</strong>,</br> Change your
-                        <strong class="text-brand">Life</strong>
-                    </p>
+<!-- Blog Detail -->
+<main class="container mx-auto px-4 py-8 blog-detail-main">
+    
+    <article class="bg-white shadow-lg rounded-lg p-6 mb-8">
+        <a href="../blog.html" class="underline hover-text-brand mb-10"><i class="fa fa-sharp fa-solid fa-angle-left"></i> Back to Blogs</a>
+        <div class="mt-8">
+            <div>
+            <time datetime="2021-02-14 20:00">06th August, 2024 .</time>
+            <span class="ml-2"> 2 min. read</span>
+            </div>
+            <div class="mb-2">
+            <h1 class="text-3xl font-bold text-gray-800 inline-block align-middle">Nutrition Plans for Better <span class="text-brand">Transformation</span></h1>
+            <button class="rounded-full bg-slate-300 ml-3 btn-pill align-middle">Nutrition</button>
+        </div>
+        </div>
+        <figure class="mb-4">
+            <img src="../assets/nutrition.webp" alt="Blog Image" class="w-full rounded-lg">
+            <figcaption class="text-gray-500 text-sm mt-2">Image caption goes here.</figcaption>
+        </figure>
+        <section class="text-gray-700 leading-relaxed space-y-4">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vehicula est a nunc vehicula, ac sagittis justo bibendum. Ut vitae erat nisi. Donec nec fermentum mi, ut pellentesque nulla. Mauris consequat, ligula a venenatis consequat, purus nisi consectetur mauris, in commodo nunc purus non orci. Suspendisse potenti. Mauris sit amet velit ac quam commodo aliquet.</p>
+            <p>Aliquam erat volutpat. Nullam scelerisque sit amet erat a pellentesque. Aenean sit amet fringilla erat. Curabitur id mi sed augue lacinia feugiat non in nisi. Vivamus euismod, sapien eget tristique consequat, sapien eros commodo neque, ac lacinia quam justo in sapien.</p>
+            <h2 class="text-2xl font-bold text-gray-800">Subheading</h2>
+            <p>Fusce et varius ipsum. Nam vehicula elit eu odio consequat, in egestas ipsum ullamcorper. Quisque et quam at lorem suscipit bibendum. Sed suscipit massa at sapien blandit, et consectetur arcu congue. Vestibulum in volutpat erat, nec aliquet nunc.</p>
+            <blockquote class="border-l-4 border-blue-500 pl-4 italic text-gray-600">
+                "This is a quote from the blog post, emphasizing a key point made by the author."
+            </blockquote>
+            <p>Curabitur ac leo sed est aliquet dapibus. Donec et erat erat. Vivamus convallis lacus et bibendum auctor. Nulla lacinia, justo non dignissim luctus, ex nisl hendrerit velit, sit amet egestas justo ligula in tortor. Proin sollicitudin turpis non tincidunt blandit.</p>
+        </section>
+        <script id="dsq-count-scr" src="//reshapeclub.disqus.com/count.js" async></script>
+
+    </article>
+
+    <!-- Related Blogs -->
+    <section class="bg-white shadow-lg rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Related Blogs</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Blog Card 1 -->
+            <div class="bg-gray-100 rounded-lg shadow-md overflow-hidden">
+                <img src="../assets/body_scanning.webp" alt="Related Blog 1" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="text-xl font-semibold text-gray-800">Related Blog Title 1</h3>
+                    <p class="text-gray-600 mt-2">A brief description of the related blog post. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <a href="#" class="text-blue-500 hover:underline mt-4 block">Read more</a>
+                </div>
+            </div>
+            <!-- Blog Card 2 -->
+            <div class="bg-gray-100 rounded-lg shadow-md overflow-hidden">
+                <img src="../assets/back_training.jpg" alt="Related Blog 2" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="text-xl font-semibold text-gray-800">Related Blog Title 2</h3>
+                    <p class="text-gray-600 mt-2">A brief description of the related blog post. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <a href="#" class="text-blue-500 hover:underline mt-4 block">Read more</a>
+                </div>
+            </div>
+            <!-- Blog Card 3 -->
+            <div class="bg-gray-100 rounded-lg shadow-md overflow-hidden">
+                <img src="../assets/result7.png" alt="Related Blog 3" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="text-xl font-semibold text-gray-800">Related Blog Title 3</h3>
+                    <p class="text-gray-600 mt-2">A brief description of the related blog post. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <a href="#" class="text-blue-500 hover:underline mt-4 block">Read more</a>
                 </div>
             </div>
         </div>
     </section>
+</main>
+  
 
-    <section class="section-card-block section-sessions py-10">
-        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Blog Content -->
-                <div class="lg:col-span-2 bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-3xl font-bold mb-4">Blog Post Title</h2>
-                    <p class="text-gray-700 mb-6">By Author Name | Date</p>
-                    <img src="assets/blog_detail_image.jpg" alt="Blog Post Image" class="w-full h-auto mb-6 rounded-lg">
-                    <p class="text-gray-700 mb-4">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eget nisl et lacus gravida
-                        malesuada. Phasellus et aliquam erat. Morbi cursus ex a est bibendum fermentum.
-                    </p>
-                    <p class="text-gray-700 mb-4">
-                        Pellentesque a nisl vehicula, facilisis odio at, aliquet libero. Fusce sit amet urna a elit
-                        tincidunt laoreet. Praesent vulputate tellus non magna porta, sit amet vulputate sapien
-                        sagittis. Nullam dictum arcu sed erat fermentum laoreet.
-                    </p>
-                    <p class="text-gray-700 mb-4">
-                        Proin eget diam velit. Integer scelerisque justo non ligula vehicula, in tincidunt leo luctus.
-                        Nam ut neque nec sapien malesuada tincidunt. Sed accumsan augue a ligula laoreet, eget
-                        vulputate justo eleifend.
-                    </p>
-                    <p class="text-gray-700 mb-4">
-                        Aliquam erat volutpat. Sed euismod, nisi vel consectetur euismod, est lacus scelerisque eros, a
-                        pulvinar enim arcu vel libero. Donec luctus, sapien sed viverra facilisis, dui turpis
-                        consectetur urna, nec blandit ligula ligula nec dolor.
-                    </p>
-                </div>
-
-                <!-- Recent Posts -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-2xl font-bold mb-4">Recent Posts</h3>
-                    <div class="recent-post">
-                        <a href="blog-post-1.html" class="flex items-center mb-4">
-                            <img src="assets/recent_blog_1.jpg" alt="Recent Post 1"
-                                class="w-16 h-16 object-cover rounded-lg mr-4">
-                            <div>
-                                <h4 class="text-lg font-semibold">Recent Blog Post Title 1</h4>
-                                <p class="text-gray-600 text-sm">Brief description for recent post 1...</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="recent-post">
-                        <a href="blog-post-2.html" class="flex items-center mb-4">
-                            <img src="assets/recent_blog_2.jpg" alt="Recent Post 2"
-                                class="w-16 h-16 object-cover rounded-lg mr-4">
-                            <div>
-                                <h4 class="text-lg font-semibold">Recent Blog Post Title 2</h4>
-                                <p class="text-gray-600 text-sm">Brief description for recent post 2...</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="recent-post">
-                        <a href="blog-post-3.html" class="flex items-center mb-4">
-                            <img src="assets/recent_blog_3.jpg" alt="Recent Post 3"
-                                class="w-16 h-16 object-cover rounded-lg mr-4">
-                            <div>
-                                <h4 class="text-lg font-semibold">Recent Blog Post Title 3</h4>
-                                <p class="text-gray-600 text-sm">Brief description for recent post 3...</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
      <!-- Footer Section -->
 
      <footer class="bg-black lg:grid lg:grid-cols-5">
         <div class="relative block h-32 lg:col-span-2 lg:h-full hidden md:block ">
-            <img src="assets/back_training.jpg" alt="hero img" class="absolute inset-0 h-full w-full object-cover" />
+            <img src="../assets/back_training.jpg" alt="hero img" class="absolute inset-0 h-full w-full object-cover" />
         </div>
 
         <div class="px-4 py-16 sm:px-6 lg:col-span-3 lg:px-8 text-center md:text-left lg:text-left">
             <div class="grid grid-cols-1 gap-8 sm:grid-cols-2">
                 <div>
                     <a href="index.html">
-                        <img src="./assets/reshape_color.webp" alt="Brand Logo"
+                        <img src="../assets/reshape_color.webp" alt="Brand Logo"
                             class="h-16 w-32 h-16 m-auto md:mx-0 mb-5">
                     </a>
                     <div class="inline-block pr-8 border-r text-white text-xl no-border-md">
@@ -455,6 +443,26 @@
     </footer>
     <!-- End of Footer Section -->
 </body>
-<script src="js/jquery.min.js"></script> <!-- jQuery for JavaScript plugins -->
-<script src="js/scripts.js"></script> <!-- Custom scripts -->
+<script src="../js/jquery.min.js"></script> <!-- jQuery for JavaScript plugins -->
+<script src="../js/scripts.js"></script> <!-- Custom scripts -->
+<div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+    
+    var disqus_config = function () {
+    this.page.url = "http://127.0.0.1:3000/blog/blog1.html";  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = "blog1"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://reshapeclub.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </html>
