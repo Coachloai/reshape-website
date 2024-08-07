@@ -256,9 +256,9 @@ a:hover.back-to-top {
         margin-top: .25rem;
         position: absolute
     }
-    .h-m-550{
+    /* .h-m-550{
         height: 300px !important;
-    }
+    } */
 }
 
 @media(max-width:1024px) {
@@ -1143,6 +1143,10 @@ button {
     padding-bottom: 1.5rem;
     padding-top: 1.5rem;
     background-color: #ffffff;
+
+    .navbar-item{
+        margin: 1rem 0;
+    }
 }
 .blog-detail-main{
     margin-top: 7rem;
