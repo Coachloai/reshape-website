@@ -1156,3 +1156,29 @@ font-size: 15px;
 border-radius: 10px;
 vertical-align: middle;
 }
+.bg-light-grey{
+    background-color: #fcfcfc;
+}
+.boreder-bottom{
+    border-bottom: 1px solid var(--color-border);
+}
+.group:hover{
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+
+
+}
+.group:hover .zoom-image {
+    transform: scale(1.1);
+}
+
+.zoom-image {
+    transition: transform 0.3s;
+}
+
+.read-more-link {
+    transition: transform 0.3s;
+}
+
+.read-more-link:hover {
+    transform: translateX(8px);
+}
