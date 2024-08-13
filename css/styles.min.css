@@ -739,6 +739,10 @@ a:hover.back-to-top {
     .card-d {
         background-image: url(../assets/reshape45.webp)
     }
+    .card-e{
+        background-image: url(../assets/elite.png)
+
+    }
 }
 
 .community-block {
