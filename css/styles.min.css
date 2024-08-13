@@ -485,7 +485,7 @@ a:hover.back-to-top {
 
 .card-inner-block {
     background-color: transparent;
-    background: linear-gradient(180deg, #15151600 8%, #151516 75%);
+    background: linear-gradient(180deg, #15151600 8%, #151516f0 75%);
     opacity: 1
 }
 
@@ -689,7 +689,7 @@ a:hover.back-to-top {
 }
 
 .faq-banner {
-    background-attachment: fixed;
+    /* background-attachment: fixed; */
     background-image: url(../assets/faq_home_banner.webp) !important;
     background-position: 50% 0;
     background-size: cover
@@ -830,6 +830,24 @@ a:hover.back-to-top {
     transform: scale(1.05);
 }
 
+.training-sessions .beat{
+    .card-block{
+        background-position: 50% 0 !important;
+    }
+    .card-1 {
+        background-image: url("../assets/beat/beat9.jpg") !important;
+
+    }
+
+    .card-2 {
+        background-image: url("../assets/beat/beat12.jpg")
+
+    }
+
+    .card-3 {
+        background-image: url("../assets/beat/beat11.jpg");
+    }
+} 
 .training-sessions .predators{
     .card-block{
         background-position: 50% 0 !important;
@@ -865,6 +883,25 @@ a:hover.back-to-top {
 
     .card-3 {
         background-image: url("../assets/hybrid/battle_rope.JPG");
+    }
+}
+
+.training-sessions .reshape{
+    .card-block{
+        background-position: 50% 0 !important;
+    }
+    .card-1 {
+        background-image: url("../assets/reshape/reshape_3.jpg") !important;
+
+    }
+
+    .card-2 {
+        background-image: url("../assets/reshape/reshape_2.jpg")
+
+    }
+
+    .card-3 {
+        background-image: url("../assets/reshape/reshape_4.jpg");
     }
 }
 
