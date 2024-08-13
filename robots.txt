@@ -3,4 +3,4 @@ Disallow: /private/
 Disallow: /tmp/
 Allow: /
 
-Sitemap: https://reshape-website-6gg.pages.dev/sitemap.xml
+Sitemap: https://www.reshapeclub.com/sitemap.xml
