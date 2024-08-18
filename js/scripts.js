@@ -71,7 +71,7 @@
 						});
 					});
 				});
-				s.src = 'https://cdn.landbot.io/landbot-3/landbot-3.0.0.js';
+				// s.src = 'https://cdn.landbot.io/landbot-3/landbot-3.0.0.js';
 				var x = document.getElementsByTagName('script')[0];
 				x.parentNode.insertBefore(s, x);
 			}
