@@ -59,9 +59,9 @@
 			if (!myLandbot) {
 				var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
 				s.addEventListener('load', function () {
-					myLandbot = new Landbot.Popup({
-						configUrl: 'https://storage.googleapis.com/landbot.pro/v3/H-2134441-K29HTOQUHOJBA975/index.json',
-					});
+					// myLandbot = new Landbot.Popup({
+					// 	configUrl: 'https://storage.googleapis.com/landbot.pro/v3/H-2134441-K29HTOQUHOJBA975/index.json',
+					// });
 
 					var buttonsOpen = document.querySelectorAll(".open-bot");
 					buttonsOpen.forEach(function (button) {
