@@ -515,18 +515,12 @@ a:hover.back-to-top {
     opacity: 1;
     transform: translateY(0)
 }
-.home-bnr-section{
+/* .home-bnr-section{
     p{
-        /* font-size: 3.25rem;
-        line-height: 3.7rem; */
         text-transform: uppercase;
-     
     }
-    .animation{
-    transition: opacity 1s ease-in-out, transform .25s ease-in-out !important
-
-    }
-}
+ 
+} */
 
 /* .fade-in {
     opacity: 0;
