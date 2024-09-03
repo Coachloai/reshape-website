@@ -515,6 +515,13 @@ a:hover.back-to-top {
     opacity: 1;
     transform: translateY(0)
 }
+.home-bnr-section{
+    p{
+        /* font-size: 2.25rem; */
+        /* line-height: 2.5rem; */
+        text-transform: uppercase;
+    }
+}
 
 /* :root { */
     /* --color-primary: #ff4b4b;
