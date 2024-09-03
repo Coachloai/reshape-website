@@ -517,12 +517,26 @@ a:hover.back-to-top {
 }
 .home-bnr-section{
     p{
-        font-size: 3.25rem;
-        line-height: 3.7rem;
+        /* font-size: 3.25rem;
+        line-height: 3.7rem; */
         text-transform: uppercase;
+     
+    }
+    .animation{
+    transition: opacity 1s ease-in-out, transform .25s ease-in-out !important
+
     }
 }
 
+/* .fade-in {
+    opacity: 0;
+    transform: translateY(200px);
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out !important
+} */
+
+/* .fade-in-1 {
+    transition: opacity 1s ease-in-out, transform .25s ease-in-out !important
+} */
 /* :root { */
     /* --color-primary: #ff4b4b;
     --color-text: #545d7a;
