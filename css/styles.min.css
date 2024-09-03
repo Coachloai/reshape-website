@@ -517,8 +517,8 @@ a:hover.back-to-top {
 }
 .home-bnr-section{
     p{
-        /* font-size: 2.25rem; */
-        /* line-height: 2.5rem; */
+        font-size: 3.25rem;
+        line-height: 3.7rem;
         text-transform: uppercase;
     }
 }
