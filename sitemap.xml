@@ -7,69 +7,128 @@
 
 
 <url>
-  <loc>https://www.reshape.club/</loc>
-  <lastmod>2024-06-27T11:10:51+00:00</lastmod>
-  <changefreq>daily</changefreq>
+  <loc>https://reshape.club/</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
-  <loc>https://www.reshape.club/mission</loc>
-  <lastmod>2024-06-27T11:10:51+00:00</lastmod>
-  <changefreq>daily</changefreq>
+  <loc>https://reshape.club/mission</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://www.reshape.club/experience</loc>
-  <lastmod>2024-06-27T11:10:51+00:00</lastmod>
-  <changefreq>daily</changefreq>
+  <loc>https://reshape.club/experience</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://www.reshape.club/result</loc>
-  <lastmod>2024-06-27T11:10:51+00:00</lastmod>
-  <changefreq>daily</changefreq>
+  <loc>https://reshape.club/result</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://www.reshape.club/faq</loc>
-  <lastmod>2024-06-27T11:10:51+00:00</lastmod>
-  <changefreq>daily</changefreq>
+  <loc>https://reshape.club/blog</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://www.reshape.club/privacy</loc>
-  <lastmod>2024-06-27T11:10:51+00:00</lastmod>
-  <changefreq>daily</changefreq>
+  <loc>https://reshape.club/faq</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://www.reshape.club/beat</loc>
-  <lastmod>2024-06-27T11:10:51+00:00</lastmod>
-  <changefreq>daily</changefreq>
+  <loc>https://reshape.club/privacy</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://reshape.club/beat</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://www.reshape.club/predators</loc>
-  <lastmod>2024-06-27T11:10:51+00:00</lastmod>
-  <changefreq>daily</changefreq>
+  <loc>https://reshape.club/predators</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://www.reshape.club/hybrid</loc>
-  <lastmod>2024-06-27T11:10:51+00:00</lastmod>
-  <changefreq>daily</changefreq>
+  <loc>https://reshape.club/hybrid</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://www.reshape.club/reshape</loc>
-  <lastmod>2024-06-27T11:10:51+00:00</lastmod>
-  <changefreq>daily</changefreq>
+  <loc>https://reshape.club/reshape</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://www.reshape.club/elite</loc>
-  <lastmod>2024-06-27T11:10:51+00:00</lastmod>
-  <changefreq>daily</changefreq>
+  <loc>https://reshape.club/elite</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://reshape.club/coaches-vs-personal-trainers</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://reshape.club/traditional-gyms-waste-time-money</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://reshape.club/breaking-beliefs-first-step-transformation</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://reshape.club/holistic-approach-body-transformations</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://reshape.club/blog4</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://reshape.club/ultimate-confidence-booster-embrace-transform-life</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://reshape.club/truth-motivation-fail-discipline-success</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://reshape.club/medicine-nutrition-body-composition</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://reshape.club/obesity-overcome-mindset-first-step</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://reshape.club/embracing-strength-celebrate-fitness-reshape-society</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://reshape.club/discipline-over-motivation-lasting-routine</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://reshape.club/mastering-your-mind-key-to-happiness</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://reshape.club/responsibility-influencers-addressing-obesity-social-media</loc>
+  <lastmod>2024-09-04T11:54:46+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 
