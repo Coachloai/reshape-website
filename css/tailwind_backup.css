@@ -852,6 +852,12 @@ video {
   height: 100vh;
 }
 
+.h-\[30vh\] {
+  height: 30vh;
+}
+.h-\[40vh\] {
+  height: 40vh;
+}
 .h-\[50vh\] {
   height: 50vh;
 }
@@ -1695,7 +1701,9 @@ video {
   .lg\:hidden {
     display: none;
   }
-
+  .lg\:h-\[30vh\] {
+    height: 30vh;
+  }
   .lg\:h-\[75vh\] {
     height: 75vh;
   }
