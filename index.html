@@ -189,67 +189,36 @@
 
     <!-- Home Banner -->
     <section class="page-banner-section">
-        <div class="h-[75vh] md:h-[98vh] lg:h-[98vh] w-full relative">
-          <!-- Blurhash placeholder image -->
-          <canvas id="blurhash" class="absolute inset-0 w-full h-full object-cover"></canvas>
-      
-          <!-- Video -->
-          <video class="inset-0 w-full h-full object-cover" autoplay muted loop playsinline>
-            <source src="assets/home.mov" type="video/mp4">
-            <track src="assets/home-captions.vtt" kind="captions" srclang="en" label="English">
-            Your browser does not support the video tag.
-          </video>
-      
-          <!-- Overlay content -->
-          <div class="inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute h-full w-full">
-            <div class="text-white text-center">
-              <h1 class="text-3xl md:text-4xl mb-5 text-brand fade-in fade-in-1">JOIN THE WAITING LIST</h1>
-              <div class="home-bnr-section mb-8 uppercase">
-                <p class="text-4xl md:text-6xl">Transform your <span class="text-brand">body</span></p>
-                <p class="text-4xl md:text-6xl">Change your <span class="text-brand">Life</span></p>
-              </div>
-              <span class="block lg:ml-3.5 fade-in">
-                <button type="button" class="open-bot text-white bg-brand hover:bg-orange-600 focus:outline-none focus:ring-1 font-medium rounded-full text-large p-4 px-12 py-3 text-center dark:focus:ring-orange-600">APPLY</button>
-              </span>
+        <div class=" h-[75vh] md:h-[98vh] lg:h-[98vh]  w-full relative">
+            <video class="inset-0 w-full h-full object-cover h-full" autoplay muted loop playsinline>
+                <source src="assets/home.mov" type="video/mp4">
+                <track src="assets/home-captions.vtt" kind="captions" srclang="en" label="English">
+                Your browser does not support the video tag.
+            </video>
+            
+            <div class=" inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute table h-full w-full">
+                <div class="text-white text-center table-cell align-middle">
+                    <h1 class="text-3xl md:text-4xl mb-5 text-brand fade-in fade-in-1">JOIN THE WAITING LIST
+                    </h1>
+                        <div class="home-bnr-section mb-8 uppercase">
+                            <p class="text-4xl md:text-6xl">Transform your <span class="text-brand">body</span></p>
+                            <p class="text-4xl md:text-6xl">Change your <span class="text-brand">Life</span></p>
+
+
+                        </div>
+                
+                    
+                    <span class="block lg:ml-3.5 fade-in">
+                        <button type="button"
+                            class="open-bot text-white bg-brand hover:bg-orange-600 focus:outline-none focus:ring-1 font-medium rounded-full text-large p-4 px-12 py-3 text-center dark:focus:ring-orange-600">
+                            APPLY
+                        </button>
+                    </span>
+                </div>
             </div>
-          </div>
         </div>
-      </section>
-      
-    <!-- Blurhash script -->
-<script type="module">
-    import { decode } from 'https://unpkg.com/blurhash@1.1.4/dist/esm/index.js';
-  
-    const blurhashString = "L9H]%T--%0,b~n$fR%NxR75StPni"; // Replace with your Blurhash string
-    const canvas = document.getElementById('blurhash');
-    const ctx = canvas.getContext('2d');
-  
-    // Set the canvas dimensions
-    canvas.width = 32;
-    canvas.height = 32;
-  
-    // Decode the Blurhash string
-    const pixels = decode(blurhashString, 32, 32);
-  
-    // Set the pixels to the canvas
-    const imageData = ctx.createImageData(32, 32);
-    for (let i = 0; i < pixels.length; i++) {
-      imageData.data[i] = pixels[i];
-    }
-    ctx.putImageData(imageData, 0, 0);
-  
-    const hideBlurhash = () => {
-      canvas.style.display = 'none';
-    };
-  
-    // Hide the Blurhash canvas once the video is ready
-    const video = document.querySelector('video');
-    video.addEventListener('canplay', hideBlurhash);
-  
-    // Fallback: Hide the Blurhash after 5 seconds even if the video hasn’t triggered the canplay event
-    setTimeout(hideBlurhash, 1000);
-  </script>
-      
+
+    </section>
 
     <!--End of  Home Banner -->
 
