@@ -18,3 +18,16 @@
 .pt-6rem{
     padding-top: 8rem;
 }
+.bg-black-shadow{
+    background: linear-gradient(180deg, #15151600 8%, #151516f0 75%);
+    opacity: 1;
+}
+/* .h-150{
+    height: 150px;
+} */
+.video-element {
+    height: 400px; /* Set a fixed height for the videos */
+    width: 100%; /* Set width to auto-scale according to the height */
+    object-fit: cover; /* Ensure the video maintains aspect ratio and covers the space */
+  }
+  
