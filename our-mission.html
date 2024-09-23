@@ -168,29 +168,87 @@
   <!-- end of navigation -->
 
   <!-- Page Banner Section -->
+<section class="page-banner-section">
+  <div class="h-[75vh] md:h-[98vh] lg:h-[98vh] w-full relative">
+    <!-- Blurhash placeholder image -->
+    <canvas id="blurhash-mission" class="absolute inset-0 w-full h-full object-cover"></canvas>
 
-  <section class="page-banner-section">
-    <div class=" h-[75vh] md:h-[98vh] lg:h-[98vh]  w-full relative">
-      <video class=" inset-0 w-full h-full object-cover h-full" autoplay muted loop playsinline>
-        <source src="assets/mission.mp4" type="video/mp4">
-      </video>
-      <div class=" inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute table h-full w-full">
-        <div class="text-white text-center table-cell align-middle">
-          <h2 class="text-4xl md:text-6xl font-bold text-white mb-8 my-5 uppercase fade-in fade-in-1">OUR <strong
-              class="text-brand">MISSION </strong></h2>
-          <p class="mb-6 text-2xl lg:text-3xl fade-in fade-in-2">Personal Training. Group Exercise. Body
-            Transformations.</p>
-          <span class="block lg:ml-3.5 fade-in">
-            <button type="button"
-              class="open-bot text-white bg-brand hover:bg-orange-600 focus:outline-none focus:ring-1 font-medium rounded-full text-large p-4 px-12 py-3 text-center dark:focus:ring-orange-600">
-              APPLY
-            </button>
-          </span>
-        </div>
+    <!-- Video -->
+    <video class="inset-0 w-full h-full object-cover" autoplay muted loop playsinline preload="auto">
+      <source src="assets/mission.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+
+    <!-- Overlay content -->
+    <div class="inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute table h-full w-full">
+      <div class="text-white text-center table-cell align-middle">
+        <h2 class="text-4xl md:text-6xl font-bold text-white mb-8 my-5 uppercase fade-in fade-in-1">
+          OUR <strong class="text-brand">MISSION</strong>
+        </h2>
+        <p class="mb-6 text-2xl lg:text-3xl fade-in fade-in-2">Personal Training. Group Exercise. Body Transformations.</p>
+        <span class="block lg:ml-3.5 fade-in">
+          <button type="button"
+            class="open-bot text-white bg-brand hover:bg-orange-600 focus:outline-none focus:ring-1 font-medium rounded-full text-large p-4 px-12 py-3 text-center dark:focus:ring-orange-600">
+            APPLY
+          </button>
+        </span>
       </div>
     </div>
+  </div>
+</section>
 
-  </section>
+<!-- Blurhash script -->
+<script type="module">
+  import { decode } from 'https://unpkg.com/blurhash@1.1.4/dist/esm/index.js';
+
+  const blurhashString = "LKH_iB~qE1IUV@M_t7t7ITM_s:t7"; // Replace with your Blurhash string
+  const canvas = document.getElementById('blurhash-mission');
+  const ctx = canvas.getContext('2d');
+
+  // Set the canvas dimensions
+  const resizeCanvas = () => {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+
+    // Decode and draw the Blurhash image
+    const pixels = decode(blurhashString, 32, 32);
+    const imageData = ctx.createImageData(32, 32);
+    for (let i = 0; i < pixels.length; i++) {
+      imageData.data[i] = pixels[i];
+    }
+
+    // Scale the decoded image to fit the canvas
+    const tmpCanvas = document.createElement('canvas');
+    const tmpCtx = tmpCanvas.getContext('2d');
+    tmpCanvas.width = 32;
+    tmpCanvas.height = 32;
+    tmpCtx.putImageData(imageData, 0, 0);
+
+    ctx.drawImage(tmpCanvas, 0, 0, 32, 32, 0, 0, canvas.width, canvas.height);
+  };
+
+  // Set the canvas size on page load
+  resizeCanvas();
+
+  // Update canvas size on window resize
+  window.addEventListener('resize', resizeCanvas);
+
+  const video = document.querySelector('video');
+
+  // Hide the Blurhash canvas once the first frame of the video is loaded
+  video.addEventListener('loadeddata', () => {
+    canvas.style.display = 'none';
+    video.play();  // Ensure the video plays once loaded
+  });
+
+  // Ensure the canvas is visible while the video is loading
+  canvas.style.display = 'block';
+</script>
+
+  
+  
+  
   <!-- End of the Page Banner Section-->
 
   <!-- The Mission Section -->
