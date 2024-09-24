@@ -32,7 +32,7 @@
 
 
 	document.addEventListener('DOMContentLoaded', () => {
-
+		console.log("Loaded")
 // Fade in the video and hide the Blurhash placeholder when the video is loaded
 $('#beat-video').on('loadeddata', function() {
     $(this).css('opacity', '1');
