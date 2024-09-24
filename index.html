@@ -195,37 +195,41 @@
 
     <!-- Home Banner -->
     <section class="page-banner-section">
-        <div class=" h-[75vh] md:h-[98vh] lg:h-[98vh]  w-full relative">
-            <video class="inset-0 w-full h-full object-cover h-full" autoplay muted loop playsinline>
-                <source src="assets/home.mov" type="video/mp4">
-                <track src="assets/home-captions.vtt" kind="captions" srclang="en" label="English">
-                Your browser does not support the video tag.
-            </video>
-
-            <div class=" inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute table h-full w-full">
-                <div class="text-white text-center table-cell align-middle">
-                    <h1 class="text-3xl md:text-4xl mb-5 text-brand fade-in fade-in-1">JOIN THE WAITING LIST
-                    </h1>
-                    <div class="home-bnr-section mb-8 uppercase">
-                        <p class="text-4xl md:text-6xl">Transform your <span class="text-brand">body</span></p>
-                        <p class="text-4xl md:text-6xl">Change your <span class="text-brand">Life</span></p>
-
-
-                    </div>
-
-
-                    <span class="block lg:ml-3.5 fade-in">
-                        <button type="button"
-                            class="open-bot text-white bg-brand hover:bg-orange-600 focus:outline-none focus:ring-1 font-medium rounded-full text-large p-4 px-12 py-3 text-center dark:focus:ring-orange-600">
-                            WAITING LIST
-                        </button>
-                    </span>
-                </div>
+        <div class="h-[75vh] md:h-[98vh] lg:h-[98vh] w-full relative">
+            <!-- Blurhash Placeholder -->
+            <div id="blurhash-placeholder-home" class="absolute inset-0 w-full h-full bg-cover bg-center" 
+                 style="background-image: url('./assets/canvas/home_blur.webp');">
             </div>
-        </div>
+          
+            <!-- Video Element -->
+            <video id="home-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline onloadeddata="this.style.opacity = '1'; document.getElementById('blurhash-placeholder-home').style.display = 'none';">
+              <source src="assets/home.mov" type="video/mp4">
+              <track src="assets/home-captions.vtt" kind="captions" srclang="en" label="English">
+              Your browser does not support the video tag.
+            </video>
+          
+            <!-- Overlay Content -->
+            <div class="inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute table h-full w-full">
+              <div class="text-white text-center table-cell align-middle">
+                <h1 class="text-3xl md:text-4xl mb-5 text-brand fade-in fade-in-1">JOIN THE WAITING LIST</h1>
+                <div class="home-bnr-section mb-8 uppercase">
+                  <p class="text-4xl md:text-6xl">Transform your <span class="text-brand">body</span></p>
+                  <p class="text-4xl md:text-6xl">Change your <span class="text-brand">Life</span></p>
+                </div>
+          
+                <span class="block lg:ml-3.5 fade-in">
+                  <button type="button" class="open-bot text-white bg-brand hover:bg-orange-600 focus:outline-none focus:ring-1 font-medium rounded-full text-large p-4 px-12 py-3 text-center dark:focus:ring-orange-600">
+                    WAITING LIST
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
 
     </section>
 
+
+    <!--Jot Form Implementation-->
     <!--End of  Home Banner -->
 
     <!-- Home Banner -->
@@ -260,6 +264,7 @@
     </section> -->
     <!--End of JotForm Home Banner -->
 
+    <!--End of Jot Form Implementation-->
 
 
 
@@ -280,11 +285,12 @@
                 <div class="glide__track" data-glide-el="track">
                     <ul class="glide__slides">
                         <li class="glide__slide">
-                            <img class="gallerySliderItemImg" src="assets/r1.webp" alt="slider-img">
-                        </li>
-                        <li class="glide__slide">
                             <img class="gallerySliderItemImg" src="assets/r2.webp" alt="slider-img">
                         </li>
+                        <li class="glide__slide">
+                            <img class="gallerySliderItemImg" src="assets/r1.webp" alt="slider-img">
+                        </li>
+                       
                         <li class="glide__slide">
                             <img class="gallerySliderItemImg" src="assets/r3.webp" alt="slider-img">
                         </li>
@@ -906,6 +912,16 @@
 
 
     <!-- Scripts -->
+    <!-- Add JavaScript at the end to ensure elements are loaded -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fade in the video and hide the Blurhash placeholder when the video is loaded
+        document.getElementById('home-video').addEventListener('loadeddata', function () {
+        this.style.opacity = '1';
+        document.getElementById('blurhash-placeholder-home').style.display = 'none';
+        });
+    });
+    </script>
     <script src="js/jquery.min.js"></script>
     <script src="js/scripts.js"></script> <!-- Custom scripts -->
     <link rel="stylesheet" href="css/glide.core.min.css"><!-- Glide Slider css -->
