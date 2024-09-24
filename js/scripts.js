@@ -32,6 +32,53 @@
 
 
 	document.addEventListener('DOMContentLoaded', () => {
+
+// Fade in the video and hide the Blurhash placeholder when the video is loaded
+$('#beat-video').on('loadeddata', function() {
+    $(this).css('opacity', '1');
+    $('#blurhash-placeholder-beat').hide();
+  });
+
+  $('#predators-video').on('loadeddata', function() {
+    $(this).css('opacity', '1');
+    $('#blurhash-placeholder-predators').hide();
+  });
+
+  $('#hybrid-video').on('loadeddata', function() {
+    $(this).css('opacity', '1');
+    $('#blurhash-placeholder-hybrid').hide();
+  });
+
+  $('#reshape-video').on('loadeddata', function() {
+    $(this).css('opacity', '1');
+    $('#blurhash-placeholder-reshape').hide();
+  });
+
+  $('#elite-video').on('loadeddata', function() {
+    $(this).css('opacity', '1');
+    $('#blurhash-placeholder-elite').hide();
+  });
+
+  // Nutrition Section
+  $('#nutrition-video').on('loadeddata', function() {
+    $(this).css('opacity', '1');
+    $('#blurhash-placeholder-nutrition').hide();
+  });
+
+  // Evolt Section
+  $('#evolt-video').on('loadeddata', function() {
+    $(this).css('opacity', '1');
+    $('#blurhash-placeholder-evolt').hide();
+  });
+
+  // Training Section
+  $('#training-video').on('loadeddata', function() {
+    $(this).css('opacity', '1');
+    $('#blurhash-placeholder-training').hide();
+  });
+
+
+
 		const observer = new IntersectionObserver(entries => {
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {
