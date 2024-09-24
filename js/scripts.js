@@ -107,7 +107,7 @@ $('#beat-video').on('loadeddata', function() {
 				var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
 				s.addEventListener('load', function () {
 					myLandbot = new Landbot.Popup({
-						configUrl: 'https://storage.googleapis.com/landbot.pro/v3/H-2134441-K29HTOQUHOJBA975/index.json',
+						configUrl: 'https://storage.googleapis.com/landbot.pro/v3/H-2143862-SFZLSX1Y17KLVYW9/index.json',
 					});
 
 					var buttonsOpen = document.querySelectorAll(".open-bot");
