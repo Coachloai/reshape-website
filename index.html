@@ -197,12 +197,12 @@
     <section class="page-banner-section">
         <div class="h-[75vh] md:h-[98vh] lg:h-[98vh] w-full relative">
             <!-- Blurhash Placeholder -->
-            <div id="blurhash-placeholder-home" class="absolute inset-0 w-full h-full bg-cover bg-center" 
+            <!-- <div id="blurhash-placeholder-home" class="absolute inset-0 w-full h-full bg-cover bg-center" 
                  style="background-image: url('./assets/canvas/home_blur.webp');">
-            </div>
+            </div> -->
           
             <!-- Video Element -->
-            <video id="home-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline onloadeddata="this.style.opacity = '1'; document.getElementById('blurhash-placeholder-home').style.display = 'none';">
+            <video id="home-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline >
               <source src="assets/home.mov" type="video/mp4">
               <track src="assets/home-captions.vtt" kind="captions" srclang="en" label="English">
               Your browser does not support the video tag.
@@ -913,7 +913,7 @@
 
     <!-- Scripts -->
     <!-- Add JavaScript at the end to ensure elements are loaded -->
-    <script>
+    <!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Fade in the video and hide the Blurhash placeholder when the video is loaded
         document.getElementById('home-video').addEventListener('loadeddata', function () {
@@ -921,7 +921,7 @@
         document.getElementById('blurhash-placeholder-home').style.display = 'none';
         });
     });
-    </script>
+    </script> -->
     <script src="js/jquery.min.js"></script>
     <script src="js/scripts.js"></script> <!-- Custom scripts -->
     <link rel="stylesheet" href="css/glide.core.min.css"><!-- Glide Slider css -->
