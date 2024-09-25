@@ -32,6 +32,46 @@
 
 
 	document.addEventListener('DOMContentLoaded', () => {
+		$('#evolt-video').on('loadeddata', function() {
+			$('#blurhash-placeholder-evolt').fadeOut(); // Fade out the Blurhash placeholder
+			$(this).css('opacity', '1'); // Fade in the video
+		  });
+		  $('#experience-video').on('loadeddata', function() {
+			$('#blurhash-placeholder-experience').fadeOut(); // Fade out the Blurhash placeholder
+			$(this).css('opacity', '1'); // Fade in the video
+		  });
+		  $('#nutrition-video').on('loadeddata', function() {
+			$('#blurhash-placeholder-nutrition').fadeOut(); // Fade out the Blurhash placeholder
+			$(this).css('opacity', '1'); // Fade in the video
+		  });
+		  // For BEAT45 video
+		  $('#beat-video').on('loadeddata', function() {
+			$('#blurhash-placeholder-beat').fadeOut();
+			$(this).css('opacity', '1');
+		  });
+	  
+		  // For Predators video
+		  $('#predators-video').on('loadeddata', function() {
+			$('#blurhash-placeholder-predators').fadeOut();
+			$(this).css('opacity', '1');
+		  });
+	  
+		  // For Hybrid video
+		  $('#hybrid-video').on('loadeddata', function() {
+			$('#blurhash-placeholder-hybrid').fadeOut();
+			$(this).css('opacity', '1');
+		  });
+	  
+		  // For Reshape video
+		  $('#reshape-video').on('loadeddata', function() {
+			$('#blurhash-placeholder-reshape').fadeOut();
+			$(this).css('opacity', '1');
+		  });
+		  	  // For Reshape video
+				$('#elite-video').on('loadeddata', function() {
+					$('#blurhash-placeholder-elite').fadeOut();
+					$(this).css('opacity', '1');
+				  });
 		const observer = new IntersectionObserver(entries => {
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {

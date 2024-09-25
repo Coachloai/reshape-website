@@ -196,23 +196,23 @@
   <section class="page-banner-section">
     <div class="h-[75vh] md:h-[98vh] lg:h-[98vh] w-full relative">
       <!-- Blurhash Placeholder -->
-      <div class="absolute inset-0 w-full h-full bg-cover bg-center" 
+      <div id="blurhash-placeholder-experience" class="absolute inset-0 w-full h-full bg-cover bg-center" 
            style="background-image: url('./assets/canvas/experience_blur.webp');">
       </div>
-  
+    
       <!-- Video Element -->
-      <video class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline onloadeddata="this.style.opacity = '1';">
+      <video id="experience-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline>
         <source src="assets/experience.mp4" type="video/mp4">
       </video>
-  
+    
       <!-- Overlay Content -->
       <div class="inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute table h-full w-full">
         <div class="text-white text-center table-cell align-middle">
-          <h2 class="text-4xl md:text-6xl font-bold text-white mb-8 my-5 uppercase fade-in fade-in fade-in-1">EXPERIENCE
-            THE ONLY
-            <strong class="text-brand">TRANSFORMATION</strong><br> <strong class="text-brand">PROGRAMME</strong> IN TOWN
+          <h2 class="text-4xl md:text-6xl font-bold text-white mb-8 my-5 uppercase fade-in fade-in-1">
+            EXPERIENCE THE ONLY <strong class="text-brand">TRANSFORMATION</strong><br> 
+            <strong class="text-brand">PROGRAMME</strong> IN TOWN
           </h2>
-          <p class="mb-6 text-2xl lg:text-3xl	fade-in ">Personal Training. Group Exercise. Body Transformations.</p>
+          <p class="mb-6 text-2xl lg:text-3xl fade-in">Personal Training. Group Exercise. Body Transformations.</p>
           <span class="block lg:ml-3.5 fade-in">
             <button type="button" class="open-bot text-white bg-brand hover:bg-orange-600 focus:outline-none focus:ring-1 font-medium rounded-full text-large p-4 px-12 py-3 text-center dark:focus:ring-orange-600">
               WAITING LIST
@@ -221,6 +221,7 @@
         </div>
       </div>
     </div>
+
   </section>
   
   <!--End of Page Banner Section -->
@@ -249,20 +250,20 @@
           <div class="p-4 text-center relative z-10 w-full fade-in fade-in-1">
             <div class="flex flex-wrap bg-white rounded-md overflow-hidden relative">
               <!-- Blurhash Placeholder -->
-              <!-- <div id="blurhash-placeholder-nutrition" class="absolute inset-0 md:w-1/2 w-full h-full bg-cover bg-center" 
+              <div id="blurhash-placeholder-nutrition" class="absolute inset-0 md:w-1/2 w-full h-full bg-cover bg-center" 
                    style="background-image: url('./assets/canvas/nutrition_blur.webp');">
-              </div> -->
-        
+              </div>
+          
               <!-- Video Element -->
               <video id="nutrition-video" class="md:w-1/2 w-full md:h-auto h-64 object-cover object-center opacity-0 transition-opacity duration-700" 
                 autoplay muted loop playsinline>
                 <source src="assets/nutrition.mp4" type="video/mp4">
-                Your browser does not support the video tag.
               </video>
-        
+          
               <div class="md:w-1/2 w-full md:mt-0 text-left px-5 py-8 relative z-10">
                 <h1 class="text-brand text-3xl title-font font-medium mb-1">NUTRITION</h1>
                 <div class="h-1 w-10 bg-brand mb-4"></div>
+          
                 <p class="leading-relaxed text-2xl text-justify text-brand-grey">
                   To ensure your success, you will be working closely with a nutritionist and accountability coach.
                   Loai, our founder is not only a nutritionist but also an experienced chef. You'll quickly learn that
@@ -278,9 +279,9 @@
           <div class="p-4 md:w-1/2 fade-in fade-in-2">
             <div class="h-full overflow-hidden bg-white rounded-md relative">
               <!-- Blurhash Placeholder -->
-              <!-- <div id="blurhash-placeholder-evolt" class="absolute inset-0 w-full h-320  bg-cover bg-center" 
+              <div id="blurhash-placeholder-evolt" class="absolute inset-0 w-full h-320  bg-cover bg-center" 
                    style="background-image: url('./assets/canvas/evolt_blur.webp');">
-              </div> -->
+              </div>
         
               <!-- Video Element -->
               <video id="evolt-video" class="w-full object-cover object-center h-320 opacity-0 transition-opacity duration-700" 
@@ -299,32 +300,26 @@
               </div>
             </div>
           </div>
-        
           <!-- Transformation Coaches Section -->
-          <div class="p-4 md:w-1/2 fade-in fade-in-3">
-            <div class="h-full overflow-hidden bg-white rounded-md relative">
-              <!-- Blurhash Placeholder -->
-              <!-- <div id="blurhash-placeholder-training" class="absolute inset-0 w-full h-320  bg-cover bg-center" 
-                   style="background-image: url('./assets/canvas/training_blur.webp');">
-              </div> -->
         
-              <!-- Video Element -->
-              <video id="training-video" class="w-full object-cover object-center h-320 opacity-0 transition-opacity duration-700" 
-                autoplay muted loop playsinline>
-                <source src="assets/training.mp4" type="video/mp4">
+          <div class="p-4 md:w-1/2  fade-in fade-in-3">
+            <div class="h-full overflow-hidden bg-white rounded-md">
+              <video class="w-full object-cover object-center h-320" autoplay="" muted="" loop="" playsinline>
+                <source src="assets/training.mp4"
+                  type="video/mp4">
               </video>
-        
-              <div class="p-4 relative z-10">
+              <div class="p-4">
                 <h1 class="text-brand text-3xl title-font font-medium mb-1">TRANSFORMATION COACHES</h1>
                 <div class="h-1 w-10 bg-brand mb-4"></div>
+
                 <div>
-                  <p class="mb-3 text-xl text-justify text-brand-grey">
-                    At Re-Shape, we have a team of transformation coaches who are focused on helping you transform your body, health, and fitness for good. Unlike personal trainers at commercial gyms who are not necessarily trained to help you with your goals, but to just deliver sessions that may or may not be effective. Training is a skill and it is best passed on by passionate professionals who care about the small details of what will make your bespoke, results-driven program a success.
-                  </p>
+                  <p class="mb-3 text-xl text-justify text-brand-grey">At Re-Shape, we have a team of transformation coaches who are focused on helping you transform your body, health, and fitness for good. Unlike personal trainers at commercial gyms who are not necessarily trained to help you with your goals, but to just deliver sessions that may or may not be effective. Training is a skill and it is best passed on by passionate professionals who care about the small details of what will make your bespoke, results-driven program a success.</p>
+
                 </div>
               </div>
             </div>
           </div>
+
         </div>
         
       </div>
@@ -382,26 +377,26 @@
     
   </section>
   <!-- End of Our Sessions Section -->
-
   <!-- Video Section -->
 
   <section class="bg-brand-grey">
     <!-- Video 1 (BEAT45) -->
     <div class="h-[75vh] md:h-[75vh] lg:h-[75vh] w-full relative fade-in fade-in-1">
       <!-- Blurhash Placeholder -->
-      <!-- <div id="blurhash-placeholder-beat" class="absolute inset-0 w-full h-full bg-cover bg-center" 
-           style="background-image: url('./assets/canvas/beat_blur.webp');"></div> -->
+      <div id="blurhash-placeholder-beat" class="absolute inset-0 w-full h-full bg-cover bg-center" 
+           style="background-image: url('./assets/canvas/beat_blur.webp');"></div>
   
       <!-- Video Element -->
       <video id="beat-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline>
         <source src="assets/beat.mp4" type="video/mp4">
       </video>
   
+      <!-- Overlay Content -->
       <div class="inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute table h-full w-full">
         <div class="text-white text-center md:px-24 md:text-left table-cell align-middle">
           <div class="md:w-1/2 w-full text-center px-4">
             <img alt="gallery" class="w-48 w-48 object-cover object-center m-auto" src="./assets/beat.png">
-            <p class="mt-6 text-2xl lg:text-3xl">One of the reasons BEAT45 is one of our members' favourite workouts...</p>
+            <p class="mt-6 text-2xl lg:text-3xl">One of the reasons BEAT45 is one of our members' favourite workouts is because it's a great stress reliever. An energetic full body workout combining boxing with explosive HIIT training.</p>
           </div>
         </div>
       </div>
@@ -410,19 +405,20 @@
     <!-- Video 2 (Predators) -->
     <div class="h-[75vh] md:h-[75vh] lg:h-[75vh] w-full relative mt-3 fade-in fade-in-1">
       <!-- Blurhash Placeholder -->
-      <!-- <div id="blurhash-placeholder-predators" class="absolute inset-0 w-full h-full bg-cover bg-center" 
-           style="background-image: url('./assets/canvas/predators_blur.webp');"></div> -->
+      <div id="blurhash-placeholder-predators" class="absolute inset-0 w-full h-full bg-cover bg-center" 
+           style="background-image: url('./assets/canvas/predators_blur.webp');"></div>
   
       <!-- Video Element -->
       <video id="predators-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline>
         <source src="assets/predators.mp4" type="video/mp4">
       </video>
   
+      <!-- Overlay Content -->
       <div class="inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute table h-full w-full">
         <div class="text-white text-center md:px-24 md:text-left table-cell align-middle">
           <div class="md:w-1/2 w-full text-center px-4">
             <img alt="gallery" class="w-48 w-48 object-cover object-center m-auto" src="assets/predators.png">
-            <p class="mt-6 text-2xl lg:text-3xl">Whether you have strength goals or you're wanting to pack on some muscle...</p>
+            <p class="mt-6 text-2xl lg:text-3xl">Whether you have strength goals or you're wanting to pack on some muscle in the right areas, Predators will get you to your goals faster than just weight training in the traditional way.</p>
           </div>
         </div>
       </div>
@@ -431,19 +427,20 @@
     <!-- Video 3 (Hybrid) -->
     <div class="h-[75vh] md:h-[75vh] lg:h-[75vh] w-full relative mt-3 fade-in fade-in-1">
       <!-- Blurhash Placeholder -->
-      <!-- <div id="blurhash-placeholder-hybrid" class="absolute inset-0 w-full h-full bg-cover bg-center" 
-           style="background-image: url('./assets/canvas/hybrid_blur.webp');"></div> -->
+      <div id="blurhash-placeholder-hybrid" class="absolute inset-0 w-full h-full bg-cover bg-center" 
+           style="background-image: url('./assets/canvas/hybrid_blur.webp');"></div>
   
       <!-- Video Element -->
       <video id="hybrid-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline>
         <source src="assets/hybrid.mp4" type="video/mp4">
       </video>
   
+      <!-- Overlay Content -->
       <div class="inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute table h-full w-full">
         <div class="text-white text-center md:px-24 md:text-left table-cell align-middle">
           <div class="md:w-1/2 w-full text-center px-4">
             <img alt="gallery" class="w-48 w-48 object-cover object-center m-auto" src="assets/hybrid.webp">
-            <p class="mt-6 text-2xl lg:text-3xl">Hybrid gives you overall strength, power and confidence...</p>
+            <p class="mt-6 text-2xl lg:text-3xl">Hybrid gives you overall strength, power and confidence to tackle any challenge in the gym. Using functional training equipment, Hybrid is an explosive, high-energy strength and fat-burning workout.</p>
           </div>
         </div>
       </div>
@@ -452,48 +449,49 @@
     <!-- Video 4 (Reshape) -->
     <div class="h-[75vh] md:h-[75vh] lg:h-[75vh] w-full relative mt-3 fade-in fade-in-1">
       <!-- Blurhash Placeholder -->
-      <!-- <div id="blurhash-placeholder-reshape" class="absolute inset-0 w-full h-full bg-cover bg-center" 
-           style="background-image: url('./assets/canvas/reshape_blur.webp');"></div> -->
+      <div id="blurhash-placeholder-reshape" class="absolute inset-0 w-full h-full bg-cover bg-center" 
+           style="background-image: url('./assets/canvas/reshape_blur.webp');"></div>
   
       <!-- Video Element -->
       <video id="reshape-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline>
         <source src="assets/reshape.mp4" type="video/mp4">
       </video>
   
+      <!-- Overlay Content -->
       <div class="inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute table h-full w-full">
         <div class="text-white text-center md:px-24 md:text-left table-cell align-middle">
           <div class="md:w-1/2 w-full text-center px-4">
             <img alt="gallery" class="w-48 w-48 object-cover object-center m-auto" src="./assets/reshape_white.webp">
-            <p class="mt-6 text-2xl lg:text-3xl">Our most intense workout designed to improve your athletic abilities...</p>
+            <p class="mt-6 text-2xl lg:text-3xl">Our most intense workout designed to improve your athletic abilities no matter what your starting point. Accelerate your fat loss goals while improving your agility, speed, and stamina, all in a 30-minute workout.</p>
           </div>
         </div>
       </div>
     </div>
-  
-    <!-- Video 5 (Elite) -->
-    <div class="h-[75vh] md:h-[75vh] lg:h-[75vh] w-full relative mt-3 fade-in fade-in-1">
-      <!-- Blurhash Placeholder -->
-      <!-- <div id="blurhash-placeholder-elite" class="absolute inset-0 w-full h-full bg-cover bg-center" 
-           style="background-image: url('./assets/canvas/elite_blur.webp');"></div> -->
-  
-      <!-- Video Element -->
-      <video id="elite-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline>
-        <source src="assets/elite.MP4" type="video/mp4">
-      </video>
-  
-      <div class="inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute table h-full w-full">
-        <div class="text-white text-center md:px-24 md:text-left table-cell align-middle">
-          <div class="md:w-1/2 w-full text-center px-4">
-            <img alt="gallery" class="w-48 w-48 object-cover object-center m-auto" src="./assets/elite_logo.png">
-            <p class="mt-6 text-2xl lg:text-3xl">Our most intense workout designed to improve your athletic abilities...</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
- 
-  
+        <!-- Video 5 (Elite) -->
+        <div class="h-[75vh] md:h-[75vh] lg:h-[75vh] w-full relative mt-3 fade-in fade-in-1">
+          <!-- Blurhash Placeholder -->
+          <div id="blurhash-placeholder-elite" class="absolute inset-0 w-full h-full bg-cover bg-center" 
+               style="background-image: url('./assets/canvas/elite_blur.webp');"></div>
+      
+          <!-- Video Element -->
+          <video id="elite-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline>
+            <source src="assets/elite.MP4" type="video/mp4">
+          </video>
+      
+          <!-- Overlay Content -->
+          <div class="inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute table h-full w-full">
+            <div class="text-white text-center md:px-24 md:text-left table-cell align-middle">
+              <div class="md:w-1/2 w-full text-center px-4">
+                <img alt="gallery" class="w-48 w-48 object-cover object-center m-auto" src="./assets/elite_logo.png">
+                <p class="mt-6 text-2xl lg:text-3xl">The Elite training program consists of specifically designed weight training sessions that combine education and quality to help you achieve your best results in record time.
+
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+  </section>
   <!-- Video Section -->
 
   <!-- End of Our Community Section -->
