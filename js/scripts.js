@@ -99,7 +99,7 @@
 			threshold: 0.1
 		});
 
-		console.log("Content Loaded Successfully");
+		// console.log("Content Loaded Successfully");
 
 		// Adding Animation on Scroll
 		document.querySelectorAll('.fade-in').forEach(element => {
@@ -209,11 +209,11 @@ $acceptButton.on('click', function() {
 	$banner.hide();
 });
 
-console.log("End Of Content Loaded Successfully");
+// console.log("End Of Content Loaded Successfully");
 	
 	});
 
-	console.log("Content Loaded Successfully");
+	// console.log("Content Loaded Successfully");
 
 	// Adding FAq Section
 
