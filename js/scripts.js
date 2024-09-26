@@ -36,18 +36,25 @@
 			$('#blurhash-placeholder-experience').fadeOut(); // Fade out the Blurhash placeholder
 			$(this).css('opacity', '1'); // Fade in the video
 		  });
-		  $('#nutrition-video').on('loadeddata', function() {
-			$('#blurhash-placeholder-nutrition').fadeOut(); // Fade out the Blurhash placeholder
-			$(this).css('opacity', '1'); // Fade in the video
+		// For Nutrition video
+		$('#nutrition-video').on('loadeddata', function() {
+			$('#blurhash-placeholder-nutrition').fadeOut();
+			$(this).css('opacity', '1');
 		  });
-		$('#evolt-video').on('loadeddata', function() {
-			$('#blurhash-placeholder-evolt').fadeOut(); // Fade out the Blurhash placeholder
-			$(this).css('opacity', '1'); // Fade in the video
+	  
+		  // For Evolt 360 video
+		  $('#evolt-video').on('loadeddata', function() {
+			$('#blurhash-placeholder-evolt').fadeOut();
+			$(this).css('opacity', '1');
 		  });
-		
-		
-		  // For BEAT45 video
-		  $('#beat-video').on('loadeddata', function() {
+	  
+		  // For Transformation Coaches video
+		  $('#training-video').on('loadeddata', function() {
+			$('#blurhash-placeholder-training').fadeOut();
+			$(this).css('opacity', '1');
+		  });
+		// For BEAT45 video
+		$('#beat-video').on('loadeddata', function() {
 			$('#blurhash-placeholder-beat').fadeOut();
 			$(this).css('opacity', '1');
 		  });
@@ -69,11 +76,13 @@
 			$('#blurhash-placeholder-reshape').fadeOut();
 			$(this).css('opacity', '1');
 		  });
-		  	  // For Reshape video
-				$('#elite-video').on('loadeddata', function() {
-					$('#blurhash-placeholder-elite').fadeOut();
-					$(this).css('opacity', '1');
-				  });
+		    // For Elite video
+			$('#elite-video').on('loadeddata', function() {
+				$('#blurhash-placeholder-elite').fadeOut();
+				$(this).css('opacity', '1');
+			  });
+	
+
 		const observer = new IntersectionObserver(entries => {
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {
