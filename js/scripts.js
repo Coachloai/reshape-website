@@ -80,12 +80,12 @@
 		// 	$(this).css('opacity', '1');
 		//   });
 		    // For Elite video
-			$('#elite-video').on('loadeddata', function() {
-				console.log('Video loaded Successfully');
+			// $('#elite-video').on('loadeddata', function() {
+			// 	console.log('Video loaded Successfully');
 
-				$('#blurhash-placeholder-elite').fadeOut();
-				$(this).css('opacity', '1');
-			  });
+			// 	$('#blurhash-placeholder-elite').fadeOut();
+			// 	$(this).css('opacity', '1');
+			//   });
 	
 
 		const observer = new IntersectionObserver(entries => {
