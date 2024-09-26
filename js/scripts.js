@@ -38,6 +38,8 @@
 		  });
 		// For Nutrition video
 		$('#nutrition-video').on('loadeddata', function() {
+			console.log('Video loaded');
+
 			$('#blurhash-placeholder-nutrition').fadeOut();
 			$(this).css('opacity', '1');
 		  });
