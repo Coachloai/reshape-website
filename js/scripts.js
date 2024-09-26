@@ -32,6 +32,8 @@
 
 
 	document.addEventListener('DOMContentLoaded', () => {
+
+		console.log("Content Loaded Successfully");
 		// $('#experience-video').on('loadeddata', function() {
 		// 	$('#blurhash-placeholder-experience').fadeOut(); // Fade out the Blurhash placeholder
 		// 	$(this).css('opacity', '1'); // Fade in the video
@@ -206,6 +208,8 @@ $acceptButton.on('click', function() {
 	localStorage.setItem('cookiesAccepted', 'true');
 	$banner.hide();
 });
+
+console.log("End Of Content Loaded Successfully");
 	
 	});
 
