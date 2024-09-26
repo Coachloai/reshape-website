@@ -213,6 +213,7 @@ console.log("End Of Content Loaded Successfully");
 	
 	});
 
+	console.log("Content Loaded Successfully");
 
 	// Adding FAq Section
 
