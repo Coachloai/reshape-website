@@ -33,7 +33,6 @@
 
 	document.addEventListener('DOMContentLoaded', () => {
 
-		console.log("Content Loaded Successfully");
 		// $('#experience-video').on('loadeddata', function() {
 		// 	$('#blurhash-placeholder-experience').fadeOut(); // Fade out the Blurhash placeholder
 		// 	$(this).css('opacity', '1'); // Fade in the video
@@ -100,6 +99,7 @@
 			threshold: 0.1
 		});
 
+		console.log("Content Loaded Successfully");
 
 		// Adding Animation on Scroll
 		document.querySelectorAll('.fade-in').forEach(element => {
