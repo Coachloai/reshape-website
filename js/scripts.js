@@ -1,6 +1,7 @@
 /* Template: Reshape
    Description: Custom JS file for the Reshape App
 */
+console.log("Hello Team");
 
 (function ($) {
 	"use strict";
