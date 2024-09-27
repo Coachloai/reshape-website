@@ -32,7 +32,7 @@
 
 
 	document.addEventListener('DOMContentLoaded', () => {
-		console.log("Content Loaded Successfully");
+		// console.log("Content Loaded Successfully");
 
 		// $('#experience-video').on('loadeddata', function() {
 		// 	$('#blurhash-placeholder-experience').fadeOut(); // Fade out the Blurhash placeholder
