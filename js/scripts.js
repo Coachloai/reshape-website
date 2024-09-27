@@ -1,7 +1,6 @@
 /* Template: Reshape
    Description: Custom JS file for the Reshape App
 */
-console.log("Hello Team");
 
 (function ($) {
 	"use strict";
@@ -33,7 +32,7 @@ console.log("Hello Team");
 
 
 	document.addEventListener('DOMContentLoaded', () => {
-		console.log("Hello Team");
+		console.log("Hello Team -->> Content Loaded Successfully");
 
 		// $('#experience-video').on('loadeddata', function() {
 		// 	$('#blurhash-placeholder-experience').fadeOut(); // Fade out the Blurhash placeholder
