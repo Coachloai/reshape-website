@@ -1,10 +1,8 @@
 /* Template: Reshape
    Description: Custom JS file for the Reshape App
 */
-console.log("hello world SCRIPT.JS");
 
 (function ($) {
-	"use strict";
 
 	// On Scroll Function
 	$(window).on('scroll load', function () {
@@ -33,61 +31,61 @@ console.log("hello world SCRIPT.JS");
 
 
 	document.addEventListener('DOMContentLoaded', () => {
-		console.log("Hello Team -->> Content Loaded Successfully");
+		console.log("Content Loaded Successfully");
 
-		$('#experience-video').on('loadeddata', function() {
-			$('#blurhash-placeholder-experience').fadeOut(); // Fade out the Blurhash placeholder
-			$(this).css('opacity', '1'); // Fade in the video
-		  });
-		// For Nutrition video
-		$('#nutrition-video').on('loadeddata', function() {
-			console.log('Video loaded');
+		// $('#experience-video').on('loadeddata', function() {
+		// 	$('#blurhash-placeholder-experience').fadeOut(); // Fade out the Blurhash placeholder
+		// 	$(this).css('opacity', '1'); // Fade in the video
+		//   });
+		// // For Nutrition video
+		// $('#nutrition-video').on('loadeddata', function() {
+		// 	console.log('Video loaded');
 
-			$('#blurhash-placeholder-nutrition').fadeOut();
-			$(this).css('opacity', '1');
-		  });
+		// 	$('#blurhash-placeholder-nutrition').fadeOut();
+		// 	$(this).css('opacity', '1');
+		//   });
 	  
-		  // For Evolt 360 video
-		  $('#evolt-video').on('loadeddata', function() {
-			$('#blurhash-placeholder-evolt').fadeOut();
-			$(this).css('opacity', '1');
-		  });
+		//   // For Evolt 360 video
+		//   $('#evolt-video').on('loadeddata', function() {
+		// 	$('#blurhash-placeholder-evolt').fadeOut();
+		// 	$(this).css('opacity', '1');
+		//   });
 	  
-		  // For Transformation Coaches video
-		  $('#training-video').on('loadeddata', function() {
-			$('#blurhash-placeholder-training').fadeOut();
-			$(this).css('opacity', '1');
-		  });
-		// For BEAT45 video
-		$('#beat-video').on('loadeddata', function() {
-			$('#blurhash-placeholder-beat').fadeOut();
-			$(this).css('opacity', '1');
-		  });
+		//   // For Transformation Coaches video
+		//   $('#training-video').on('loadeddata', function() {
+		// 	$('#blurhash-placeholder-training').fadeOut();
+		// 	$(this).css('opacity', '1');
+		//   });
+		// // For BEAT45 video
+		// $('#beat-video').on('loadeddata', function() {
+		// 	$('#blurhash-placeholder-beat').fadeOut();
+		// 	$(this).css('opacity', '1');
+		//   });
 	  
-		  // For Predators video
-		  $('#predators-video').on('loadeddata', function() {
-			$('#blurhash-placeholder-predators').fadeOut();
-			$(this).css('opacity', '1');
-		  });
+		//   // For Predators video
+		//   $('#predators-video').on('loadeddata', function() {
+		// 	$('#blurhash-placeholder-predators').fadeOut();
+		// 	$(this).css('opacity', '1');
+		//   });
 	  
-		  // For Hybrid video
-		  $('#hybrid-video').on('loadeddata', function() {
-			$('#blurhash-placeholder-hybrid').fadeOut();
-			$(this).css('opacity', '1');
-		  });
+		//   // For Hybrid video
+		//   $('#hybrid-video').on('loadeddata', function() {
+		// 	$('#blurhash-placeholder-hybrid').fadeOut();
+		// 	$(this).css('opacity', '1');
+		//   });
 	  
-		  // For Reshape video
-		  $('#reshape-video').on('loadeddata', function() {
-			$('#blurhash-placeholder-reshape').fadeOut();
-			$(this).css('opacity', '1');
-		  });
+		//   // For Reshape video
+		//   $('#reshape-video').on('loadeddata', function() {
+		// 	$('#blurhash-placeholder-reshape').fadeOut();
+		// 	$(this).css('opacity', '1');
+		//   });
 		    // For Elite video
-			$('#elite-video').on('loadeddata', function() {
-				console.log('Video loaded Successfully');
+			// $('#elite-video').on('loadeddata', function() {
+			// 	console.log('Video loaded Successfully');
 
-				$('#blurhash-placeholder-elite').fadeOut();
-				$(this).css('opacity', '1');
-			  });
+			// 	$('#blurhash-placeholder-elite').fadeOut();
+			// 	$(this).css('opacity', '1');
+			//   });
 	
 
 		const observer = new IntersectionObserver(entries => {
