@@ -29,120 +29,108 @@
 		}
 	});
 
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("Content Loaded Successfully>>>>>>>");
 
-	document.addEventListener('DOMContentLoaded', () => {
-		console.log("Content Loaded Successfully");
+    // Handle video loading and Blurhash placeholder fading for all videos
+    const videoHandlers = [
+        { videoId: '#experience-video', blurId: '#blurhash-placeholder-experience' },
+        { videoId: '#nutrition-video', blurId: '#blurhash-placeholder-nutrition' },
+        { videoId: '#evolt-video', blurId: '#blurhash-placeholder-evolt' },
+        { videoId: '#training-video', blurId: '#blurhash-placeholder-training' },
+        { videoId: '#beat-video', blurId: '#blurhash-placeholder-beat' },
+        { videoId: '#predators-video', blurId: '#blurhash-placeholder-predators' },
+        { videoId: '#hybrid-video', blurId: '#blurhash-placeholder-hybrid' },
+        { videoId: '#reshape-video', blurId: '#blurhash-placeholder-reshape' },
+        { videoId: '#elite-video', blurId: '#blurhash-placeholder-elite' }
+    ];
 
-		console.log("Content Loaded Successfully>>>>>>>");
+    videoHandlers.forEach(({ videoId, blurId }) => {
+		console.log("Video Handler Function");
+        $(videoId).on('loadeddata', function () {
+            $(blurId).fadeOut();  // Fade out Blurhash placeholder
+            $(this).css('opacity', '1');  // Fade in the video
+            console.log(`${videoId} loaded successfully`);
+        });
+    });
 
-		// Handle video loading and Blurhash placeholder fading for all videos
-		const videoHandlers = [
-			{ videoId: '#experience-video', blurId: '#blurhash-placeholder-experience' },
-			{ videoId: '#nutrition-video', blurId: '#blurhash-placeholder-nutrition' },
-			{ videoId: '#evolt-video', blurId: '#blurhash-placeholder-evolt' },
-			{ videoId: '#training-video', blurId: '#blurhash-placeholder-training' },
-			{ videoId: '#beat-video', blurId: '#blurhash-placeholder-beat' },
-			{ videoId: '#predators-video', blurId: '#blurhash-placeholder-predators' },
-			{ videoId: '#hybrid-video', blurId: '#blurhash-placeholder-hybrid' },
-			{ videoId: '#reshape-video', blurId: '#blurhash-placeholder-reshape' },
-			{ videoId: '#elite-video', blurId: '#blurhash-placeholder-elite' }
-		];
-	
-		videoHandlers.forEach(({ videoId, blurId }) => {
-			console.log("Video Handler Function");
-			$(videoId).on('loadeddata', function () {
-				$(blurId).fadeOut();  // Fade out Blurhash placeholder
-				$(this).css('opacity', '1');  // Fade in the video
-				console.log(`${videoId} loaded successfully`);
-			});
-		});
-	
-	
+    // Adding IntersectionObserver for scroll animations
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('show');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
 
-		const observer = new IntersectionObserver(entries => {
-			entries.forEach(entry => {
-				if (entry.isIntersecting) {
-					entry.target.classList.add('show');
-					observer.unobserve(entry.target);
-				}
-			});
-		}, {
-			threshold: 0.1
-		});
+    document.querySelectorAll('.fade-in').forEach(element => {
+        observer.observe(element);
+    });
 
-		// console.log("Content Loaded Successfully");
+    // Initialize chatbot once mouseover or touchstart
+    window.addEventListener('mouseover', initLandbot, { once: true });
+    window.addEventListener('touchstart', initLandbot, { once: true });
 
-		// Adding Animation on Scroll
-		document.querySelectorAll('.fade-in').forEach(element => {
-			observer.observe(element);
-		});
+    var myLandbot;
 
-		// Open the Chatbot when Clicked
-		window.addEventListener('mouseover', initLandbot, { once: true });
-		window.addEventListener('touchstart', initLandbot, { once: true });
+    function initLandbot() {
+        if (!myLandbot) {
+            var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
+            s.addEventListener('load', function () {
+                myLandbot = new Landbot.Popup({
+                    configUrl: 'https://storage.googleapis.com/landbot.pro/v3/H-2143862-SFZLSX1Y17KLVYW9/index.json',
+                });
 
-		var myLandbot;
+                var buttonsOpen = document.querySelectorAll(".open-bot");
+                buttonsOpen.forEach(function (button) {
+                    button.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        myLandbot.open();
+                    });
+                });
+            });
+            s.src = 'https://cdn.landbot.io/landbot-3/landbot-3.0.0.js';
+            var x = document.getElementsByTagName('script')[0];
+            x.parentNode.insertBefore(s, x);
+        }
+    }
 
-		function initLandbot() {
-			if (!myLandbot) {
-				var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
-				s.addEventListener('load', function () {
-					myLandbot = new Landbot.Popup({
-						configUrl: 'https://storage.googleapis.com/landbot.pro/v3/H-2143862-SFZLSX1Y17KLVYW9/index.json',
-					});
+    // Share the page functionalities
+    const viewBtn = document.querySelector(".btn-calendar1"),
+        popup = document.querySelector(".popup"),
+        close = popup.querySelector(".close"),
+        field = popup.querySelector(".field"),
+        input = field.querySelector("input"),
+        copy = field.querySelector("button");
 
-					var buttonsOpen = document.querySelectorAll(".open-bot");
-					buttonsOpen.forEach(function (button) {
-						button.addEventListener('click', function (event) {
-							event.preventDefault();
-							myLandbot.open();
-						});
-					});
-				});
-				s.src = 'https://cdn.landbot.io/landbot-3/landbot-3.0.0.js';
-				var x = document.getElementsByTagName('script')[0];
-				x.parentNode.insertBefore(s, x);
-			}
-		}
+    viewBtn.onclick = (e) => {
+        e.preventDefault();
+        popup.classList.toggle("show");
+    };
+    close.onclick = () => {
+        viewBtn.click();
+    };
 
-		//Adding Repuso API Code Here
-		var script = document.createElement("script"); script.type = "module"; script.src = "https://repuso.com/widgets/2.0/rw-widget-masonry.js"; document.getElementsByTagName("head")[0].appendChild(script);
+    copy.onclick = () => {
+        input.select(); // select input value
+        if (document.execCommand("copy")) { // copy selected text
+            field.classList.add("active");
+            copy.innerText = "Copied";
+            setTimeout(() => {
+                window.getSelection().removeAllRanges(); // deselect text
+                field.classList.remove("active");
+                copy.innerText = "Copy";
+            }, 3000);
+        }
+    };
 
-		//Share the Page functionalities
+    document.querySelector('.backdrop').addEventListener("click", function (e) {
+        popup.classList.remove("show");
+    });
 
-		const viewBtn = document.querySelector(".btn-calendar1"),
-		popup = document.querySelector(".popup"),
-		close = popup.querySelector(".close"),
-		field = popup.querySelector(".field"),
-		input = field.querySelector("input"),
-		copy = field.querySelector("button");
-	
-	viewBtn.onclick = (e) => {
-		e.preventDefault();
-		popup.classList.toggle("show");
-	}
-	close.onclick = () => {
-		viewBtn.click();
-	}
-	
-	copy.onclick = () => {
-		input.select(); //select input value
-		if (document.execCommand("copy")) { //if the selected text is copied
-			field.classList.add("active");
-			copy.innerText = "Copied";
-			setTimeout(() => {
-				window.getSelection().removeAllRanges(); //remove selection from page
-				field.classList.remove("active");
-				copy.innerText = "Copy";
-			}, 3000);
-		}
-	}
-	
-	document.querySelector('.backdrop').addEventListener("click", function(e) {
-		popup.classList.remove("show");
-	});
-
-	$('.accordion__header').on('click', function() {
+    // Accordion toggle
+    $('.accordion__header').on('click', function () {
         var accordion = $(this).parent();
         accordion.toggleClass('open');
         var icon = $(this).find('.fa');
@@ -158,31 +146,30 @@
             content.css('height', '0');
         }
     });
-	//Adding cookies Setting
-	$('body').append(`
+
+    // Cookie banner setup
+    $('body').append(`
 <div id="cookie-banner" class="cookie-banner">
     <p>We use cookies to ensure you get the best experience on our website. <a href="/privacy.html">Learn more about our privacy policy</a>.</p>
     <button id="accept-cookies" class="cookie-button rounded-full">OK</button>
-</div>
+</div>`);
 
-`);
+    var $banner = $('#cookie-banner');
+    var $acceptButton = $('#accept-cookies');
 
-var $banner = $('#cookie-banner');
-var $acceptButton = $('#accept-cookies');
+    // Show cookie banner if not accepted yet
+    if (!localStorage.getItem('cookiesAccepted')) {
+        $banner.show();
+    }
 
-// Check if the user has already accepted cookies
-if (!localStorage.getItem('cookiesAccepted')) {
-	$banner.show();
-}
+    $acceptButton.on('click', function () {
+        localStorage.setItem('cookiesAccepted', 'true');
+        $banner.hide();
+    });
 
-$acceptButton.on('click', function() {
-	localStorage.setItem('cookiesAccepted', 'true');
-	$banner.hide();
+    // console.log("End Of Content Loaded Successfully");
 });
 
-// console.log("End Of Content Loaded Successfully");
-	
-	});
 
 	// console.log("Content Loaded Successfully");
 
