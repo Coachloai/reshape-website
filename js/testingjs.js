@@ -305,7 +305,7 @@
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Content Loaded Successfully");
+    console.log("Content Loaded Successfully>>>>>>>");
 
     // Handle video loading and Blurhash placeholder fading for all videos
     const videoHandlers = [
@@ -442,5 +442,5 @@ document.addEventListener('DOMContentLoaded', () => {
         $banner.hide();
     });
 
-    console.log("End Of Content Loaded Successfully");
+    // console.log("End Of Content Loaded Successfully");
 });
