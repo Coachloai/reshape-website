@@ -321,6 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     videoHandlers.forEach(({ videoId, blurId }) => {
+		console.log("Video Handler Function");
         $(videoId).on('loadeddata', function () {
             $(blurId).fadeOut();  // Fade out Blurhash placeholder
             $(this).css('opacity', '1');  // Fade in the video
