@@ -2,9 +2,7 @@
 <html lang="en">
 
 <head>
-      <!-- Scripts -->
-      <script src="js/jquery.min.js"></script> <!-- jQuery for JavaScript plugins -->
-      <script src="js/scripts.js"></script> <!-- Custom scripts -->
+  
   <!--Ms Clarity-->
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
@@ -107,29 +105,6 @@
     src="https://www.facebook.com/tr?id=159423160497667&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Meta Pixel Code -->
-    <style>
-      
-      .video-containers {
-        position: relative;
-        width: 100%;
-        height: 100%; /* Adjust as needed */
-        overflow: hidden;
-      }
-
-      .video-containers video,
-      .video-containers canvas {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .video-containers video {
-        opacity: 0;
-        transition: opacity 0.7s;
-      }
-    </style>
  
 </head>
 
@@ -196,11 +171,23 @@
 
   <!-- Page Banner Section -->
 
-  <!-- <section class="page-banner-section">
-    <div class=" h-[75vh] md:h-[98vh] lg:h-[98vh]  w-full relative">
-      <video class=" inset-0 w-full h-full object-cover" autoplay muted loop playsinline>
-        <source src="assets/experience.mp4" type="video/mp4">
+  <section class="page-banner-section">
+    <div class=" h-[75vh] md:h-[98vh] lg:h-[98vh]  w-full relative video-wrapper">
+      <!-- Blurhash Placeholder -->
+      <canvas id="blurhash-canvas" class="h-full w-full"></canvas>
+  <video
+        autoplay
+        muted
+        loop
+        playsinline
+        onloadeddata="this.style.opacity = '1'; document.getElementById('blurhash-canvas').style.display = 'none';"
+     class="inset-0 w-full h-full object-cover" >
+        <source
+          src="assets/experience.mp4"
+          type="video/mp4"
+        />
       </video>
+      
       <div class=" inset-0 bg-black bg-opacity-50 flex items-center justify-center absolute table h-full w-full">
         <div class="text-white text-center table-cell align-middle">
 
@@ -219,46 +206,8 @@
       </div>
     </div>
 
-  </section> -->
-  <section class="page-banner-section">
-    <div class="h-[75vh] md:h-[98vh] lg:h-[98vh] w-full relative">
-          <!-- Video Container -->
-    <div class="video-containers">
-      <!-- Blurhash Placeholder -->
-      <canvas id="blurhash-canvas"></canvas>
-      <!-- Video Element  -->
-      <video
-        autoplay
-        muted
-        loop
-        playsinline
-        onloadeddata="this.style.opacity = '1'; document.getElementById('blurhash-canvas').style.display = 'none';" class="h-[75vh] md:h-[98vh] lg:h-[98vh] object-cover w-full"
-      >
-        <source
-          src="https://reshapeclub.com/assets/home.mov"
-          type="video/mp4"
-        />
-      </video>
-     
-    </div>
-     
-      <!-- Overlay Content -->
-      <div class="inset-0 flex bg-black bg-opacity-50 justify-center absolute table h-full w-full">
-        <div class="text-white text-center table-cell align-middle">
-          <h2 class="text-4xl md:text-6xl font-bold text-white mb-8 my-5 uppercase fade-in fade-in fade-in-1">EXPERIENCE
-            THE ONLY
-            <strong class="text-brand">TRANSFORMATION</strong><br> <strong class="text-brand">PROGRAMME</strong> IN TOWN
-          </h2>
-          <p class="mb-6 text-2xl lg:text-3xl	fade-in ">Personal Training. Group Exercise. Body Transformations.</p>
-          <span class="block lg:ml-3.5 fade-in">
-            <button type="button" class="open-bot text-white bg-brand hover:bg-orange-600 focus:outline-none focus:ring-1 font-medium rounded-full text-large p-4 px-12 py-3 text-center dark:focus:ring-orange-600">
-              WAITING LIST
-            </button>
-          </span>
-        </div>
-      </div>
-    </div>
   </section>
+
   
   <!--End of Page Banner Section -->
 
@@ -278,84 +227,84 @@
 
     </div>
 
-    
+    <div>
       
-    <div class="container px-5 pb-24 mx-auto">
-      <div class="flex flex-wrap">
-        <!-- Nutrition Section -->
-        <div class="p-4 text-center relative z-10 w-full fade-in fade-in-1">
-          <div class="flex flex-wrap bg-white rounded-md overflow-hidden relative">
-            <!-- Blurhash Placeholder -->
-            <canvas id="blurhash-nutrition" class="absolute inset-0 md:w-1/2 w-full h-64 object-cover bg-center"></canvas>
-    
-            <!-- Video Element -->
-            <video id="nutrition-video" class="md:w-1/2 w-full md:h-auto h-64 object-cover object-center opacity-0 transition-opacity duration-700" 
-              autoplay muted loop playsinline  onloadeddata="this.style.opacity = '1'; document.getElementById('blurhash-nutrition').style.display = 'none';">
-              <source src="assets/nutrition.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-    
-            <div class="md:w-1/2 w-full md:mt-0 text-left px-5 py-8 relative z-10">
-              <h1 class="text-brand text-3xl title-font font-medium mb-1">NUTRITION</h1>
-              <div class="h-1 w-10 bg-brand mb-4"></div>
-              <p class="leading-relaxed text-2xl text-justify text-brand-grey">
-                To ensure your success, you will be working closely with a nutritionist and accountability coach.
-                Loai, our founder is not only a nutritionist but also an experienced chef. You'll quickly learn that
-                healthy food doesn't need to be boring, bland or 'cold chicken and broccoli'! Our nutrition systems are far more educational than just a diet plan.
-              </p>
-            </div>
-          </div>
-        </div>
-    
-        <!-- Evolt 360 Scanner Section -->
-        <div class="p-4 md:w-1/2 fade-in fade-in-2">
-          <div class="h-full overflow-hidden bg-white rounded-md relative">
-            <!-- Blurhash Placeholder -->
-            <canvas id="blurhash-evolt" class="absolute inset-0 w-full h-320 bg-cover bg-center"></canvas>
-    
-            <!-- Video Element -->
-            <video id="evolt-video" class="w-full object-cover object-center h-320 opacity-0 transition-opacity duration-700" 
-              autoplay muted loop playsinline onloadeddata="this.style.opacity = '1'; document.getElementById('blurhash-evolt').style.display = 'none';">
-              <source src="assets/evolt.mp4" type="video/mp4">
-            </video>
-    
-            <div class="p-4 relative z-10">
-              <h1 class="text-brand text-3xl title-font font-medium mb-1">EVOLT 360 SCANNER</h1>
-              <div class="h-1 w-10 bg-brand mb-4"></div>
-              <p class="mb-3 text-xl text-justify text-brand-grey">
-                Our Evolt360 body scanner provides in-depth details to create your plan. Regular scans hold you accountable to your goals and help your coaches make changes. Your scan results will include body fat, muscle mass, hydration, nutrient deficiency, and more.
-              </p>
-            </div>
-          </div>
-        </div>
-    
-        <!-- Transformation Coaches Section -->
-        <div class="p-4 md:w-1/2 fade-in fade-in-3">
-          <div class="h-full overflow-hidden bg-white rounded-md relative">
-            <!-- Blurhash Placeholder -->
-            <canvas id="blurhash-training" class="absolute inset-0 w-full h-320 bg-cover bg-center"></canvas>
-    
-            <!-- Video Element -->
-            <video id="training-video" class="w-full object-cover object-center h-320 opacity-0 transition-opacity duration-700" 
-              autoplay muted loop playsinline onloadeddata="this.style.opacity = '1'; document.getElementById('blurhash-training').style.display = 'none';">
-              <source src="assets/training.mp4" type="video/mp4">
-            </video>
-    
-            <div class="p-4 relative z-10">
-              <h1 class="text-brand text-3xl title-font font-medium mb-1">TRANSFORMATION COACHES</h1>
-              <div class="h-1 w-10 bg-brand mb-4"></div>
-              <p class="mb-3 text-xl text-justify text-brand-grey">
-                Our team of transformation coaches focuses on helping you transform your body, health, and fitness. Training is a skill best passed on by passionate professionals who care about the small details that will make your program a success.
-              </p>
-            </div>
-          </div>
+      <div class="container px-5 pb-24 mx-auto">
+        <div class="flex flex-wrap">
+  <!-- Nutrition Section -->
+  <div class="p-4 text-center relative z-10 w-full fade-in fade-in-1">
+    <div class="flex flex-wrap bg-white rounded-md overflow-hidden relative">
+      <!-- Video Element -->
+      <video id="nutrition-video" class="md:w-1/2 w-full md:h-auto h-64 object-cover object-center opacity-0 transition-opacity duration-700" 
+        autoplay muted loop playsinline>
+        <source src="assets/nutrition.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+
+      <div class="md:w-1/2 w-full md:mt-0 text-left px-5 py-8 relative z-10">
+        <h1 class="text-brand text-3xl title-font font-medium mb-1">NUTRITION</h1>
+        <div class="h-1 w-10 bg-brand mb-4"></div>
+        <p class="leading-relaxed text-2xl text-justify text-brand-grey">
+          To ensure your success, you will be working closely with a nutritionist and accountability coach.
+          Loai, our founder is not only a nutritionist but also an experienced chef. You'll quickly learn that
+          healthy food doesn't need to be boring, bland or 'cold chicken and broccoli'! With the choice of
+          many delicious recipes, acquiring lifelong kitchen skills whilst becoming healthier for the long
+          term. Our nutrition systems are far more educational than just a diet plan.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evolt 360 Scanner Section -->
+  <div class="p-4 md:w-1/2 fade-in fade-in-2">
+    <div class="h-full overflow-hidden bg-white rounded-md relative">
+     
+      <!-- Video Element -->
+      <video id="evolt-video" class="w-full object-cover object-center h-320 opacity-0 transition-opacity duration-700" 
+        autoplay muted loop playsinline>
+        <source src="assets/evolt.mp4" type="video/mp4">
+      </video>
+
+      <div class="p-4 relative z-10">
+        <h1 class="text-brand text-3xl title-font font-medium mb-1">EVOLT 360 SCANNER</h1>
+        <div class="h-1 w-10 bg-brand mb-4"></div>
+        <div>
+          <p class="mb-3 text-xl text-justify text-brand-grey">
+            At Re-Shape we pride ourselves on having the best equipment and technology. Our Evolt360 body scanner provides all the in-depth details we need to create your plan. Regular scans will hold you accountable to your goals and help your coaches make the changes necessary along the way. Your scan results will include your body fat and visceral fat measurements, muscle mass percentage, hydration, nutrient deficiency, and more.
+          </p>
         </div>
       </div>
     </div>
+  </div>
 
+  <!-- Transformation Coaches Section -->
+  <div class="p-4 md:w-1/2 fade-in fade-in-3">
+    <div class="h-full overflow-hidden bg-white rounded-md relative">
 
-
+      <!-- Video Element -->
+      <video id="evolt-video" class="w-full object-cover object-center h-320 opacity-0 transition-opacity duration-700" 
+      autoplay muted loop playsinline>
+      <source src="assets/training.mp4" type="video/mp4">
+    </video>
     
+      <div class="p-4 relative z-10">
+        <h1 class="text-brand text-3xl title-font font-medium mb-1">TRANSFORMATION COACHES</h1>
+        <div class="h-1 w-10 bg-brand mb-4"></div>
+        <div>
+          <p class="mb-3 text-xl text-justify text-brand-grey">
+            At Re-Shape, we have a team of transformation coaches who are focused on helping you transform your body, health, and fitness for good. Unlike personal trainers at commercial gyms who are not necessarily trained to help you with your goals, but to just deliver sessions that may or may not be effective. Training is a skill and it is best passed on by passionate professionals who care about the small details of what will make your bespoke, results-driven program a success.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+
+
+
+    </div>
 
 
 
@@ -412,10 +361,6 @@
   <section class="bg-brand-grey">
     <!-- Video 1 (BEAT45) -->
     <div class="h-[75vh] md:h-[75vh] lg:h-[75vh] w-full relative fade-in fade-in-1">
-      <!-- Blurhash Placeholder -->
-      <div id="blurhash-placeholder-beat" class="absolute inset-0 w-full h-full bg-cover bg-center" 
-           style="background-image: url('./assets/canvas/beat_blur.webp');"></div>
-  
       <!-- Video Element -->
       <video id="beat-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline>
         <source src="assets/beat.mp4" type="video/mp4">
@@ -434,10 +379,6 @@
   
     <!-- Video 2 (Predators) -->
     <div class="h-[75vh] md:h-[75vh] lg:h-[75vh] w-full relative mt-3 fade-in fade-in-1">
-      <!-- Blurhash Placeholder -->
-      <div id="blurhash-placeholder-predators" class="absolute inset-0 w-full h-full bg-cover bg-center" 
-           style="background-image: url('./assets/canvas/predators_blur.webp');"></div>
-  
       <!-- Video Element -->
       <video id="predators-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline>
         <source src="assets/predators.mp4" type="video/mp4">
@@ -456,10 +397,6 @@
   
     <!-- Video 3 (Hybrid) -->
     <div class="h-[75vh] md:h-[75vh] lg:h-[75vh] w-full relative mt-3 fade-in fade-in-1">
-      <!-- Blurhash Placeholder -->
-      <div id="blurhash-placeholder-hybrid" class="absolute inset-0 w-full h-full bg-cover bg-center" 
-           style="background-image: url('./assets/canvas/hybrid_blur.webp');"></div>
-  
       <!-- Video Element -->
       <video id="hybrid-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline>
         <source src="assets/hybrid.mp4" type="video/mp4">
@@ -478,10 +415,7 @@
   
     <!-- Video 4 (Reshape) -->
     <div class="h-[75vh] md:h-[75vh] lg:h-[75vh] w-full relative mt-3 fade-in fade-in-1">
-      <!-- Blurhash Placeholder -->
-      <div id="blurhash-placeholder-reshape" class="absolute inset-0 w-full h-full bg-cover bg-center" 
-           style="background-image: url('./assets/canvas/reshape_blur.webp');"></div>
-  
+     
       <!-- Video Element -->
       <video id="reshape-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline>
         <source src="assets/reshape.mp4" type="video/mp4">
@@ -500,9 +434,6 @@
 
       <!-- Video 5 (Elite) -->
       <div class="h-[75vh] md:h-[75vh] lg:h-[75vh] w-full relative mt-3 fade-in fade-in-1">
-        <!-- Blurhash Placeholder -->
-        <div id="blurhash-placeholder-elite" class="absolute inset-0 w-full h-full bg-cover bg-center" 
-             style="background-image: url('./assets/canvas/elite_blur.webp');"></div>
     
         <!-- Video Element -->
         <video id="elite-video" class="inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700" autoplay muted loop playsinline>
@@ -820,37 +751,59 @@
 
   
 </body>
- <!-- Include your Blurhash library -->
- <script src="js/blurhash_pure_js_port.min.js"></script>
+    <!-- Scripts -->
+    <script src="js/jquery.min.js"></script> <!-- jQuery for JavaScript plugins -->
+    <script src="js/scripts.js"></script> <!-- Custom scripts -->
+    <script data-cfasync="false" src="js/blurhash_pure_js_port.min.js"></script><!-- BlurHash scripts -->
+     <!-- Your script without 'type="module"' -->
+     <script>
+      // Wait for the window to load completely
+      window.addEventListener("load", function () {
+        // Verify if 'blurhash' is defined
+        console.log("blurhash:", blurhash);
 
- <!-- Your script without 'type="module"' -->
- <script>
-  // Function to apply Blurhash to canvas placeholders
-  window.addEventListener("load", function () {
-    const blurhashMappings = [
-      { id: 'blurhash-nutrition', blurhashString: 'L5H2EC=PM+yV0g-mq.wG9c010J}I' },
-      { id: 'blurhash-evolt', blurhashString: 'L6Pj0^ay0~pIjZayt8ay0fay^6r?' },
-      { id: 'blurhash-training', blurhashString: 'L5H2EC=PM+yV0g-mq.wG9c010J}I' }
-    ];
+        // Decode the Blurhash and render it on the canvas
+        const blurhashString = "LEHV6nWB2yk8pyo0adR*.7kCMdnj";
+        const canvas = document.getElementById("blurhash-canvas");
+        const ctx = canvas.getContext("2d");
 
-    blurhashMappings.forEach(({ id, blurhashString }) => {
-      const canvas = document.getElementById(id);
-      const ctx = canvas.getContext("2d");
-      const container = canvas.parentElement;
-      const { width, height } = container.getBoundingClientRect();
-      canvas.width = width;
-      canvas.height = height;
+        // Get dimensions of the container
+        const container = document.querySelector('.video-wrapper');
+        const rect = container.getBoundingClientRect();
+        const width = canvas.width = rect.width;
+        const height = canvas.height = rect.height;
 
-      const decodeWidth = 32;
-      const decodeHeight = 32;
+        console.log('Canvas dimensions:', width, height);
 
-      const pixels = blurhash.decode(blurhashString, decodeWidth, decodeHeight);
+        // Decode at a smaller size for performance, then scale up
+        const decodeWidth = 32; // Adjust for decoding quality/performance
+        const decodeHeight = 32;
 
-      const imageData = new ImageData(pixels, decodeWidth, decodeHeight);
-      ctx.putImageData(imageData, 0, 0);
-      ctx.drawImage(canvas, 0, 0, decodeWidth, decodeHeight, 0, 0, width, height);
-    });
-  });
-</script>
+        // Decode the Blurhash using the global 'blurhash' object
+        const pixels = blurhash.decode(
+          blurhashString,
+          decodeWidth,
+          decodeHeight
+        );
 
-</html>
+        // Create ImageData and put it on the canvas
+        const imageData = new ImageData(pixels, decodeWidth, decodeHeight);
+        ctx.putImageData(imageData, 0, 0);
+
+        // Scale the decoded image to fill the canvas
+        ctx.drawImage(
+          canvas,
+          0,
+          0,
+          decodeWidth,
+          decodeHeight,
+          0,
+          0,
+          width,
+          height
+        );
+
+        console.log("Blurhash decoding complete");
+      });
+    </script>
+    </html>
