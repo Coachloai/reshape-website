@@ -44,7 +44,7 @@
         muted
         loop
         playsinline
-        onloadeddata="this.style.opacity = '1'; document.getElementById('blurhash-canvas').style.display = 'none';"
+        onloadeddata="this.style.opacity = '0.5'; document.getElementById('blurhash-canvas').style.display = 'none';"
       >
         <source
           src="https://reshapeclub.com/assets/home.mov"
@@ -54,8 +54,8 @@
      
     </div>
 
-    <!-- Include your Blurhash library -->
-    <script src="js/blurhash_pure_js_port.min.js"></script>
+    <!-- Include your Blurhash library with Rocket Loader disabled -->
+    <script data-cfasync="false" src="js/blurhash_pure_js_port.min.js"></script>
 
     <!-- Your script without 'type="module"' -->
     <script>
