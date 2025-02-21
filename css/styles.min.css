@@ -31,3 +31,9 @@
     object-fit: cover; /* Ensure the video maintains aspect ratio and covers the space */
   }
   
+  .lead-hero-section{
+    background-image: url('../assets/temp_images/hero.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
