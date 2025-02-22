@@ -32,7 +32,6 @@
   }
   
   .lead-hero-section{
-    /* background-image: url('../assets/temp_images/hero.jpg'); */
     background:black;
     background-size: cover;
     background-position: center;
@@ -40,6 +39,7 @@
     
   }
 
-  /* .jotform-block{
-    transform:translate(0, -5%)
-  } */
+  .lead-video-container{
+    position:relative;
+    bottom:-18%;
+  }
