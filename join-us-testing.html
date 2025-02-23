@@ -180,7 +180,7 @@
   </nav>
   <!-- end of navigation -->
  <!-- Hero Section -->
- <section class="bg-gray-50 min-h-screen px-6 lead-hero-section bg-black bg-opacity-90">
+ <section class="bg-gray-50 min-h-screen px-6 lead-hero-section bg-black bg-opacity-90 py-6">
   <!-- Hero Text Section -->
   <div class="home-bnr-section mb-8 uppercase text-center pt-20 md:pt-40">
     <p class="text-4xl md:text-5xl text-white">Transform your <span class="text-brand">body</span></p>
@@ -188,12 +188,11 @@
   </div> 
 
   <!-- Video & Form Container -->
-  <div class="flex items-center justify-center">
+  <div class="flex justify-center">
     <div class="container grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 px-4 md:px-0">
       
       <!-- Left: YouTube Video (Fixed Larger Size) -->
-      <div class="flex justify-center w-full lead-video-container">
-        <div class="w-full max-w-3xl"> <!-- Increased max-width -->
+      <div class="w-full flex flex-col items-center lead-video-container">
           <div class="relative w-full" style="padding-top: 56.25%;"> <!-- 16:9 Aspect Ratio Fix -->
             <iframe class="absolute top-0 left-0 w-full h-full rounded-lg"
               src="https://www.youtube.com/embed/x_LzFYlLe24?si=VR2NHXCO7WArb2rB&rel=0&modestbranding=1&showinfo=0&controls=1" 
@@ -204,11 +203,11 @@
               allowfullscreen>
             </iframe>
           </div>
-        </div>
       </div>
 
-      <!-- Right: JotForm -->
-      <div class="w-full max-w-lg">
+      <!-- Right: JotForm (Fixed Height) -->
+      <div class="w-full flex flex-col items-center">
+        <div class="w-full max-w-lg">
         <iframe id="JotFormIFrame-232603111428343" 
           title="Colchester Waiting List - Website" 
           onload="window.parent.scrollTo(0,0)" 
@@ -216,15 +215,18 @@
           allow="geolocation; microphone; camera; fullscreen" 
           src="https://form.jotform.com/232603111428343" 
           frameborder="0" 
-          class="w-full h-[500px] rounded-lg shadow-lg border-none" 
-          scrolling="no">
+          class="w-full rounded-lg shadow-lg border-none" 
+          scrolling="no" style="
+          min-width: 100%;
+          height:439px;
+          border:none;">
         </iframe> 
-        <script src='https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js'></script> 
+        <script src='https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js'></script>
         <script>
           window.jotformEmbedHandler("iframe[id='JotFormIFrame-232603111428343']", "https://form.jotform.com/");
-        </script> 
+        </script>
       </div>
-
+</
     </div>
   </div>
 </section>

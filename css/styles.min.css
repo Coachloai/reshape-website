@@ -41,5 +41,16 @@
 
   .lead-video-container{
     position:relative;
-    bottom:-18%;
+    bottom:-5%;
   }
+
+  iframe#JotFormIFrame-232603111428343 {
+    height: 439px !important;
+    min-height: 439px !important;
+    max-height: 439px !important;
+    overflow: hidden;
+  }
+  .w-fit {
+    width: -moz-fit-content;
+    width: fit-content;
+}
