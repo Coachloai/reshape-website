@@ -32,7 +32,6 @@
   }
   
   .lead-hero-section{
-    background:black;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -58,4 +57,7 @@
   .w-fit {
     width: -moz-fit-content;
     width: fit-content;
+}
+.h-450{
+    height: 450px;
 }

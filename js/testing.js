@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Content Loaded Successfully>>>>>>>");
 
     const videoHandlers = [
         // { videoId: '#experience-video', blurId: '#blurhash-placeholder-experience' },
