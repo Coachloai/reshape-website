@@ -32,14 +32,30 @@
   }
   
   .lead-hero-section{
-    background-image: url('../assets/temp_images/hero.jpg');
+    background:black;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    
   }
 .h-75{
     height: 75%;
 }
 .w-75{
     width: 75%;
+}
+  .lead-video-container{
+    position:relative;
+    bottom:-5%;
+  }
+
+  iframe#JotFormIFrame-232603111428343 {
+    height: 439px !important;
+    min-height: 439px !important;
+    max-height: 439px !important;
+    overflow: hidden;
+  }
+  .w-fit {
+    width: -moz-fit-content;
+    width: fit-content;
 }
