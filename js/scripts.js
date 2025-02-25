@@ -300,6 +300,12 @@ $acceptButton.on('click', function() {
 			e.preventDefault();
 	});
 
+	   $(".scroll-to-booking").click(function () {
+      $("html, body").animate({
+        scrollTop: $("#booking-section").offset().top
+      }, 800); // 800ms smooth scroll
+    });
+
 	
 
 })(jQuery);
