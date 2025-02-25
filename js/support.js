@@ -21,23 +21,31 @@ document.getElementById("contactForm").addEventListener("submit", function(event
     phoneError.classList.add("hidden");
     messageError.classList.add("hidden");
 
+    // Regular expressions for validation
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phonePattern = /^\+?\d{10,15}$/; // Allows 10-15 digits, optional country code (+)
+
     // Validation checks
     if (!name) {
+        nameError.textContent = "Full Name is required.";
         nameError.classList.remove("hidden");
         isValid = false;
     }
 
-    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+    if (!email || !emailPattern.test(email)) {
+        emailError.textContent = "Enter a valid email address (e.g., user@example.com).";
         emailError.classList.remove("hidden");
         isValid = false;
     }
 
-    if (!phone) {
+    if (!phone || !phonePattern.test(phone)) {
+        phoneError.textContent = "Enter a valid phone number";
         phoneError.classList.remove("hidden");
         isValid = false;
     }
 
     if (!message) {
+        messageError.textContent = "Message is required.";
         messageError.classList.remove("hidden");
         isValid = false;
     }

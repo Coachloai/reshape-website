@@ -61,6 +61,11 @@
 .h-450{
     height: 450px;
 }
+
 html {
-    scroll-behavior: smooth;
-  }
+scroll-behavior: smooth;
+}
+
+.fs-18{
+font-size: 18px;
+}
