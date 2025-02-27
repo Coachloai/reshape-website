@@ -108,32 +108,32 @@
 		});
 
 		// Open the Chatbot when Clicked
-		window.addEventListener('mouseover', initLandbot, { once: true });
-		window.addEventListener('touchstart', initLandbot, { once: true });
+		// window.addEventListener('mouseover', initLandbot, { once: true });
+		// window.addEventListener('touchstart', initLandbot, { once: true });
 
-		var myLandbot;
+		// var myLandbot;
 
-		function initLandbot() {
-			if (!myLandbot) {
-				var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
-				s.addEventListener('load', function () {
-					myLandbot = new Landbot.Popup({
-						configUrl: 'https://storage.googleapis.com/landbot.pro/v3/H-2143862-SFZLSX1Y17KLVYW9/index.json',
-					});
+		// function initLandbot() {
+		// 	if (!myLandbot) {
+		// 		var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;
+		// 		s.addEventListener('load', function () {
+		// 			myLandbot = new Landbot.Popup({
+		// 				configUrl: 'https://storage.googleapis.com/landbot.pro/v3/H-2143862-SFZLSX1Y17KLVYW9/index.json',
+		// 			});
 
-					var buttonsOpen = document.querySelectorAll(".open-bot");
-					buttonsOpen.forEach(function (button) {
-						button.addEventListener('click', function (event) {
-							event.preventDefault();
-							myLandbot.open();
-						});
-					});
-				});
-				s.src = 'https://cdn.landbot.io/landbot-3/landbot-3.0.0.js';
-				var x = document.getElementsByTagName('script')[0];
-				x.parentNode.insertBefore(s, x);
-			}
-		}
+		// 			var buttonsOpen = document.querySelectorAll(".open-bot");
+		// 			buttonsOpen.forEach(function (button) {
+		// 				button.addEventListener('click', function (event) {
+		// 					event.preventDefault();
+		// 					myLandbot.open();
+		// 				});
+		// 			});
+		// 		});
+		// 		s.src = 'https://cdn.landbot.io/landbot-3/landbot-3.0.0.js';
+		// 		var x = document.getElementsByTagName('script')[0];
+		// 		x.parentNode.insertBefore(s, x);
+		// 	}
+		// }
 
 		//Adding Repuso API Code Here
 		var script = document.createElement("script"); script.type = "module"; script.src = "https://repuso.com/widgets/2.0/rw-widget-masonry.js"; document.getElementsByTagName("head")[0].appendChild(script);
