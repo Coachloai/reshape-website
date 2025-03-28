@@ -48,12 +48,6 @@
     bottom:-5%;
   }
 
-  .jotform-iframe {
-    height: 439px !important;
-    min-height: 439px !important;
-    max-height: 439px !important;
-    overflow: hidden;
-  }
   .w-fit {
     width: -moz-fit-content;
     width: fit-content;
@@ -69,3 +63,10 @@ scroll-behavior: smooth;
 .fs-18{
 font-size: 18px;
 }
+
+.jotform-iframe {
+    height: 439px !important;
+    min-height: 439px !important;
+    max-height: 439px !important;
+    overflow: hidden;
+  }
