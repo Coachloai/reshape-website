@@ -70,3 +70,6 @@ font-size: 18px;
     max-height: 439px !important;
     overflow: hidden;
   }
+  .list-style-inside{
+    list-style: inside;
+  }
