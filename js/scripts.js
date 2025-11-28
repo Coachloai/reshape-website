@@ -38,32 +38,36 @@
 		function setupVideoWithPlaceholder(videoId, placeholderId) {
 			const $video = $('#' + videoId);
 			const $placeholder = $('#' + placeholderId);
-
+		  
 			if (!$video.length) return;
-
+		  
 			const videoEl = $video.get(0);
 			if (!videoEl) return;
-
+		  
 			function showVideo() {
-				// Fade video in (CSS has transition on opacity)
-				$video.css('opacity', '1');
-
-				// Fade placeholder out if it exists
-				if ($placeholder.length) {
-					$placeholder.fadeOut(700, function () {
-						$(this).hide();
-					});
-				}
+			  // Try to start playback
+			  videoEl.play().catch(() => {
+				// If autoplay is blocked, at least fade the first frame in
+				console.warn('Autoplay blocked, showing video frame only');
+			  });
+		  
+			  $video.css('opacity', '1');
+		  
+			  if ($placeholder.length) {
+				$placeholder.fadeOut(700, function () {
+				  $(this).hide();
+				});
+			  }
 			}
-
-			// If already buffered enough (from cache etc.)
+		  
 			if (videoEl.readyState >= 2) {
-				showVideo();
+			  showVideo();
 			} else {
-				videoEl.addEventListener('loadeddata', showVideo);
-				videoEl.addEventListener('canplay', showVideo);
+			  videoEl.addEventListener('loadeddata', showVideo);
+			  videoEl.addEventListener('canplay', showVideo);
 			}
-		}
+		  }
+		  
 
 		// Home hero video
 		setupVideoWithPlaceholder('home-video', 'blurhash-placeholder-home');
