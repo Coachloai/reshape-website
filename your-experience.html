@@ -138,12 +138,48 @@
       </a>
 
       <button
-        class="background-transparent rounded text-xl leading-none hover:no-underline focus:no-underline lg:hidden lg:text-gray-400"
-        type="button" data-toggle="offcanvas" aria-label="toggle-menu">
-        <span class="navbar-toggler-icon inline-block w-8 h-8 align-middle">
+      class="background-transparent rounded text-xl leading-none hover:no-underline focus:no-underline lg:hidden lg:text-gray-400"
+      type="button" data-toggle="offcanvas" aria-label="toggle-menu">
+      <span class="navbar-toggler-icon inline-block w-8 h-8 align-middle">
           <i class="fa fa-bars" aria-hidden="true"></i>
-        </span>
-      </button>
+      </span>
+  </button>
+
+
+      <div class="navbar-collapse offcanvas-collapse lg:flex lg:flex-grow lg:items-center"
+                id="navbarsExampleDefault">
+                <ul
+                    class="pl-0 mt-24 md:mt-40 md:mb-2 m-auto flex flex-col list-none lg:mt-0 lg:mb-0 lg:flex-row text-3xl">
+                    <li class="navbar-item">
+                        <a class="nav-link page-scroll text-center text-white" href="our-mission.html">OUR MISSION</a>
+                    </li>
+                    <li class="navbar-item">
+                        <a class="nav-link page-scroll text-center text-white" href="your-experience.html">YOUR
+                            EXPERIENCE</a>
+                    </li>
+                    <li class="navbar-item">
+                        <a class="nav-link page-scroll text-center text-white" href="results.html">RESULTS</a>
+                    </li>
+                    <li class="navbar-item">
+                        <a class="nav-link page-scroll text-center text-white" href="blog.html">BLOGS</a>
+                    </li>
+                    <li class="navbar-item">
+                        <a class="nav-link page-scroll text-center text-white" href="faqs.html">FAQs</a>
+                    </li>
+                    <li class="navbar-item">
+                        <a class="nav-link page-scroll text-center text-white"
+                            href="https://team.reshapeclub.com/">LOGIN</a>
+                    </li>
+                </ul>
+                <span class="block lg:ml-3.5 text-center">
+                    <button type="button" onclick="window.location.href='consultation.html'"
+                        class="text-white bg-brand hover:bg-orange-600 focus:outline-none focus:ring-1 font-medium rounded-full text-large p-4 px-12 py-3 text-center dark:focus:ring-orange-600">
+                        <span class="relative text-white">WAITING LIST</span>
+                    </button>
+
+
+                </span>
+            </div> 
 
       <div class="navbar-collapse offcanvas-collapse lg:flex lg:flex-grow lg:items-center" id="navbarsExampleDefault">
         <ul class="pl-0 mt-24 md:mt-40 md:mb-2 m-auto flex flex-col list-none lg:mt-0 lg:mb-0 lg:flex-row text-3xl">
@@ -179,7 +215,7 @@
           <span class="relative text-white">WAITING LIST</span>
           </button>
         </span>
-      </div> <!-- end of navbar-collapse -->
+      </div> 
     </div> <!-- end of container -->
   </nav>
   <!-- end of navigation -->

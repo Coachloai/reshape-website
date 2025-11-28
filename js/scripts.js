@@ -217,11 +217,26 @@
 	// ===========================
 	// Menu Toggle for small devices
 	// ===========================
-	$('[data-toggle="offcanvas"], .nav-link:not(.dropdown-toggle)').on("click", function () {
-	  $(this).find("i").toggleClass("fa-bars fa-times");
-	  $(".offcanvas-collapse").toggleClass("open");
-	});
-  
+	$(function () {
+		var $toggle = $('[data-toggle="offcanvas"]');
+		var $offcanvas = $('.offcanvas-collapse');
+		var $icon = $toggle.find('i');
+	  
+		// Open / close when hamburger is clicked
+		$toggle.on('click', function (e) {
+		  e.preventDefault();
+		  $offcanvas.toggleClass('open');
+		  $icon.toggleClass('fa-bars fa-times');
+		});
+	  
+		// Close menu when any nav link is clicked (on mobile)
+		$('.nav-link').on('click', function () {
+		  if ($offcanvas.hasClass('open')) {
+			$offcanvas.removeClass('open');
+			$icon.removeClass('fa-times').addClass('fa-bars');
+		  }
+		});
+	  });
 	// Hover for dropdown in desktop
 	function toggleDropdown(e) {
 	  const _d = $(e.target).closest(".dropdown"),
