@@ -27,6 +27,13 @@
 		}
 	  }
 	});
+	    //CTA Button Text Content
+		const WAITING_LIST_TEXT = "APPLY NOW"; 
+
+		document.addEventListener("DOMContentLoaded", () => {
+		document.querySelectorAll(".js-waiting-list-text")
+		.forEach((el) => (el.textContent = WAITING_LIST_TEXT));
+		});
   
 	document.addEventListener("DOMContentLoaded", () => {
 	  // ===========================
