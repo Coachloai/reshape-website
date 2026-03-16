@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Re-Shape — Leads Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000000;
+      --bg-card: #0A0A0A;
+      --bg-card-hover: #111111;
+      --accent: #ED5C25;
+      --accent-glow: rgba(237, 92, 37, 0.3);
+      --accent-hover: #F06B3A;
+      --accent-soft: rgba(237, 92, 37, 0.08);
+      --text: #FFFFFF;
+      --text-secondary: #999999;
+      --text-muted: rgba(255, 255, 255, 0.4);
+      --border: rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(255, 255, 255, 0.12);
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --success: #2ECC71;
+      --warning: #F39C12;
+      --danger: #E74C3C;
+      --font: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* === LOGIN OVERLAY === */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .login-overlay.hidden { display: none; }
+
+    .login-box {
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+    }
+
+    .login-logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 16px;
+      outline: none;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .login-input:focus {
+      border-color: var(--accent);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: var(--font);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+
+    .login-btn:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 0 30px var(--accent-glow);
+    }
+
+    .login-error {
+      color: var(--danger);
+      font-size: 13px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .login-error.visible { display: block; }
+
+    /* === DASHBOARD LAYOUT === */
+    .dashboard { display: none; }
+    .dashboard.active { display: block; }
+
+    .dash-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .dash-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .dash-title span { color: var(--accent); }
+
+    .logout-btn {
+      padding: 8px 20px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-family: var(--font);
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .logout-btn:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .dash-body {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    /* === FILTERS === */
+    .filters-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 32px;
+      align-items: flex-end;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .filter-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .filter-input, .filter-select {
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      min-width: 140px;
+    }
+
+    .filter-input:focus, .filter-select:focus {
+      border-color: var(--accent);
+    }
+
+    .filter-select option {
+      background: #111;
+      color: var(--text);
+    }
+
+    .filter-search {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .filter-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .filter-btn-apply {
+      background: var(--accent);
+      color: white;
+    }
+
+    .filter-btn-apply:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .filter-btn-clear {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .filter-btn-clear:hover {
+      border-color: var(--text-secondary);
+      color: var(--text);
+    }
+
+    .filter-btn-export {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .filter-btn-export:hover {
+      background: var(--accent-soft);
+    }
+
+    /* === KPI CARDS === */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .kpi-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .kpi-card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .kpi-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.1;
+    }
+
+    .kpi-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    .kpi-delta {
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .kpi-delta.up { color: var(--success); }
+    .kpi-delta.down { color: var(--danger); }
+
+    /* === CHARTS === */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .chart-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .chart-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      height: 250px;
+    }
+
+    .chart-wrap canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* === LEADS TABLE === */
+    .table-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .table-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .table-count {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      transition: color 0.2s;
+    }
+
+    th:hover { color: var(--accent); }
+
+    th .sort-arrow {
+      margin-left: 4px;
+      opacity: 0.4;
+    }
+
+    th.sorted .sort-arrow { opacity: 1; color: var(--accent); }
+
+    td {
+      padding: 14px 16px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .td-name { font-weight: 600; }
+
+    .td-email {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .td-location {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .td-date {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .view-btn {
+      padding: 6px 14px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-family: var(--font);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .view-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .page-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-family: var(--font);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .page-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .page-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .page-info {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* === MODAL === */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      background: #0A0A0A;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 32px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .modal-section {
+      margin-bottom: 20px;
+    }
+
+    .modal-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .modal-field {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .modal-field-label {
+      color: var(--text-secondary);
+      min-width: 140px;
+    }
+
+    .modal-field-value {
+      text-align: right;
+      color: var(--text);
+      max-width: 300px;
+      word-break: break-word;
+    }
+
+    .modal-field-value a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .modal-field-value a:hover {
+      text-decoration: underline;
+    }
+
+    /* === LOADING STATE === */
+    .loading-spinner {
+      text-align: center;
+      padding: 60px;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* === EMPTY STATE === */
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      opacity: 0.4;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 1024px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .dash-body { padding: 16px; }
+      .dash-header { padding: 16px; }
+      .filters-bar { flex-direction: column; }
+      .filter-group { width: 100%; }
+      .filter-input, .filter-select { width: 100%; }
+      .filter-search { min-width: unset; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .kpi-value { font-size: 28px; }
+      .login-box { padding: 32px 24px; margin: 16px; }
+    }
+
+    @media (max-width: 480px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- === LOGIN OVERLAY === -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+      <div class="login-logo">Re-Shape</div>
+      <div class="login-subtitle">Leads Dashboard</div>
+      <input type="password" class="login-input" id="loginPassword" placeholder="Enter dashboard password" autofocus>
+      <button class="login-btn" id="loginBtn">Log In</button>
+      <div class="login-error" id="loginError">Incorrect password. Try again.</div>
+    </div>
+  </div>
+
+  <!-- === DASHBOARD === -->
+  <div class="dashboard" id="dashboard">
+    <header class="dash-header">
+      <div class="dash-title">Re-Shape <span>Leads Dashboard</span></div>
+      <button class="logout-btn" id="logoutBtn">Log Out</button>
+    </header>
+
+    <div class="dash-body">
+
+      <!-- FILTERS -->
+      <div class="filters-bar">
+        <div class="filter-group">
+          <span class="filter-label">From</span>
+          <input type="date" class="filter-input" id="filterDateFrom">
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">To</span>
+          <input type="date" class="filter-input" id="filterDateTo">
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Form</span>
+          <select class="filter-select" id="filterForm">
+            <option value="">All Forms</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Location</span>
+          <select class="filter-select" id="filterLocation">
+            <option value="">All Locations</option>
+            <option value="Colchester">Colchester</option>
+            <option value="Ipswich">Ipswich</option>
+          </select>
+        </div>
+        <div class="filter-group filter-search">
+          <span class="filter-label">Search</span>
+          <input type="text" class="filter-input" id="filterSearch" placeholder="Search name or email...">
+        </div>
+        <button class="filter-btn filter-btn-apply" id="applyFilters">Apply</button>
+        <button class="filter-btn filter-btn-clear" id="clearFilters">Clear</button>
+        <button class="filter-btn filter-btn-export" id="exportCSV">Export CSV</button>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-value" id="kpiTotal">—</div>
+          <div class="kpi-label">Total Leads</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="kpiWeek">—</div>
+          <div class="kpi-label">This Week</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="kpiQuality">—</div>
+          <div class="kpi-label">Quality %</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="kpiAge">—</div>
+          <div class="kpi-label">Avg Age</div>
+        </div>
+      </div>
+
+      <!-- CHARTS -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">Leads Over Time</div>
+          <div class="chart-wrap"><canvas id="chartTimeline"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Referral Sources</div>
+          <div class="chart-wrap"><canvas id="chartReferral"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Location Split</div>
+          <div class="chart-wrap"><canvas id="chartLocation"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Gender Split</div>
+          <div class="chart-wrap"><canvas id="chartGender"></canvas></div>
+        </div>
+      </div>
+
+      <!-- LEADS TABLE -->
+      <div class="table-card">
+        <div class="table-header-bar">
+          <div class="table-title">All Leads</div>
+          <div class="table-count" id="tableCount"></div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th data-sort="index"># <span class="sort-arrow">&#x25B2;</span></th>
+                <th data-sort="name">Name <span class="sort-arrow">&#x25B2;</span></th>
+                <th data-sort="email">Email <span class="sort-arrow">&#x25B2;</span></th>
+                <th data-sort="phone">Phone <span class="sort-arrow">&#x25B2;</span></th>
+                <th data-sort="location">Location <span class="sort-arrow">&#x25B2;</span></th>
+                <th data-sort="form_name">Form <span class="sort-arrow">&#x25B2;</span></th>
+                <th data-sort="created_at">Date <span class="sort-arrow">&#x25B2;</span></th>
+                <th>View</th>
+              </tr>
+            </thead>
+            <tbody id="leadsTableBody">
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <button class="page-btn" id="prevPage">&#x2190; Prev</button>
+          <span class="page-info" id="pageInfo"></span>
+          <button class="page-btn" id="nextPage">Next &#x2192;</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- === LEAD DETAIL MODAL === -->
+  <div class="modal-overlay" id="leadModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Lead Details</div>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- === SCRIPTS === -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <script>
+  (function() {
+    'use strict';
+
+    // ============================================================
+    // CONFIG — Replace with your Supabase credentials
+    // ============================================================
+    var SUPABASE_URL = 'https://lvizldmdficsfpgegehp.supabase.co';
+    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXpsZG1kZmljc2ZwZ2VnZWhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2OTk4NDQsImV4cCI6MjA4OTI3NTg0NH0.72wHbZaTvqNzW6DTb6Ae1vi9QpOg_-KiEO-Jjm9mn0k';
+
+    // Dashboard password — change this to your preferred password
+    var DASHBOARD_PASSWORD = 'reshape2026';
+
+    var sb = null;
+    if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+      sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+
+    // ============================================================
+    // STATE
+    // ============================================================
+    var allLeads = [];
+    var filteredLeads = [];
+    var currentPage = 1;
+    var perPage = 20;
+    var sortField = 'created_at';
+    var sortDir = 'desc';
+
+    // Chart instances
+    var charts = {};
+
+    // ============================================================
+    // AUTH — Simple Password Gate
+    // ============================================================
+    var loginOverlay = document.getElementById('loginOverlay');
+    var dashboard = document.getElementById('dashboard');
+    var loginBtn = document.getElementById('loginBtn');
+    var loginPassword = document.getElementById('loginPassword');
+    var loginError = document.getElementById('loginError');
+    var logoutBtn = document.getElementById('logoutBtn');
+
+    function checkAuth() {
+      if (sessionStorage.getItem('dash_auth') === 'true') {
+        showDashboard();
+      }
+    }
+
+    function showDashboard() {
+      loginOverlay.classList.add('hidden');
+      dashboard.classList.add('active');
+      loadLeads();
+    }
+
+    loginBtn.addEventListener('click', function() {
+      if (loginPassword.value === DASHBOARD_PASSWORD) {
+        sessionStorage.setItem('dash_auth', 'true');
+        loginError.classList.remove('visible');
+        showDashboard();
+      } else {
+        loginError.classList.add('visible');
+        loginPassword.value = '';
+        loginPassword.focus();
+      }
+    });
+
+    loginPassword.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') loginBtn.click();
+    });
+
+    logoutBtn.addEventListener('click', function() {
+      sessionStorage.removeItem('dash_auth');
+      dashboard.classList.remove('active');
+      loginOverlay.classList.remove('hidden');
+      loginPassword.value = '';
+      loginPassword.focus();
+    });
+
+    // ============================================================
+    // DATA FETCHING
+    // ============================================================
+    async function loadLeads() {
+      if (!sb) {
+        showDemoData();
+        return;
+      }
+
+      var body = document.getElementById('leadsTableBody');
+      body.innerHTML = '<tr><td colspan="8"><div class="loading-spinner"><div class="spinner"></div>Loading leads...</div></td></tr>';
+
+      try {
+        var { data, error } = await sb.from('leads').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        allLeads = data || [];
+      } catch (err) {
+        console.error('Error loading leads:', err);
+        allLeads = [];
+      }
+
+      populateFormFilter();
+      applyAllFilters();
+    }
+
+    function showDemoData() {
+      // Generate demo leads so the dashboard is usable without Supabase
+      var names = [
+        { first_name: 'Zoe', last_name: 'Turner', gender: 'Female', email: 'zoe@example.com', phone: '+44 7700 100001', age: 42, location: 'Colchester' },
+        { first_name: 'Matt', last_name: 'Davies', gender: 'Male', email: 'matt@example.com', phone: '+44 7700 100002', age: 38, location: 'Ipswich' },
+        { first_name: 'Kimberlee', last_name: 'Jones', gender: 'Female', email: 'kim@example.com', phone: '+44 7700 100003', age: 34, location: 'Colchester' },
+        { first_name: 'Jaime', last_name: 'Roberts', gender: 'Female', email: 'jaime@example.com', phone: '+44 7700 100004', age: 45, location: 'Colchester' },
+        { first_name: 'Tom', last_name: 'Clark', gender: 'Male', email: 'tom@example.com', phone: '+44 7700 100005', age: 29, location: 'Ipswich' },
+        { first_name: 'Sarah', last_name: 'Williams', gender: 'Female', email: 'sarah@example.com', phone: '+44 7700 100006', age: 31, location: 'Colchester' },
+        { first_name: 'James', last_name: 'Brown', gender: 'Male', email: 'james@example.com', phone: '+44 7700 100007', age: 27, location: 'Ipswich' },
+        { first_name: 'Emma', last_name: 'Wilson', gender: 'Female', email: 'emma@example.com', phone: '+44 7700 100008', age: 36, location: 'Colchester' }
+      ];
+
+      var referrals = ['Social Media', 'From A Friend', 'Google Search', 'Online Article'];
+      var timelines = [['3 months'], ['6 months'], ['12 months'], ['3 months', '6 months']];
+
+      allLeads = [];
+      for (var i = 0; i < 48; i++) {
+        var n = names[i % names.length];
+        var daysAgo = Math.floor(Math.random() * 60);
+        var d = new Date();
+        d.setDate(d.getDate() - daysAgo);
+
+        allLeads.push({
+          id: 'demo-' + i,
+          created_at: d.toISOString(),
+          form_name: i % 5 === 0 ? 'Facebook Campaign' : 'Main Landing Page',
+          gender: n.gender,
+          looking_for: Math.random() > 0.2 ? 'Long Term Solution' : 'Quick Fix',
+          reason: Math.random() > 0.15 ? 'I Want Results' : 'I Want A Membership Card',
+          coachability: Math.random() > 0.25 ? 'I Am Coachable And Can Follow Instructions' : 'I Feel I Have All The Answers',
+          first_name: n.first_name,
+          last_name: n.last_name + (i > 7 ? ' ' + (i - 7) : ''),
+          age: n.age + Math.floor(Math.random() * 5 - 2),
+          phone: n.phone,
+          email: n.email.replace('@', i + '@'),
+          big_goal: 'Lose weight and build confidence',
+          importance: Math.floor(Math.random() * 3) + 3,
+          ready_for_coach: Math.random() > 0.2 ? 'Yes I\'m ready to work with a transformation coach' : 'No I\'m looking for a standard gym',
+          timeline: timelines[Math.floor(Math.random() * timelines.length)],
+          willing_to_invest: Math.random() > 0.3 ? 'Yes' : 'No',
+          referral: [referrals[Math.floor(Math.random() * referrals.length)]],
+          location: n.location,
+          utm_source: null,
+          utm_campaign: null
+        });
+      }
+
+      allLeads.sort(function(a, b) { return new Date(b.created_at) - new Date(a.created_at); });
+      populateFormFilter();
+      applyAllFilters();
+    }
+
+    // ============================================================
+    // FILTERS
+    // ============================================================
+    var filterDateFrom = document.getElementById('filterDateFrom');
+    var filterDateTo = document.getElementById('filterDateTo');
+    var filterForm = document.getElementById('filterForm');
+    var filterLocation = document.getElementById('filterLocation');
+    var filterSearch = document.getElementById('filterSearch');
+
+    function populateFormFilter() {
+      var formNames = {};
+      allLeads.forEach(function(l) { if (l.form_name) formNames[l.form_name] = true; });
+      filterForm.innerHTML = '<option value="">All Forms</option>';
+      Object.keys(formNames).sort().forEach(function(name) {
+        var opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        filterForm.appendChild(opt);
+      });
+    }
+
+    function applyAllFilters() {
+      var dateFrom = filterDateFrom.value ? new Date(filterDateFrom.value + 'T00:00:00') : null;
+      var dateTo = filterDateTo.value ? new Date(filterDateTo.value + 'T23:59:59') : null;
+      var formName = filterForm.value;
+      var location = filterLocation.value;
+      var search = filterSearch.value.toLowerCase().trim();
+
+      filteredLeads = allLeads.filter(function(lead) {
+        var leadDate = new Date(lead.created_at);
+        if (dateFrom && leadDate < dateFrom) return false;
+        if (dateTo && leadDate > dateTo) return false;
+        if (formName && lead.form_name !== formName) return false;
+        if (location && lead.location !== location) return false;
+        if (search) {
+          var haystack = ((lead.first_name || '') + ' ' + (lead.last_name || '') + ' ' + (lead.email || '')).toLowerCase();
+          if (haystack.indexOf(search) === -1) return false;
+        }
+        return true;
+      });
+
+      // Sort
+      filteredLeads.sort(function(a, b) {
+        var aVal, bVal;
+        if (sortField === 'name') {
+          aVal = (a.first_name || '') + ' ' + (a.last_name || '');
+          bVal = (b.first_name || '') + ' ' + (b.last_name || '');
+        } else if (sortField === 'created_at') {
+          aVal = new Date(a.created_at);
+          bVal = new Date(b.created_at);
+        } else {
+          aVal = a[sortField] || '';
+          bVal = b[sortField] || '';
+        }
+        if (aVal < bVal) return sortDir === 'asc' ? -1 : 1;
+        if (aVal > bVal) return sortDir === 'asc' ? 1 : -1;
+        return 0;
+      });
+
+      currentPage = 1;
+      renderKPIs();
+      renderCharts();
+      renderTable();
+    }
+
+    document.getElementById('applyFilters').addEventListener('click', applyAllFilters);
+
+    document.getElementById('clearFilters').addEventListener('click', function() {
+      filterDateFrom.value = '';
+      filterDateTo.value = '';
+      filterForm.value = '';
+      filterLocation.value = '';
+      filterSearch.value = '';
+      applyAllFilters();
+    });
+
+    // ============================================================
+    // KPIs
+    // ============================================================
+    function renderKPIs() {
+      var total = filteredLeads.length;
+      document.getElementById('kpiTotal').textContent = total;
+
+      // This week
+      var weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      var thisWeek = filteredLeads.filter(function(l) { return new Date(l.created_at) >= weekAgo; }).length;
+      document.getElementById('kpiWeek').textContent = thisWeek;
+
+      // Quality % — coachable + willing to invest
+      var quality = filteredLeads.filter(function(l) {
+        return l.willing_to_invest === 'Yes' &&
+               l.coachability && l.coachability.indexOf('Coachable') !== -1;
+      }).length;
+      var qualityPct = total > 0 ? Math.round((quality / total) * 100) : 0;
+      document.getElementById('kpiQuality').textContent = qualityPct + '%';
+
+      // Avg age
+      var ages = filteredLeads.filter(function(l) { return l.age; }).map(function(l) { return l.age; });
+      var avgAge = ages.length > 0 ? Math.round(ages.reduce(function(s, a) { return s + a; }, 0) / ages.length) : 0;
+      document.getElementById('kpiAge').textContent = avgAge || '—';
+
+      document.getElementById('tableCount').textContent = total + ' lead' + (total !== 1 ? 's' : '');
+    }
+
+    // ============================================================
+    // CHARTS
+    // ============================================================
+    var chartColors = {
+      orange: '#ED5C25',
+      orangeLight: '#F06B3A',
+      orangeSoft: 'rgba(237, 92, 37, 0.2)',
+      orangeGlow: 'rgba(237, 92, 37, 0.5)',
+      white: '#FFFFFF',
+      grey: '#999999',
+      border: 'rgba(255,255,255,0.06)',
+      bg: '#0A0A0A'
+    };
+
+    Chart.defaults.color = chartColors.grey;
+    Chart.defaults.borderColor = chartColors.border;
+    Chart.defaults.font.family = "'DM Sans', sans-serif";
+
+    function renderCharts() {
+      renderTimelineChart();
+      renderReferralChart();
+      renderLocationChart();
+      renderGenderChart();
+    }
+
+    function renderTimelineChart() {
+      var ctx = document.getElementById('chartTimeline');
+      if (charts.timeline) charts.timeline.destroy();
+
+      // Group by day for last 30 days
+      var days = {};
+      var labels = [];
+      for (var i = 29; i >= 0; i--) {
+        var d = new Date();
+        d.setDate(d.getDate() - i);
+        var key = d.toISOString().split('T')[0];
+        days[key] = 0;
+        labels.push(d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }));
+      }
+
+      filteredLeads.forEach(function(l) {
+        var key = l.created_at.split('T')[0];
+        if (days.hasOwnProperty(key)) days[key]++;
+      });
+
+      var data = Object.values(days);
+
+      charts.timeline = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: data,
+            borderColor: chartColors.orange,
+            backgroundColor: chartColors.orangeSoft,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 0,
+            pointHitRadius: 10,
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { maxTicksLimit: 8, font: { size: 11 } } },
+            y: { beginAtZero: true, grid: { color: chartColors.border }, ticks: { stepSize: 1, font: { size: 11 } } }
+          }
+        }
+      });
+    }
+
+    function renderReferralChart() {
+      var ctx = document.getElementById('chartReferral');
+      if (charts.referral) charts.referral.destroy();
+
+      var counts = {};
+      filteredLeads.forEach(function(l) {
+        var refs = l.referral || [];
+        if (typeof refs === 'string') refs = [refs];
+        refs.forEach(function(r) { counts[r] = (counts[r] || 0) + 1; });
+      });
+
+      var sorted = Object.entries(counts).sort(function(a, b) { return b[1] - a[1]; });
+      var labels = sorted.map(function(e) { return e[0]; });
+      var data = sorted.map(function(e) { return e[1]; });
+
+      charts.referral = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: data,
+            backgroundColor: chartColors.orangeSoft,
+            borderColor: chartColors.orange,
+            borderWidth: 1,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { beginAtZero: true, grid: { color: chartColors.border }, ticks: { stepSize: 1, font: { size: 11 } } },
+            y: { grid: { display: false }, ticks: { font: { size: 12 } } }
+          }
+        }
+      });
+    }
+
+    function renderLocationChart() {
+      var ctx = document.getElementById('chartLocation');
+      if (charts.location) charts.location.destroy();
+
+      var counts = {};
+      filteredLeads.forEach(function(l) {
+        if (l.location) counts[l.location] = (counts[l.location] || 0) + 1;
+      });
+
+      charts.location = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(counts),
+          datasets: [{
+            data: Object.values(counts),
+            backgroundColor: [chartColors.orange, chartColors.orangeLight],
+            borderRadius: 8,
+            borderSkipped: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { font: { size: 12 } } },
+            y: { beginAtZero: true, grid: { color: chartColors.border }, ticks: { stepSize: 1, font: { size: 11 } } }
+          }
+        }
+      });
+    }
+
+    function renderGenderChart() {
+      var ctx = document.getElementById('chartGender');
+      if (charts.gender) charts.gender.destroy();
+
+      var counts = {};
+      filteredLeads.forEach(function(l) {
+        if (l.gender) counts[l.gender] = (counts[l.gender] || 0) + 1;
+      });
+
+      charts.gender = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(counts),
+          datasets: [{
+            data: Object.values(counts),
+            backgroundColor: [chartColors.orange, chartColors.orangeLight],
+            borderColor: chartColors.bg,
+            borderWidth: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '65%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { padding: 16, font: { size: 13 }, usePointStyle: true, pointStyleWidth: 10 }
+            }
+          }
+        }
+      });
+    }
+
+    // ============================================================
+    // TABLE
+    // ============================================================
+    function renderTable() {
+      var body = document.getElementById('leadsTableBody');
+      var totalPages = Math.ceil(filteredLeads.length / perPage) || 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      var start = (currentPage - 1) * perPage;
+      var pageLeads = filteredLeads.slice(start, start + perPage);
+
+      if (pageLeads.length === 0) {
+        body.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="empty-state-icon">&#128269;</div>No leads found matching your filters.</div></td></tr>';
+      } else {
+        body.innerHTML = pageLeads.map(function(lead, i) {
+          var date = new Date(lead.created_at);
+          var dateStr = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+          return '<tr>' +
+            '<td>' + (start + i + 1) + '</td>' +
+            '<td class="td-name">' + esc(lead.first_name) + ' ' + esc(lead.last_name) + '</td>' +
+            '<td class="td-email">' + esc(lead.email) + '</td>' +
+            '<td>' + esc(lead.phone || '—') + '</td>' +
+            '<td>' + (lead.location ? '<span class="td-location">' + esc(lead.location) + '</span>' : '—') + '</td>' +
+            '<td class="td-date">' + esc(lead.form_name || '—') + '</td>' +
+            '<td class="td-date">' + dateStr + '</td>' +
+            '<td><button class="view-btn" data-id="' + lead.id + '">View</button></td>' +
+          '</tr>';
+        }).join('');
+      }
+
+      // Pagination
+      document.getElementById('pageInfo').textContent = 'Page ' + currentPage + ' of ' + totalPages;
+      document.getElementById('prevPage').disabled = currentPage <= 1;
+      document.getElementById('nextPage').disabled = currentPage >= totalPages;
+    }
+
+    function esc(str) {
+      if (!str) return '';
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Pagination
+    document.getElementById('prevPage').addEventListener('click', function() {
+      if (currentPage > 1) { currentPage--; renderTable(); }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', function() {
+      var totalPages = Math.ceil(filteredLeads.length / perPage) || 1;
+      if (currentPage < totalPages) { currentPage++; renderTable(); }
+    });
+
+    // Sort by column
+    document.querySelectorAll('th[data-sort]').forEach(function(th) {
+      th.addEventListener('click', function() {
+        var field = th.getAttribute('data-sort');
+        if (sortField === field) {
+          sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+          sortField = field;
+          sortDir = field === 'created_at' ? 'desc' : 'asc';
+        }
+
+        // Update sort arrows
+        document.querySelectorAll('th[data-sort]').forEach(function(h) { h.classList.remove('sorted'); });
+        th.classList.add('sorted');
+        th.querySelector('.sort-arrow').innerHTML = sortDir === 'asc' ? '&#x25B2;' : '&#x25BC;';
+
+        applyAllFilters();
+      });
+    });
+
+    // View lead — delegated click
+    document.getElementById('leadsTableBody').addEventListener('click', function(e) {
+      var btn = e.target.closest('.view-btn');
+      if (!btn) return;
+      var id = btn.getAttribute('data-id');
+      var lead = allLeads.find(function(l) { return l.id === id; });
+      if (lead) openModal(lead);
+    });
+
+    // ============================================================
+    // MODAL
+    // ============================================================
+    var modal = document.getElementById('leadModal');
+
+    function openModal(lead) {
+      document.getElementById('modalTitle').textContent = (lead.first_name || '') + ' ' + (lead.last_name || '');
+
+      var date = new Date(lead.created_at);
+      var dateStr = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+      var sections = [
+        {
+          title: 'Contact Information',
+          fields: [
+            ['Name', (lead.first_name || '') + ' ' + (lead.last_name || '')],
+            ['Email', lead.email ? '<a href="mailto:' + esc(lead.email) + '">' + esc(lead.email) + '</a>' : '—'],
+            ['Phone', lead.phone ? '<a href="tel:' + esc(lead.phone) + '">' + esc(lead.phone) + '</a>' : '—'],
+            ['Age', lead.age || '—'],
+            ['Gender', lead.gender || '—'],
+            ['Location', lead.location || '—']
+          ]
+        },
+        {
+          title: 'Qualification',
+          fields: [
+            ['Looking For', lead.looking_for || '—'],
+            ['Reason', lead.reason || '—'],
+            ['Coachability', lead.coachability || '—'],
+            ['Ready for Coach', lead.ready_for_coach || '—'],
+            ['Willing to Invest', lead.willing_to_invest || '—']
+          ]
+        },
+        {
+          title: 'Goals',
+          fields: [
+            ['Big Goal', lead.big_goal || '—'],
+            ['Importance', lead.importance ? lead.importance + ' / 5' : '—'],
+            ['Timeline', Array.isArray(lead.timeline) ? lead.timeline.join(', ') : (lead.timeline || '—')]
+          ]
+        },
+        {
+          title: 'Source & Tracking',
+          fields: [
+            ['Referral', Array.isArray(lead.referral) ? lead.referral.join(', ') : (lead.referral || '—')],
+            ['Form', lead.form_name || '—'],
+            ['UTM Source', lead.utm_source || '—'],
+            ['UTM Campaign', lead.utm_campaign || '—'],
+            ['Date', dateStr]
+          ]
+        }
+      ];
+
+      var html = sections.map(function(sec) {
+        return '<div class="modal-section">' +
+          '<div class="modal-section-title">' + sec.title + '</div>' +
+          sec.fields.map(function(f) {
+            return '<div class="modal-field"><span class="modal-field-label">' + f[0] + '</span><span class="modal-field-value">' + f[1] + '</span></div>';
+          }).join('') +
+        '</div>';
+      }).join('');
+
+      document.getElementById('modalBody').innerHTML = html;
+      modal.classList.add('active');
+    }
+
+    document.getElementById('modalClose').addEventListener('click', function() {
+      modal.classList.remove('active');
+    });
+
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) modal.classList.remove('active');
+    });
+
+    // ============================================================
+    // CSV EXPORT
+    // ============================================================
+    document.getElementById('exportCSV').addEventListener('click', function() {
+      if (filteredLeads.length === 0) return;
+
+      var headers = ['Date', 'First Name', 'Last Name', 'Email', 'Phone', 'Age', 'Gender', 'Location', 'Form', 'Looking For', 'Reason', 'Coachability', 'Big Goal', 'Importance', 'Ready for Coach', 'Timeline', 'Willing to Invest', 'Referral', 'UTM Source', 'UTM Campaign'];
+
+      var rows = filteredLeads.map(function(l) {
+        return [
+          new Date(l.created_at).toLocaleDateString('en-GB'),
+          l.first_name,
+          l.last_name,
+          l.email,
+          l.phone,
+          l.age,
+          l.gender,
+          l.location,
+          l.form_name,
+          l.looking_for,
+          l.reason,
+          l.coachability,
+          l.big_goal,
+          l.importance,
+          l.ready_for_coach,
+          Array.isArray(l.timeline) ? l.timeline.join('; ') : l.timeline,
+          l.willing_to_invest,
+          Array.isArray(l.referral) ? l.referral.join('; ') : l.referral,
+          l.utm_source,
+          l.utm_campaign
+        ].map(function(val) {
+          if (val == null) return '';
+          var str = String(val).replace(/"/g, '""');
+          return '"' + str + '"';
+        });
+      });
+
+      var csv = [headers.join(',')].concat(rows.map(function(r) { return r.join(','); })).join('\n');
+
+      var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'leads-export-' + new Date().toISOString().split('T')[0] + '.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    checkAuth();
+
+  })();
+  </script>
+</body>
+</html>
