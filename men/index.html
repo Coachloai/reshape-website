@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReShape — Drop 8–12kg In 12 Weeks</title>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800,900&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+img,svg{display:block}
+button,input,select,textarea{font-family:inherit}
+/* ─── TOKENS ─────────────────────────────── */
+:root{
+  --bg:       #0B0B0B;
+  --s1:       #111213;
+  --s2:       #0E0F10;
+  --s3:       #181A1B;
+  --s4:       #1E2022;
+  --border:   rgba(255,255,255,0.08);
+  --border2:  rgba(255,255,255,0.05);
+  --text:     #FFFFFF;
+  --text2:    rgba(255,255,255,0.75);
+  --text3:    rgba(255,255,255,0.50);
+  --text4:    rgba(255,255,255,0.35);
+  --orange:   #ED5C25;
+  --orange2:  #FF8A5F;
+  --orange3:  #FF6B35;
+  --odim:     rgba(237,92,37,0.12);
+  --odim2:    rgba(237,92,37,0.06);
+  --head:     'Cabinet Grotesk', sans-serif;
+  --body:     'DM Sans', sans-serif;
+  --r-card:   24px;
+  --r-btn:    14px;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+/* ─── TYPOGRAPHY ─────────────────────────── */
+.h1{font-family:var(--head);font-weight:900;font-size:clamp(40px,6vw,72px);line-height:1;letter-spacing:-0.04em}
+.h2{font-family:var(--head);font-weight:900;font-size:clamp(32px,4vw,52px);line-height:1.05;letter-spacing:-0.035em}
+.h3{font-family:var(--head);font-weight:800;font-size:clamp(22px,2.5vw,30px);line-height:1.1;letter-spacing:-0.02em}
+.h4{font-family:var(--head);font-weight:700;font-size:20px;letter-spacing:-0.01em}
+.orange{color:var(--orange)}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--orange)}
+/* ─── BUTTONS ─────────────────────────────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--body);font-weight:700;font-size:15px;border:none;cursor:pointer;transition:all .2s;text-decoration:none;border-radius:var(--r-btn);padding:14px 28px;white-space:nowrap}
+.btn-primary{background:var(--orange);color:#fff;box-shadow:0 8px 28px rgba(237,92,37,0.28)}
+.btn-primary:hover{background:var(--orange3);transform:scale(1.02);box-shadow:0 12px 36px rgba(237,92,37,0.38)}
+.btn-outline{background:transparent;color:#fff;border:1.5px solid var(--border)}
+.btn-outline:hover{border-color:rgba(255,255,255,0.28);background:rgba(255,255,255,0.04)}
+.btn-lg{padding:16px 36px;font-size:16px;border-radius:16px}
+.btn-full{width:100%;border-radius:16px;padding:16px}
+/* ─── LAYOUT ─────────────────────────────── */
+.container{max-width:1280px;margin:0 auto;padding:0 32px}
+.section{padding:96px 0;border-bottom:1px solid var(--border)}
+.section-alt{background:var(--s2)}
+.section-center{text-align:center}
+/* ─── CARD ─────────────────────────────────── */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r-card);padding:28px}
+/* ─── REVEAL ─────────────────────────────────── */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+.rv.in{opacity:1;transform:translateY(0)}
+/* ── PROOF STACKED HEADING ── */
+.proof-stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.proof-line {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  line-height: 1;
+}
+.proof-line-real {
+  font-family: var(--head);
+  font-weight: 700;
+  font-size: clamp(28px, 3.5vw, 44px);
+  letter-spacing: -0.02em;
+  color: var(--text3);
+  min-width: 90px;
+  font-style: italic;
+}
+.proof-line-word {
+  font-family: var(--head);
+  font-weight: 900;
+  font-size: clamp(26px, 3vw, 42px);
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+/* ── GUARANTEE BADGE ── */
+.hero-guarantee-badge {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--odim);
+  border: 1.5px solid rgba(237,92,37,0.35);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  max-width: 520px;
+  box-shadow: 0 4px 24px rgba(237,92,37,0.12), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.hero-guarantee-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+  box-shadow: 0 6px 20px rgba(237,92,37,0.4);
+  line-height: 1;
+}
+.hero-guarantee-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hero-guarantee-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+.hero-guarantee-copy {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.45;
+}
+.hero-guarantee-copy strong { color: var(--orange2); font-weight: 700; }
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;
+  background:rgba(11,11,11,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transition:box-shadow .3s;
+}
+.nav-logo{font-family:var(--head);font-size:20px;font-weight:900;color:#fff;text-decoration:none;letter-spacing:-0.5px}
+.nav-logo span{color:var(--orange)}
+.nav-right{display:flex;align-items:center;gap:12px}
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+.hero{
+  padding:120px 0 96px;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,#000 0%,#111213 60%,#0B0B0B 100%);
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-200px;right:-100px;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(237,92,37,0.07),transparent 70%);
+  pointer-events:none;
+}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+/* MOSAIC */
+.mosaic-wrap{position:relative;height:calc(100vh - 80px);min-height:520px;overflow:hidden;border-radius:20px;border:1px solid var(--border);background:var(--s1)}
+.mosaic-wrap::before,.mosaic-wrap::after{content:"";position:absolute;left:0;right:0;z-index:3;pointer-events:none}
+.mosaic-wrap::before{top:0;height:80px;background:linear-gradient(to bottom,var(--s1),transparent)}
+.mosaic-wrap::after{bottom:0;height:80px;background:linear-gradient(to top,var(--s1),transparent)}
+.mosaic{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:7px;height:100%}
+.mcol{display:flex;flex-direction:column;gap:7px}
+@keyframes mUp{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+@keyframes mDown{from{transform:translateY(-50%)}to{transform:translateY(0)}}
+.mc{border-radius:12px;overflow:hidden;flex-shrink:0;position:relative;background:var(--s3)}
+.mc-tall{aspect-ratio:1/1}.mc-med{aspect-ratio:1/1}.mc-sq{aspect-ratio:1/1}
+.mc img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 6s ease}
+.mc:hover img{transform:scale(1.05)}
+.mc-lbl{position:absolute;border-radius:100px;padding:4px 10px;font-size:10px;font-weight:700;letter-spacing:.5px;backdrop-filter:blur(8px)}
+.mc-lbl-before{top:8px;left:8px;background:rgba(15,15,15,.82);color:rgba(255,255,255,.7);border:1px solid var(--border)}
+.mc-lbl-after{bottom:8px;right:8px;background:var(--orange);color:white}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(237,92,37,0.35);
+  background:rgba(237,92,37,0.08);
+  border-radius:100px;
+  padding:8px 16px;
+  margin-bottom:24px;
+}
+.hero-badge-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.hero-badge span{font-size:13px;font-weight:600;color:var(--orange2)}
+.hero-h1{margin-bottom:20px}
+.hero-h1 .block-orange{display:block;color:var(--orange)}
+.hero-sub{font-size:17px;font-weight:300;color:var(--text2);line-height:1.75;max-width:500px;margin-bottom:36px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px}
+.hero-pills{display:flex;flex-wrap:wrap;gap:10px}
+.hero-pill{
+  display:flex;align-items:center;gap:8px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,0.04);
+  border-radius:100px;
+  padding:8px 16px;
+  font-size:13px;color:var(--text3);
+}
+.hero-pill svg{color:var(--orange);flex-shrink:0}
+/* Video card */
+.video-card{
+  background:var(--s1);
+  border:1px solid rgba(237,92,37,0.18);
+  border-radius:28px;
+  padding:16px;
+  box-shadow:0 32px 80px rgba(0,0,0,0.4);
+}
+.video-inner{
+  aspect-ratio:16/9;
+  border-radius:20px;
+  border:1px solid var(--border);
+  background:linear-gradient(135deg,#1A1A1A,#0D0D0D);
+  overflow:hidden;
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.video-inner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.3}
+.video-content{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;text-align:center;padding:24px;
+}
+.video-label{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--orange);margin-bottom:4px}
+.video-title{font-family:var(--head);font-size:22px;font-weight:800;margin-bottom:4px}
+.play-ring{
+  width:72px;height:72px;border-radius:50%;
+  background:var(--orange);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;border:none;
+  box-shadow:0 8px 32px rgba(237,92,37,0.45);
+  transition:all .2s;
+}
+.play-ring:hover{transform:scale(1.1);box-shadow:0 12px 48px rgba(237,92,37,0.55)}
+.video-hint{font-size:13px;color:var(--text4);max-width:240px;line-height:1.55}
+/* ═══════════════════════════════════════
+   WHY MOST FAIL
+═══════════════════════════════════════ */
+.fail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:52px}
+.fail-card{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:var(--r-card);
+  padding:24px 28px;
+  transition:border-color .25s,background .25s;
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+.fail-card:hover{border-color:rgba(237,92,37,0.25);background:var(--s3)}
+.fail-icon{
+  width:48px;height:48px;border-radius:14px;
+  background:var(--odim);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  color:var(--orange);
+}
+.fail-card p{font-size:15px;font-weight:600;line-height:1.5;color:rgba(255,255,255,.88)}
+.fail-cta{
+  margin-top:40px;text-align:center;
+  font-size:17px;color:var(--text3);line-height:1.7;
+  max-width:680px;margin-left:auto;margin-right:auto;
+}
+.fail-cta strong{color:var(--text2)}
+/* ═══════════════════════════════════════
+   PROOF / TRANSFORMATIONS
+═══════════════════════════════════════ */
+.proof-header{
+  display:flex;flex-direction:column;gap:24px;
+  margin-bottom:48px;
+}
+@media(min-width:1024px){
+  .proof-header{flex-direction:row;align-items:flex-end;justify-content:space-between}
+}
+.proof-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.proof-stat{
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:16px 20px;text-align:center;
+}
+.proof-stat-num{font-family:var(--head);font-size:26px;font-weight:900;color:var(--orange);letter-spacing:-0.03em}
+.proof-stat-lbl{font-size:12px;color:var(--text3);margin-top:2px}
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.proof-card{
+  background:var(--s1);
+  border:1px solid rgba(237,92,37,0.12);
+  border-radius:28px;
+  padding:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);
+  transition:border-color .25s,transform .25s;
+}
+.proof-card:hover{border-color:rgba(237,92,37,0.3);transform:translateY(-3px)}
+.proof-img{
+  aspect-ratio:4/3;border-radius:20px;
+  border:1px dashed rgba(255,255,255,0.08);
+  background:linear-gradient(135deg,#1a1a1a,#0d0d0d);
+  margin-bottom:20px;
+  overflow:hidden;
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.proof-img-placeholder{
+  display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text4);font-size:12px;text-align:center;
+}
+.proof-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.7}
+.proof-name{font-family:var(--head);font-size:22px;font-weight:800;letter-spacing:-0.02em}
+.proof-result{font-size:13px;font-weight:600;color:var(--orange);margin-top:3px;margin-bottom:12px}
+.proof-quote{font-size:15px;line-height:1.7;color:var(--text2)}
+/* ═══════════════════════════════════════
+   HOW IT WORKS
+═══════════════════════════════════════ */
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px}
+.step-card{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:28px;
+  padding:36px 32px;
+  position:relative;
+  overflow:hidden;
+  transition:border-color .25s,background .25s;
+}
+.step-card::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:120px;height:120px;border-radius:50%;
+  background:var(--odim2);
+  pointer-events:none;
+}
+.step-card:hover{border-color:rgba(237,92,37,0.25);background:var(--s3)}
+.step-num{
+  width:52px;height:52px;border-radius:16px;
+  background:var(--orange);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--head);font-size:22px;font-weight:900;color:#fff;
+  margin-bottom:28px;
+  box-shadow:0 8px 24px rgba(237,92,37,0.35);
+}
+.step-icon-row{
+  display:flex;align-items:center;gap:12px;margin-bottom:28px;
+}
+.step-card h3{font-family:var(--head);font-size:26px;font-weight:800;letter-spacing:-0.02em;margin-bottom:14px}
+.step-card p{font-size:15px;line-height:1.75;color:var(--text2)}
+/* ═══════════════════════════════════════
+   OFFER STACK
+═══════════════════════════════════════ */
+.offer-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:24px;
+  align-items:start;
+}
+.offer-card{
+  background:#0F1011;
+  border:1px solid rgba(237,92,37,0.18);
+  border-radius:30px;
+  padding:40px;
+  box-shadow:0 32px 80px rgba(0,0,0,0.3);
+}
+.offer-item{
+  display:flex;align-items:flex-start;gap:14px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px 18px;
+  transition:border-color .2s,background .2s;
+}
+.offer-item:hover{border-color:rgba(237,92,37,0.2);background:rgba(237,92,37,0.04)}
+.offer-item-icon{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--orange);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;
+}
+.offer-item-text{font-size:15px;line-height:1.6;color:rgba(255,255,255,.85)}
+.guarantee-card{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:30px;
+  padding:40px;
+  box-shadow:0 32px 80px rgba(0,0,0,0.3);
+}
+.guarantee-box{
+  background:var(--odim);
+  border:1px solid rgba(237,92,37,0.18);
+  border-radius:20px;
+  padding:24px;
+  margin:28px 0;
+}
+.guarantee-box .box-label{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--orange2);margin-bottom:14px}
+.guarantee-box ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.guarantee-box li{
+  font-size:15px;color:rgba(255,255,255,.82);
+  display:flex;align-items:center;gap:10px;
+}
+.guarantee-box li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--orange);flex-shrink:0}
+/* ═══════════════════════════════════════
+   REVIEWS
+═══════════════════════════════════════ */
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px}
+.review-card{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:28px;
+  padding:36px;
+  transition:border-color .2s,background .2s;
+}
+.review-card:hover{border-color:rgba(237,92,37,0.2);background:var(--s3)}
+.review-quote-mark{
+  font-family:var(--head);
+  font-size:56px;font-weight:900;
+  color:var(--orange);line-height:1;
+  margin-bottom:8px;
+}
+.review-text{font-size:15px;line-height:1.8;color:var(--text2);margin-bottom:24px}
+.review-author{
+  display:flex;align-items:center;gap:12px;
+  padding-top:20px;
+  border-top:1px solid var(--border);
+}
+.review-av{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--odim);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:var(--orange);
+  flex-shrink:0;
+  border:1px solid rgba(237,92,37,0.2);
+}
+.review-meta-name{font-size:13px;font-weight:600;color:var(--text)}
+.review-meta-stars{color:#FFA726;font-size:12px;letter-spacing:2px}
+/* ═══════════════════════════════════════
+   APPLY
+═══════════════════════════════════════ */
+.apply-grid{
+  display:grid;
+  grid-template-columns:.9fr 1.1fr;
+  gap:40px;
+  align-items:start;
+}
+.apply-steps{display:flex;flex-direction:column;gap:16px;margin-top:28px}
+.apply-step{
+  display:flex;align-items:flex-start;gap:14px;
+}
+.apply-step-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--odim);
+  border:1px solid rgba(237,92,37,0.2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;color:var(--orange);
+}
+.apply-step-text{font-size:15px;color:var(--text2);padding-top:8px}
+.form-card{
+  background:var(--s1);
+  border:1px solid rgba(237,92,37,0.18);
+  border-radius:30px;
+  padding:28px;
+  box-shadow:0 32px 80px rgba(0,0,0,0.3);
+}
+.form-inner{
+  background:rgba(0,0,0,0.25);
+  border:1px dashed rgba(255,255,255,0.08);
+  border-radius:22px;
+  padding:28px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.form-note{
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px 16px;
+  font-size:13px;color:var(--text4);
+  margin-bottom:4px;
+}
+.field input,.field select,.field textarea{
+  width:100%;
+  background:#0B0B0B;
+  border:1.5px solid var(--border);
+  border-radius:14px;
+  color:#fff;
+  padding:14px 16px;
+  font-family:var(--body);
+  font-size:14px;
+  outline:none;
+  transition:border-color .2s;
+  appearance:none;
+}
+.field input::placeholder{color:rgba(255,255,255,.28)}
+.field input:focus,.field select:focus{border-color:var(--orange)}
+.field select{cursor:pointer}
+.field select option{background:var(--s1)}
+/* ═══════════════════════════════════════
+   FAQ
+═══════════════════════════════════════ */
+.faq-list{display:flex;flex-direction:column;gap:12px;margin-top:52px}
+.faq-item{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:var(--r-card);
+  overflow:hidden;
+  transition:border-color .2s;
+}
+.faq-item.open{border-color:rgba(237,92,37,0.25)}
+.faq-q{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:22px 24px;
+  cursor:pointer;
+  font-size:16px;font-weight:600;color:var(--text);
+  user-select:none;transition:color .2s;
+}
+.faq-q:hover{color:var(--orange)}
+.faq-q-icon{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--s4);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  transition:background .2s,transform .3s;
+  color:var(--text3);
+}
+.faq-item.open .faq-q-icon{background:var(--orange);color:#fff;transform:rotate(45deg)}
+.faq-a{
+  max-height:0;overflow:hidden;
+  transition:max-height .4s ease,padding .3s;
+  font-size:15px;font-weight:300;color:var(--text2);line-height:1.75;
+  padding:0 24px;
+}
+.faq-item.open .faq-a{max-height:180px;padding:0 24px 22px}
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{
+  background:#000;
+  border-top:1px solid var(--border);
+  padding:28px 0;
+}
+.footer-inner{
+  display:flex;flex-direction:column;gap:8px;
+  font-size:13px;color:var(--text4);
+}
+@media(min-width:768px){
+  .footer-inner{flex-direction:row;align-items:center;justify-content:space-between}
+}
+.footer-logo{font-family:var(--head);font-size:17px;font-weight:900;color:var(--text3)}
+.footer-logo span{color:var(--orange)}
+/* ═══════════════════════════════════════
+   TICKER
+═══════════════════════════════════════ */
+.ticker{overflow:hidden;border-bottom:1px solid var(--border);padding:12px 0;background:var(--s2)}
+.ticker-track{display:flex;gap:10px;width:max-content;animation:tickRoll 32s linear infinite}
+@keyframes tickRoll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tick{
+  display:flex;align-items:center;gap:10px;
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:100px;padding:7px 16px 7px 7px;
+  white-space:nowrap;flex-shrink:0;
+}
+.tick-av{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--odim);font-size:9px;font-weight:700;
+  color:var(--orange);display:grid;place-items:center;
+}
+.tick-n{font-size:12px;font-weight:600;color:var(--text)}
+.tick-w{font-size:11px;color:var(--text4)}
+.tick-k{font-size:12px;font-weight:700;color:var(--orange)}
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:1024px){
+  .hero-grid,.offer-grid,.apply-grid{grid-template-columns:1fr}
+  .mosaic-wrap{height:420px;border-radius:16px}
+  .fail-grid{grid-template-columns:1fr 1fr}
+  .proof-grid,.steps-grid,.reviews-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .nav{padding:0 20px}
+  .container{padding:0 20px}
+  .section{padding:64px 0}
+  .fail-grid,.proof-grid,.steps-grid,.reviews-grid{grid-template-columns:1fr}
+  .proof-header{flex-direction:column}
+  .proof-stats{grid-template-columns:repeat(3,1fr)}
+  .offer-card,.guarantee-card{padding:28px 24px}
+  .video-card{padding:10px}
+  /* ── MOBILE HERO: copy top, mosaic strip below ── */
+  .hero{
+    position:relative;
+    padding-bottom:0;
+    overflow:hidden;
+  }
+  /* keep orange glow but no bg photo */
+  .hero::after{ display:none }
+  .hero::before{
+    background: radial-gradient(ellipse 70% 50% at 80% 20%,
+      rgba(237,92,37,0.09) 0%, transparent 70%);
+    width:100%; height:100%;
+    top:0; right:0;
+    border-radius:0;
+    opacity:1;
+    z-index:0;
+  }
+  .hero .container{ position:relative; z-index:2 }
+  /* stack: copy on top, mosaic below */
+  .hero-grid{
+    grid-template-columns: 1fr;
+    gap: 0;
+    align-items: start;
+  }
+  /* copy gets normal padding */
+  .hero-copy{ padding-bottom: 32px }
+  .hero-sub{ max-width:100% }
+  .hero-btns{ flex-direction:column; gap:10px }
+  .hero-btns .btn{ width:100%; justify-content:center }
+  /* mosaic: show as a compact horizontal strip of 3 columns */
+  .mosaic-wrap{
+    display: block;
+    height: 52vw;
+    max-height: 280px;
+    border-radius: 16px;
+    margin: 0 0 0 0;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  /* pause animations on mobile for perf — use CSS only scroll */
+  .mosaic{ height: 100%; padding: 6px; gap: 6px }
+  .mc{ border-radius: 10px }
+  .mc-lbl{ font-size: 9px; padding: 3px 8px }
+  /* ── MOBILE FORM: full width, tighter padding ── */
+  .form-card{padding:20px 16px}
+  .form-options{grid-template-columns:1fr}
+  .form-input-row{grid-template-columns:1fr}
+  .form-rating{gap:8px}
+  .form-rating-item{padding:12px 6px}
+  .form-rating-number{font-size:20px}
+}
+/* ═══════════════════════════════════════
+   QUESTIONNAIRE FORM (8-STEP)
+═══════════════════════════════════════ */
+.form-progress{display:flex;gap:6px;margin-bottom:40px}
+.form-progress-bar{flex:1;height:4px;border-radius:2px;background:var(--border);overflow:hidden;transition:background .3s}
+.form-progress-bar.active,.form-progress-bar.completed{background:var(--orange)}
+.form-step{display:none;animation:formFadeIn .4s ease}
+.form-step.active{display:block}
+@keyframes formFadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.form-step-question{font-family:var(--head);font-size:20px;font-weight:700;margin-bottom:24px;line-height:1.3}
+.form-step-number{font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
+.form-options{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+.form-option{position:relative;cursor:pointer;border:2px solid var(--border);border-radius:16px;padding:24px 20px;text-align:center;transition:border-color .2s,background .2s,transform .2s;background:rgba(255,255,255,0.02)}
+.form-option:hover{border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);transform:translateY(-2px)}
+.form-option.selected{border-color:var(--orange);background:var(--odim)}
+.form-option input{position:absolute;opacity:0;pointer-events:none}
+.form-option-icon{font-size:32px;margin-bottom:12px;display:block}
+.form-option-label{font-size:15px;font-weight:600;line-height:1.4}
+.form-option-check{position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
+.form-option.selected .form-option-check{background:var(--orange);border-color:var(--orange)}
+.form-option-check svg{width:12px;height:12px;opacity:0;transition:opacity .2s;color:#fff}
+.form-option.selected .form-option-check svg{opacity:1}
+.form-options.multi-select .form-option.selected{border-color:var(--orange);background:var(--odim)}
+.form-options.multi-select .form-option.selected .form-option-check{background:var(--orange);border-color:var(--orange)}
+.form-input-group{margin-bottom:20px}
+.form-label{display:block;font-size:14px;font-weight:600;color:var(--text3);margin-bottom:8px}
+.form-input{width:100%;padding:14px 18px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:14px;color:var(--text);font-family:var(--body);font-size:16px;transition:border-color .2s,box-shadow .2s;outline:none}
+.form-input:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(237,92,37,0.15)}
+.form-input::placeholder{color:var(--text4)}
+.form-input-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+textarea.form-input{min-height:100px;resize:vertical}
+.form-rating{display:flex;gap:12px;margin-bottom:32px}
+.form-rating-item{flex:1;cursor:pointer;text-align:center;padding:16px 8px;border:2px solid var(--border);border-radius:12px;transition:border-color .2s,background .2s,transform .2s;background:rgba(255,255,255,0.02)}
+.form-rating-item:hover{border-color:rgba(255,255,255,0.15);transform:translateY(-2px)}
+.form-rating-item.selected{border-color:var(--orange);background:var(--odim)}
+.form-rating-item input{position:absolute;opacity:0;pointer-events:none}
+.form-rating-number{font-size:24px;font-weight:800;display:block;margin-bottom:4px}
+.form-rating-label{font-size:11px;color:var(--text4)}
+.form-rating-item.selected .form-rating-number{color:var(--orange)}
+.form-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:8px}
+.form-btn-back{padding:12px 24px;background:transparent;color:var(--text3);border:1px solid var(--border);border-radius:12px;font-family:var(--body);font-weight:600;font-size:15px;cursor:pointer;transition:color .2s,border-color .2s}
+.form-btn-back:hover{color:var(--text);border-color:rgba(255,255,255,0.2)}
+.form-btn-next{padding:14px 32px;background:var(--orange);color:#fff;border:none;border-radius:12px;font-family:var(--body);font-weight:700;font-size:15px;cursor:pointer;transition:background .2s,box-shadow .2s,transform .2s,opacity .2s;box-shadow:0 0 20px rgba(237,92,37,0.3);margin-left:auto}
+.form-btn-next:hover{background:var(--orange3);box-shadow:0 0 35px rgba(237,92,37,0.3);transform:translateY(-1px)}
+.form-btn-next:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.form-success{display:none;text-align:center;padding:40px 20px;animation:formFadeIn .5s ease}
+.form-success.active{display:block}
+.form-success-icon{width:72px;height:72px;border-radius:50%;background:var(--odim);display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
+.form-success-icon svg{width:36px;height:36px;color:var(--orange)}
+.form-success h3{font-family:var(--head);font-size:24px;font-weight:800;margin-bottom:12px}
+.form-success p{font-size:16px;color:var(--text2);max-width:400px;margin:0 auto;line-height:1.6}
+.form-input.error{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,0.15)}
+.form-error-msg{font-size:12px;color:#EF4444;margin-top:6px;display:none}
+.form-error-msg.visible{display:block}
+</style>
+</head>
+<body>
+<!-- ── NAV ─────────────────────────────── -->
+<nav class="nav" id="nav">
+  <a href="#" class="nav-logo">Re<span>Shape</span></a>
+  <div class="nav-right">
+    <button class="btn btn-outline" style="padding:10px 20px;font-size:13px;" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">Log in</button>
+    <button class="btn btn-primary" style="padding:10px 22px;font-size:13px;" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">Apply Now</button>
+  </div>
+</nav>
+<!-- ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ -->
+<section class="hero" style="padding-top:120px">
+  <div class="container">
+    <div class="hero-grid">
+      <!-- LEFT -->
+      <div style="animation:fadeUp .7s ease both">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          <span>ReShape 12 Week Challenge</span>
+        </div>
+        <h1 class="h1 hero-h1">
+          Drop 8–12kg<br>In 12 Weeks
+          <span class="block-orange">Without<br>Starving</span>
+        </h1>
+        <div class="hero-guarantee-badge">
+          <div class="hero-guarantee-icon">🛡️</div>
+          <div class="hero-guarantee-text">
+            <span class="hero-guarantee-label">Guarantee</span>
+            <span class="hero-guarantee-copy">Drop 8–12kg in 12 weeks — <strong>or we coach you free until you do</strong></span>
+          </div>
+        </div>
+        <p class="hero-sub" style="margin-top:20px">
+          A high-accountability transformation programme for busy men and women who are tired of starting over and ready for a structured system that gets results.
+        </p>
+        <div class="hero-btns">
+          <a href="#apply" class="btn btn-primary btn-lg">
+            Apply For Your Spot
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+
+        </div>
+        <div class="hero-pills">
+          <div class="hero-pill">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            1,200+ transformations
+          </div>
+          <div class="hero-pill">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Personalised plan
+          </div>
+          <div class="hero-pill">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Daily accountability
+          </div>
+        </div>
+      </div>
+      <!-- RIGHT: Scrolling before/after mosaic -->
+      <div class="mosaic-wrap" style="animation:fadeUp .7s .15s ease both">
+        <div class="mosaic">
+          <div class="mcol" style="animation:mUp 28s linear infinite">
+            <div class="mc mc-tall"><img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-before">Before</div></div>
+            <div class="mc mc-med"><img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-after">−12kg ✓</div></div>
+            <div class="mc mc-sq"><img src="https://images.unsplash.com/photo-1517836477839-7072a1301bc8?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"></div>
+            <div class="mc mc-tall"><img src="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-after">−15kg ✓</div></div>
+            <div class="mc mc-tall"><img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-before">Before</div></div>
+            <div class="mc mc-med"><img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-after">−12kg ✓</div></div>
+            <div class="mc mc-sq"><img src="https://images.unsplash.com/photo-1517836477839-7072a1301bc8?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"></div>
+            <div class="mc mc-tall"><img src="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-after">−15kg ✓</div></div>
+          </div>
+          <div class="mcol" style="animation:mDown 24s linear infinite">
+            <div class="mc mc-med"><img src="https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-after">−11kg ✓</div></div>
+            <div class="mc mc-sq"><img src="https://images.unsplash.com/photo-1535914254981-b5012eebbd15?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-before">Before</div></div>
+            <div class="mc mc-tall"><img src="https://images.unsplash.com/photo-1577221084712-45b0445d2b00?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-after">−9kg ✓</div></div>
+            <div class="mc mc-med"><img src="https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"></div>
+            <div class="mc mc-med"><img src="https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-after">−11kg ✓</div></div>
+            <div class="mc mc-sq"><img src="https://images.unsplash.com/photo-1535914254981-b5012eebbd15?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-before">Before</div></div>
+            <div class="mc mc-tall"><img src="https://images.unsplash.com/photo-1577221084712-45b0445d2b00?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-after">−9kg ✓</div></div>
+            <div class="mc mc-med"><img src="https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"></div>
+          </div>
+          <div class="mcol" style="animation:mUp 20s linear infinite">
+            <div class="mc mc-sq"><img src="https://images.unsplash.com/photo-1581009137042-c552e485697a?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"></div>
+            <div class="mc mc-tall"><img src="https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-after">−14kg ✓</div></div>
+            <div class="mc mc-med"><img src="https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-before">Before</div></div>
+            <div class="mc mc-sq"><img src="https://images.unsplash.com/photo-1434608519344-49d77a699e1d?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-after">−13kg ✓</div></div>
+            <div class="mc mc-sq"><img src="https://images.unsplash.com/photo-1581009137042-c552e485697a?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"></div>
+            <div class="mc mc-tall"><img src="https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-after">−14kg ✓</div></div>
+            <div class="mc mc-med"><img src="https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-before">Before</div></div>
+            <div class="mc mc-sq"><img src="https://images.unsplash.com/photo-1434608519344-49d77a699e1d?w=600&h=600&q=80&fit=crop&crop=faces,center" alt="" loading="lazy"><div class="mc-lbl mc-lbl-after">−13kg ✓</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- KEEP video as standalone section below — placeholder replaced below -->
+      <div style="display:none"><div class="video-card">
+          <div class="video-inner">
+            <img src="https://images.unsplash.com/photo-1549576490-b0b4831ef60a?w=900&q=80&fit=crop" alt="" loading="lazy">
+            <div class="video-content">
+              <div>
+
+                <h2 class="video-title">Embed your coach intro video here</h2>
+              </div>
+              <button class="play-ring" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><polygon points="6,3 20,12 6,21"/></svg>
+              </button>
+              <p class="video-hint">Replace with Perspective, Vimeo, YouTube, or native video embed</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ── TICKER ─────────────────────────── -->
+<div class="ticker">
+  <div class="ticker-track" id="ticker"></div>
+</div>
+<!-- ══════════════════════════════════════
+   VIDEO SECTION
+══════════════════════════════════════ -->
+<section class="section" style="padding:72px 0">
+  <div class="container">
+    <div class="section-center" style="max-width:560px;margin:0 auto 40px">
+      <p class="eyebrow" style="margin-bottom:14px">Meet Your Coach</p>
+      <h2 class="h2" style="margin-bottom:12px">Meet your <em style="color:var(--orange)">future coaches</em></h2>
+      <p style="font-size:16px;color:var(--text2);font-weight:300">The coaches behind your transformation. See how they work, what they stand for, and why clients trust them.</p>
+    </div>
+    <div class="video-card" style="max-width:860px;margin:0 auto">
+      <div class="video-inner">
+        <img src="https://images.unsplash.com/photo-1549576490-b0b4831ef60a?w=900&q=80&fit=crop" alt="" loading="lazy">
+        <div class="video-content">
+          <div>
+
+            <h2 class="video-title">Embed your coach intro video here</h2>
+          </div>
+          <button class="play-ring" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><polygon points="6,3 20,12 6,21"/></svg>
+          </button>
+          <p class="video-hint">Replace with Perspective, Vimeo, YouTube, or native video embed</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ══════════════════════════════════════
+   WHY MOST PEOPLE FAIL
+══════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-center" style="max-width:640px;margin:0 auto 0">
+      <p class="eyebrow" style="margin-bottom:14px">Why most people fail</p>
+      <h2 class="h2">Most fat loss plans break because they rely on motivation, not structure</h2>
+    </div>
+    <div class="fail-grid">
+      <div class="fail-card rv">
+        <div class="fail-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <p>You start strong, then life gets in the way.</p>
+      </div>
+      <div class="fail-card rv" style="transition-delay:.08s">
+        <div class="fail-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <p>You are given generic calories and random workouts.</p>
+      </div>
+      <div class="fail-card rv" style="transition-delay:.16s">
+        <div class="fail-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        </div>
+        <p>Nobody keeps you accountable when things slip.</p>
+      </div>
+      <div class="fail-card rv" style="transition-delay:.24s">
+        <div class="fail-icon">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <p>You work hard but still do not see your body change.</p>
+      </div>
+    </div>
+    <p class="fail-cta rv">
+      ReShape fixes that with a clear system, daily accountability, and a programme built around <strong>real people with busy lives.</strong>
+    </p>
+  </div>
+</section>
+<!-- ══════════════════════════════════════
+   PROOF
+══════════════════════════════════════ -->
+<section class="section section-alt" id="proof">
+  <div class="container">
+    <div class="proof-header rv">
+      <div style="max-width:520px">
+        <p class="eyebrow" style="margin-bottom:14px">Proof</p>
+        <div class="proof-stacked">
+          <div class="proof-line">
+            <span class="proof-line-real">Real</span>
+            <span class="proof-line-word">people.</span>
+          </div>
+          <div class="proof-line">
+            <span class="proof-line-real">Real</span>
+            <span class="proof-line-word">transformations.</span>
+          </div>
+          <div class="proof-line">
+            <span class="proof-line-real">Real</span>
+            <span class="proof-line-word">momentum.</span>
+          </div>
+        </div>
+      </div>
+      <div class="proof-stats">
+        <div class="proof-stat">
+          <div class="proof-stat-num">1,200+</div>
+          <div class="proof-stat-lbl">Clients helped</div>
+        </div>
+        <div class="proof-stat">
+          <div class="proof-stat-num">28k+kg</div>
+          <div class="proof-stat-lbl">Lost collectively</div>
+        </div>
+        <div class="proof-stat">
+          <div class="proof-stat-num">92%</div>
+          <div class="proof-stat-lbl">Completion rate</div>
+        </div>
+      </div>
+    </div>
+    <div class="proof-grid">
+      <div class="proof-card rv">
+        <div class="proof-img">
+          <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80&fit=crop" alt="" loading="lazy">
+        </div>
+        <div class="proof-name">Sarah</div>
+        <div class="proof-result">−11kg in 12 weeks</div>
+        <p class="proof-quote">"I finally had structure, accountability, and a plan I could actually stick to."</p>
+      </div>
+      <div class="proof-card rv" style="transition-delay:.1s">
+        <div class="proof-img">
+          <img src="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=600&q=80&fit=crop" alt="" loading="lazy">
+        </div>
+        <div class="proof-name">James</div>
+        <div class="proof-result">−9kg and 10cm off waist</div>
+        <p class="proof-quote">"This was the first time fat loss felt clear, simple, and repeatable."</p>
+      </div>
+      <div class="proof-card rv" style="transition-delay:.2s">
+        <div class="proof-img">
+          <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=80&fit=crop" alt="" loading="lazy">
+        </div>
+        <div class="proof-name">Nicole</div>
+        <div class="proof-result">Confidence back in 90 days</div>
+        <p class="proof-quote">"I stopped guessing, started following a system, and everything changed."</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ══════════════════════════════════════
+   HOW IT WORKS
+══════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-center" style="max-width:600px;margin:0 auto">
+      <p class="eyebrow" style="margin-bottom:14px">How it works</p>
+      <h2 class="h2">A simple three-step body transformation system</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card rv">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px">
+          <div class="step-num">1</div>
+          <svg width="28" height="28" fill="none" stroke="var(--orange)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <h3>Assess</h3>
+        <p>We start by understanding your body, lifestyle, training level, and biggest obstacles so your plan is built around real life.</p>
+      </div>
+      <div class="step-card rv" style="transition-delay:.1s">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px">
+          <div class="step-num">2</div>
+          <svg width="28" height="28" fill="none" stroke="var(--orange)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3>Plan</h3>
+        <p>You get a personalised transformation roadmap covering training, nutrition, accountability, and weekly targets.</p>
+      </div>
+      <div class="step-card rv" style="transition-delay:.2s">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px">
+          <div class="step-num">3</div>
+          <svg width="28" height="28" fill="none" stroke="var(--orange)" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <h3>Transform</h3>
+        <p>You execute with coaching, check-ins, progress tracking, and clear adjustments so results keep moving.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ══════════════════════════════════════
+   OFFER + GUARANTEE
+══════════════════════════════════════ -->
+<section class="section" style="background:linear-gradient(180deg,#111213 0%,#0B0B0B 100%)">
+  <div class="container">
+    <div class="offer-grid">
+      <!-- OFFER CARD -->
+      <div class="offer-card rv">
+        <p class="eyebrow" style="margin-bottom:14px">What you get</p>
+        <h2 class="h2" style="margin-bottom:32px">The full ReShape<br>coaching stack</h2>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="offer-item">
+            <div class="offer-item-icon">
+              <svg width="14" height="14" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <div class="offer-item-text" style="font-weight:600">12-week body transformation coaching</div>
+            </div>
+          </div>
+          <div class="offer-item">
+            <div class="offer-item-icon">
+              <svg width="14" height="14" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <div class="offer-item-text" style="font-weight:600">Personalised nutrition strategy</div>
+            </div>
+          </div>
+          <div class="offer-item">
+            <div class="offer-item-icon">
+              <svg width="14" height="14" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <div class="offer-item-text" style="font-weight:600">Gym-based training plan</div>
+            </div>
+          </div>
+          <div class="offer-item">
+            <div class="offer-item-icon">
+              <svg width="14" height="14" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <div class="offer-item-text" style="font-weight:600">Daily accountability check-ins</div>
+            </div>
+          </div>
+          <div class="offer-item">
+            <div class="offer-item-icon">
+              <svg width="14" height="14" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <div class="offer-item-text" style="font-weight:600">Progress tracking and adjustments</div>
+            </div>
+          </div>
+          <div class="offer-item">
+            <div class="offer-item-icon">
+              <svg width="14" height="14" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <div class="offer-item-text" style="font-weight:600">Private support and coaching access</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- GUARANTEE CARD -->
+      <div class="guarantee-card rv" style="transition-delay:.12s">
+        <p class="eyebrow" style="margin-bottom:14px">Guarantee</p>
+        <h3 class="h3" style="margin-bottom:16px">Follow the plan.<br><em style="color:var(--orange)">Get the result.</em></h3>
+        <p style="font-size:15px;line-height:1.8;color:var(--text2)">
+          Drop 8–12kg in 12 weeks — <strong style="color:var(--text)">or we coach you for free until you do.</strong> Complete the programme, follow the system, and your result is guaranteed. No catches, no asterisks.ou do.
+        </p>
+        <div class="guarantee-box">
+          <div class="box-label">Best fit for</div>
+          <ul>
+            <li>Busy professionals who need structure</li>
+            <li>People tired of starting over every Monday</li>
+            <li>Men and women serious about body transformation</li>
+          </ul>
+        </div>
+        <a href="#apply" class="btn btn-primary btn-full" style="font-size:15px">
+          Start My Application
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ══════════════════════════════════════
+   REVIEWS
+══════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-center" style="max-width:580px;margin:0 auto">
+      <p class="eyebrow" style="margin-bottom:14px">Reviews</p>
+      <h2 class="h2">What members say after joining ReShape</h2>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card rv">
+        <div class="review-quote-mark">"</div>
+        <p class="review-text">I lost weight, got stronger, and stopped obsessing over every meal.</p>
+        <div class="review-author">
+          <div class="review-av">M1</div>
+          <div>
+            <div class="review-meta-name">Member #1</div>
+            <div class="review-meta-stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card rv" style="transition-delay:.1s">
+        <div class="review-quote-mark">"</div>
+        <p class="review-text">The accountability changed everything. I finally stayed consistent.</p>
+        <div class="review-author">
+          <div class="review-av">M2</div>
+          <div>
+            <div class="review-meta-name">Member #2</div>
+            <div class="review-meta-stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card rv" style="transition-delay:.2s">
+        <div class="review-quote-mark">"</div>
+        <p class="review-text">The structure made fat loss feel simple instead of overwhelming.</p>
+        <div class="review-author">
+          <div class="review-av">M3</div>
+          <div>
+            <div class="review-meta-name">Member #3</div>
+            <div class="review-meta-stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ══════════════════════════════════════
+   APPLY
+══════════════════════════════════════ -->
+<section class="section section-alt" id="apply">
+  <div class="container">
+    <div class="apply-grid">
+      <!-- LEFT -->
+      <div class="rv">
+        <p class="eyebrow" style="margin-bottom:14px">Apply now</p>
+        <h2 class="h2" style="margin-bottom:16px">Apply for the next ReShape intake</h2>
+        <p style="font-size:16px;line-height:1.75;color:var(--text2);max-width:420px">
+          We only take a limited number of applicants each round to protect coaching quality and results. Complete the short form and we will review whether you are a fit.
+        </p>
+        <div class="apply-steps">
+          <div class="apply-step">
+            <div class="apply-step-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </div>
+            <span class="apply-step-text">Short application — takes 2 minutes</span>
+          </div>
+          <div class="apply-step">
+            <div class="apply-step-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <span class="apply-step-text">Quick review by the team within 24 hours</span>
+          </div>
+          <div class="apply-step">
+            <div class="apply-step-icon">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 9.09a19.79 19.79 0 01-3.07-8.67A2 2 0 011.72 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L5.3 8.09a16 16 0 006.29 6.29l1.46-1.95a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+            </div>
+            <span class="apply-step-text">Next-step call for suitable applicants</span>
+          </div>
+        </div>
+      </div>
+      <!-- FORM: 8-Step Questionnaire -->
+      <div class="rv" style="transition-delay:.12s">
+        <div class="form-card">
+          <div class="form-progress" id="formProgress">
+            <div class="form-progress-bar active"></div>
+            <div class="form-progress-bar"></div>
+            <div class="form-progress-bar"></div>
+            <div class="form-progress-bar"></div>
+            <div class="form-progress-bar"></div>
+            <div class="form-progress-bar"></div>
+            <div class="form-progress-bar"></div>
+            <div class="form-progress-bar"></div>
+          </div>
+          <form id="leadForm" novalidate>
+            <!-- STEP 1: Gender -->
+            <div class="form-step active" data-step="1">
+              <div class="form-step-number">Step 1 of 8</div>
+              <div class="form-step-question">What is your gender?</div>
+              <div class="form-options" data-field="gender">
+                <label class="form-option"><input type="radio" name="gender" value="Female"><span class="form-option-icon">&#9792;</span><span class="form-option-label">Female</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+                <label class="form-option"><input type="radio" name="gender" value="Male"><span class="form-option-icon">&#9794;</span><span class="form-option-label">Male</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+              </div>
+              <div class="form-nav"><div></div><button type="button" class="form-btn-next" disabled>Next &rarr;</button></div>
+            </div>
+            <!-- STEP 2 -->
+            <div class="form-step" data-step="2">
+              <div class="form-step-number">Step 2 of 8</div>
+              <div class="form-step-question">Are you looking for...?</div>
+              <div class="form-options" data-field="looking_for">
+                <label class="form-option"><input type="radio" name="looking_for" value="Quick Fix"><span class="form-option-icon">&#9889;</span><span class="form-option-label">Quick Fix</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+                <label class="form-option"><input type="radio" name="looking_for" value="Long Term Solution"><span class="form-option-icon">&#127942;</span><span class="form-option-label">Long Term Solution</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+              </div>
+              <div class="form-nav"><button type="button" class="form-btn-back">&larr; Back</button><button type="button" class="form-btn-next" disabled>Next &rarr;</button></div>
+            </div>
+            <!-- STEP 3 -->
+            <div class="form-step" data-step="3">
+              <div class="form-step-number">Step 3 of 8</div>
+              <div class="form-step-question">You are interested in joining because?</div>
+              <div class="form-options" data-field="reason">
+                <label class="form-option"><input type="radio" name="reason" value="I Want A Membership Card"><span class="form-option-icon">&#128179;</span><span class="form-option-label">I Want A Membership Card</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+                <label class="form-option"><input type="radio" name="reason" value="I Want Results"><span class="form-option-icon">&#128170;</span><span class="form-option-label">I Want Results</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+              </div>
+              <div class="form-nav"><button type="button" class="form-btn-back">&larr; Back</button><button type="button" class="form-btn-next" disabled>Next &rarr;</button></div>
+            </div>
+            <!-- STEP 4 -->
+            <div class="form-step" data-step="4">
+              <div class="form-step-number">Step 4 of 8</div>
+              <div class="form-step-question">Which best describes you?</div>
+              <div class="form-options" data-field="coachability">
+                <label class="form-option"><input type="radio" name="coachability" value="I Am Coachable And Can Follow Instructions"><span class="form-option-icon">&#127919;</span><span class="form-option-label">I Am Coachable &amp; Can Follow Instructions</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+                <label class="form-option"><input type="radio" name="coachability" value="I Feel I Have All The Answers"><span class="form-option-icon">&#129300;</span><span class="form-option-label">I Feel I Have All The Answers</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+              </div>
+              <div class="form-nav"><button type="button" class="form-btn-back">&larr; Back</button><button type="button" class="form-btn-next" disabled>Next &rarr;</button></div>
+            </div>
+            <!-- STEP 5: Contact -->
+            <div class="form-step" data-step="5">
+              <div class="form-step-number">Step 5 of 8</div>
+              <div class="form-step-question">Tell us about yourself</div>
+              <div class="form-input-row">
+                <div class="form-input-group"><label class="form-label" for="firstName">First Name</label><input type="text" id="firstName" name="first_name" class="form-input" placeholder="John" required><div class="form-error-msg">Please enter your first name</div></div>
+                <div class="form-input-group"><label class="form-label" for="lastName">Last Name</label><input type="text" id="lastName" name="last_name" class="form-input" placeholder="Smith" required><div class="form-error-msg">Please enter your last name</div></div>
+              </div>
+              <div class="form-input-row">
+                <div class="form-input-group"><label class="form-label" for="age">Age</label><input type="number" id="age" name="age" class="form-input" placeholder="28" min="16" max="99" required><div class="form-error-msg">Please enter your age</div></div>
+                <div class="form-input-group"><label class="form-label" for="phone">Phone Number</label><input type="tel" id="phone" name="phone" class="form-input" placeholder="+44 7700 000000" required><div class="form-error-msg">Please enter your phone number</div></div>
+              </div>
+              <div class="form-input-group"><label class="form-label" for="email">Email</label><input type="email" id="email" name="email" class="form-input" placeholder="john@example.com" required><div class="form-error-msg">Please enter a valid email</div></div>
+              <div class="form-nav"><button type="button" class="form-btn-back">&larr; Back</button><button type="button" class="form-btn-next">Next &rarr;</button></div>
+            </div>
+            <!-- STEP 6: Goal -->
+            <div class="form-step" data-step="6">
+              <div class="form-step-number">Step 6 of 8</div>
+              <div class="form-step-question">What is your BIG goal?</div>
+              <div class="form-input-group"><textarea name="big_goal" class="form-input" placeholder="Tell us what you want to achieve..." required></textarea><div class="form-error-msg">Please share your goal with us</div></div>
+              <div class="form-step-question" style="margin-top:32px;">How important is this goal to you?</div>
+              <div class="form-rating" data-field="importance">
+                <label class="form-rating-item"><input type="radio" name="importance" value="1"><span class="form-rating-number">1</span><span class="form-rating-label">Low</span></label>
+                <label class="form-rating-item"><input type="radio" name="importance" value="2"><span class="form-rating-number">2</span></label>
+                <label class="form-rating-item"><input type="radio" name="importance" value="3"><span class="form-rating-number">3</span><span class="form-rating-label">Medium</span></label>
+                <label class="form-rating-item"><input type="radio" name="importance" value="4"><span class="form-rating-number">4</span></label>
+                <label class="form-rating-item"><input type="radio" name="importance" value="5"><span class="form-rating-number">5</span><span class="form-rating-label">Critical</span></label>
+              </div>
+              <div class="form-nav"><button type="button" class="form-btn-back">&larr; Back</button><button type="button" class="form-btn-next">Next &rarr;</button></div>
+            </div>
+            <!-- STEP 7: Ready -->
+            <div class="form-step" data-step="7">
+              <div class="form-step-number">Step 7 of 8</div>
+              <div class="form-step-question">Please Read!</div>
+              <p style="color:var(--text2);margin-bottom:24px;font-size:15px;line-height:1.7;">This is a premium transformation programme with a dedicated coach who will be with you every step of the way. This is NOT a standard gym membership.</p>
+              <div class="form-options" data-field="ready_for_coach">
+                <label class="form-option"><input type="radio" name="ready_for_coach" value="Yes I'm ready to work with a transformation coach"><span class="form-option-icon">&#128640;</span><span class="form-option-label">Yes, I'm ready to work with a transformation coach</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+                <label class="form-option"><input type="radio" name="ready_for_coach" value="No I'm looking for a standard gym"><span class="form-option-icon">&#127947;</span><span class="form-option-label">No, I'm looking for a standard gym</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+              </div>
+              <div class="form-step-question">Would you achieve your goal in...?</div>
+              <div class="form-options multi-select" data-field="timeline" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:32px;">
+                <label class="form-option"><input type="checkbox" name="timeline" value="3 months"><span class="form-option-icon">3</span><span class="form-option-label">3 months</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+                <label class="form-option"><input type="checkbox" name="timeline" value="6 months"><span class="form-option-icon">6</span><span class="form-option-label">6 months</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+                <label class="form-option"><input type="checkbox" name="timeline" value="12 months"><span class="form-option-icon">12</span><span class="form-option-label">12 months</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+              </div>
+              <div class="form-step-question">Are you willing to invest in yourself?</div>
+              <div class="form-options" data-field="willing_to_invest">
+                <label class="form-option"><input type="radio" name="willing_to_invest" value="Yes"><span class="form-option-icon">&#10004;</span><span class="form-option-label">Yes</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+                <label class="form-option"><input type="radio" name="willing_to_invest" value="No"><span class="form-option-icon">&#10060;</span><span class="form-option-label">No</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+              </div>
+              <div class="form-nav"><button type="button" class="form-btn-back">&larr; Back</button><button type="button" class="form-btn-next" disabled>Next &rarr;</button></div>
+            </div>
+            <!-- STEP 8: Referral + Location -->
+            <div class="form-step" data-step="8">
+              <div class="form-step-number">Step 8 of 8</div>
+              <div class="form-step-question">How did you first hear about Re-Shape?</div>
+              <div class="form-options multi-select" data-field="referral">
+                <label class="form-option"><input type="checkbox" name="referral" value="Social Media"><span class="form-option-icon">&#128241;</span><span class="form-option-label">Social Media</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+                <label class="form-option"><input type="checkbox" name="referral" value="From A Friend"><span class="form-option-icon">&#129309;</span><span class="form-option-label">From A Friend</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+                <label class="form-option"><input type="checkbox" name="referral" value="Google Search"><span class="form-option-icon">&#128269;</span><span class="form-option-label">Google Search</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+                <label class="form-option"><input type="checkbox" name="referral" value="Online Article"><span class="form-option-icon">&#128240;</span><span class="form-option-label">Online Article</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+              </div>
+              <div class="form-step-question">Please choose your preferred location</div>
+              <div class="form-options" data-field="location">
+                <label class="form-option"><input type="radio" name="location" value="Colchester"><span class="form-option-icon">&#128205;</span><span class="form-option-label">Colchester</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+                <label class="form-option"><input type="radio" name="location" value="Ipswich"><span class="form-option-icon">&#128205;</span><span class="form-option-label">Ipswich</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
+              </div>
+              <div class="form-nav"><button type="button" class="form-btn-back">&larr; Back</button><button type="submit" class="form-btn-next">Submit Application &#128640;</button></div>
+            </div>
+          </form>
+          <div class="form-success" id="formSuccess">
+            <div class="form-success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg></div>
+            <h3>Application Submitted!</h3>
+            <p>We've received your application. We will review your details and be in touch within 24 hours.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ══════════════════════════════════════
+   FAQ
+══════════════════════════════════════ -->
+<section class="section">
+  <div class="container" style="max-width:860px">
+    <div class="section-center">
+      <p class="eyebrow" style="margin-bottom:14px">FAQ</p>
+      <h2 class="h2">Common questions</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>Is this for beginners?</span>
+          <div class="faq-q-icon">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-a">Yes. The programme is built around your current level, whether you are starting fresh or getting back on track.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>Do I need to be fit already?</span>
+          <div class="faq-q-icon">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-a">No. This is designed for people who want structure, support, and a proven path to body transformation.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>How do I apply?</span>
+          <div class="faq-q-icon">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-a">Complete the form above. We will review your answers and invite the best-fit applicants to the next step.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>What if I don't see results?</span>
+          <div class="faq-q-icon">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-a">Drop 8–12kg in 12 weeks — or we coach you for free until you do. Complete the programme and follow the system. If you don't lose body fat, we keep coaching you at no charge. No catches, no asterisks.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>How much time does it take per week?</span>
+          <div class="faq-q-icon">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+        </div>
+        <div class="faq-a">3–4 training sessions of 45–60 minutes plus a weekly check-in call. Built around your schedule, not the other way around.</div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ── FOOTER ─────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-logo">Re<span>Shape</span></span>
+      <span>Ipswich · Results-driven body transformation coaching</span>
+      <span>Privacy · Terms · Contact</span>
+    </div>
+  </div>
+</footer>
+<!-- ─── ANIMATIONS ───────────────────── -->
+<style>
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ── SUPABASE INIT ── */
+(function() {
+  var SUPABASE_URL = 'https://lvizldmdficsfpgegehp.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXpsZG1kZmljc2ZwZ2VnZWhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2OTk4NDQsImV4cCI6MjA4OTI3NTg0NH0.72wHbZaTvqNzW6DTb6Ae1vi9QpOg_-KiEO-Jjm9mn0k';
+  if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
+    window.__supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('Supabase connected');
+  } else {
+    console.warn('Supabase not configured');
+  }
+})();
+
+/* ── TICKER ── */
+const TICKS=[
+  {n:'Sarah M.',k:'−12kg',w:'11 wks'},{n:'James K.',k:'−9kg',w:'12 wks'},
+  {n:'Emma T.',k:'−11kg',w:'10 wks'},{n:'Ryan C.',k:'−13kg',w:'12 wks'},
+  {n:'Laura P.',k:'−14kg',w:'10 wks'},{n:'Mark H.',k:'−8kg',w:'11 wks'},
+  {n:'Priya S.',k:'−10kg',w:'9 wks'},{n:'Tom A.',k:'−12kg',w:'12 wks'},
+  {n:'Chloe W.',k:'−11kg',w:'11 wks'},{n:'Amir K.',k:'−15kg',w:'12 wks'},
+];
+const tt=document.getElementById('ticker');
+[...TICKS,...TICKS].forEach(r=>{
+  const i=r.n.split(' ').map(x=>x[0]).join('');
+  tt.innerHTML+=`<div class="tick"><div class="tick-av">${i}</div><div><div class="tick-n">${r.n}</div><div class="tick-w">${r.w}</div></div><div class="tick-k">${r.k}</div></div>`;
+});
+/* ── REVEALS ── */
+const ro=new IntersectionObserver(e=>{
+  e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');ro.unobserve(x.target);}});
+},{threshold:.08,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+/* ── FAQ ── */
+function toggleFaq(el){
+  const item=el.closest('.faq-item');
+  const open=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+  if(!open)item.classList.add('open');
+}
+/* ── NAV shadow ── */
+const nav=document.querySelector('.nav');
+window.addEventListener('scroll',()=>{
+  nav.style.boxShadow=window.scrollY>60?'0 2px 32px rgba(0,0,0,0.5)':'';
+});
+
+/* ── MULTI-STEP FORM ENGINE ── */
+(function() {
+  var form = document.getElementById('leadForm');
+  var success = document.getElementById('formSuccess');
+  var progressBars = document.querySelectorAll('#formProgress .form-progress-bar');
+  if (!form) return;
+
+  var steps = form.querySelectorAll('.form-step');
+  var currentStep = 0;
+  var totalSteps = steps.length;
+
+  form.querySelectorAll('.form-option').forEach(function(option) {
+    option.addEventListener('click', function() {
+      var input = option.querySelector('input');
+      var container = option.closest('.form-options');
+      var isMulti = container.classList.contains('multi-select');
+      if (isMulti) {
+        input.checked = !input.checked;
+        option.classList.toggle('selected', input.checked);
+      } else {
+        container.querySelectorAll('.form-option').forEach(function(o) {
+          o.classList.remove('selected');
+          o.querySelector('input').checked = false;
+        });
+        input.checked = true;
+        option.classList.add('selected');
+      }
+      updateNextButton();
+    });
+  });
+
+  form.querySelectorAll('.form-rating-item').forEach(function(item) {
+    item.addEventListener('click', function() {
+      var input = item.querySelector('input');
+      var container = item.closest('.form-rating');
+      container.querySelectorAll('.form-rating-item').forEach(function(r) {
+        r.classList.remove('selected');
+        r.querySelector('input').checked = false;
+      });
+      input.checked = true;
+      item.classList.add('selected');
+      updateNextButton();
+    });
+  });
+
+  form.querySelectorAll('.form-btn-next').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      if (btn.disabled) return;
+      if (!validateStep(currentStep)) return;
+      goToStep(currentStep + 1);
+    });
+  });
+
+  form.querySelectorAll('.form-btn-back').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      goToStep(currentStep - 1);
+    });
+  });
+
+  function goToStep(index) {
+    if (index < 0 || index >= totalSteps) return;
+    steps[currentStep].classList.remove('active');
+    currentStep = index;
+    steps[currentStep].classList.add('active');
+    updateProgress();
+    updateNextButton();
+    document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function updateProgress() {
+    for (var i = 0; i < progressBars.length; i++) {
+      progressBars[i].classList.remove('active', 'completed');
+      if (i < currentStep) progressBars[i].classList.add('completed');
+      else if (i === currentStep) progressBars[i].classList.add('active');
+    }
+  }
+
+  function updateNextButton() {
+    var step = steps[currentStep];
+    var nextBtn = step.querySelector('.form-btn-next');
+    if (!nextBtn) return;
+    var radioGroups = step.querySelectorAll('.form-options:not(.multi-select)');
+    var needsRadio = false;
+    radioGroups.forEach(function(group) {
+      var checked = group.querySelector('input[type="radio"]:checked');
+      if (!checked) needsRadio = true;
+    });
+    var stepNum = parseInt(step.dataset.step);
+    if (stepNum === 5 || stepNum === 6 || stepNum === 8) {
+      nextBtn.disabled = false;
+      return;
+    }
+    nextBtn.disabled = needsRadio;
+  }
+
+  function validateStep(index) {
+    var step = steps[index];
+    var stepNum = parseInt(step.dataset.step);
+    var valid = true;
+    if (stepNum === 5) {
+      var fields = step.querySelectorAll('.form-input[required]');
+      fields.forEach(function(field) {
+        var errorMsg = field.parentElement.querySelector('.form-error-msg');
+        field.classList.remove('error');
+        if (errorMsg) errorMsg.classList.remove('visible');
+        if (!field.value.trim()) {
+          field.classList.add('error');
+          if (errorMsg) errorMsg.classList.add('visible');
+          valid = false;
+        } else if (field.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value)) {
+          field.classList.add('error');
+          if (errorMsg) errorMsg.classList.add('visible');
+          valid = false;
+        }
+      });
+    }
+    if (stepNum === 6) {
+      var textarea = step.querySelector('textarea[required]');
+      if (textarea) {
+        var errorMsg = textarea.parentElement.querySelector('.form-error-msg');
+        textarea.classList.remove('error');
+        if (errorMsg) errorMsg.classList.remove('visible');
+        if (!textarea.value.trim()) {
+          textarea.classList.add('error');
+          if (errorMsg) errorMsg.classList.add('visible');
+          valid = false;
+        }
+      }
+    }
+    return valid;
+  }
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var formData = new FormData(form);
+    var data = {};
+    formData.forEach(function(value, key) {
+      if (data[key]) {
+        if (!Array.isArray(data[key])) data[key] = [data[key]];
+        data[key].push(value);
+      } else {
+        data[key] = value;
+      }
+    });
+    if (data.timeline && !Array.isArray(data.timeline)) data.timeline = [data.timeline];
+    if (data.referral && !Array.isArray(data.referral)) data.referral = [data.referral];
+    var urlParams = new URLSearchParams(window.location.search);
+    var leadData = {
+      form_name: 'Main Landing Page',
+      gender: data.gender || null,
+      looking_for: data.looking_for || null,
+      reason: data.reason || null,
+      coachability: data.coachability || null,
+      first_name: data.first_name,
+      last_name: data.last_name,
+      age: data.age ? parseInt(data.age) : null,
+      phone: data.phone || null,
+      email: data.email,
+      big_goal: data.big_goal || null,
+      importance: data.importance ? parseInt(data.importance) : null,
+      ready_for_coach: data.ready_for_coach || null,
+      timeline: data.timeline || [],
+      willing_to_invest: data.willing_to_invest || null,
+      referral: data.referral || [],
+      location: data.location || null,
+      utm_source: urlParams.get('utm_source') || null,
+      utm_campaign: urlParams.get('utm_campaign') || null
+    };
+    console.log('--- CONSULTATION FORM SUBMISSION ---');
+    console.log(JSON.stringify(leadData, null, 2));
+    try {
+      if (typeof window.__supabaseClient !== 'undefined') {
+        var result = await window.__supabaseClient.from('leads').insert([leadData]);
+        if (result.error) {
+          console.error('Supabase error:', result.error.message);
+        } else {
+          console.log('Lead saved to database successfully');
+        }
+      } else {
+        console.warn('Supabase not configured — lead logged to console only');
+      }
+    } catch (err) {
+      console.error('Submit error:', err);
+    }
+    form.style.display = 'none';
+    document.getElementById('formProgress').style.display = 'none';
+    success.classList.add('active');
+  });
+
+  form.querySelectorAll('.form-input').forEach(function(input) {
+    input.addEventListener('input', function() {
+      input.classList.remove('error');
+      var errorMsg = input.parentElement.querySelector('.form-error-msg');
+      if (errorMsg) errorMsg.classList.remove('visible');
+    });
+  });
+
+  updateProgress();
+  updateNextButton();
+})();
+</script>
+</body>
+</html>
