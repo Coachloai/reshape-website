@@ -812,7 +812,7 @@ if(sessionStorage.getItem('rs_auth')==='1'){
         <div class="donut-wrap">
           <canvas id="chart-gender"></canvas>
           <div class="donut-center">
-            <div class="donut-center-num">12</div>
+            <div class="donut-center-num" id="gender-donut-total">0</div>
             <div class="donut-center-lbl">Total</div>
           </div>
         </div>
@@ -1017,7 +1017,7 @@ if(sessionStorage.getItem('rs_auth')==='1'){
           <div class="donut-wrap">
             <canvas id="chart-gender-2"></canvas>
             <div class="donut-center">
-              <div class="donut-center-num" id="analytics-total">12</div>
+              <div class="donut-center-num" id="analytics-total">0</div>
               <div class="donut-center-lbl">Total</div>
             </div>
           </div>
@@ -1473,6 +1473,8 @@ function initGenderChart() {
       }}
     }
   });
+  var donutTotal = document.getElementById('gender-donut-total');
+  if (donutTotal) donutTotal.textContent = male + female;
   const leg = document.getElementById('gender-legend');
   const total = male + female || 1;
   leg.innerHTML = [
