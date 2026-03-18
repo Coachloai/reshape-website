@@ -6,6 +6,7 @@
 <title>ReShape — Leads Dashboard</title>
 <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800,900&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -602,9 +603,45 @@ body{
   display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap;
   margin-bottom: 0;
 }
+/* ── PASSWORD GATE ── */
+.gate-overlay{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.gate-box{background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:40px;max-width:380px;width:100%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.5)}
+.gate-title{font-family:var(--head);font-size:22px;font-weight:900;margin-bottom:8px;letter-spacing:-0.03em}
+.gate-sub{font-size:13px;color:var(--text3);margin-bottom:24px}
+.gate-input{width:100%;background:var(--s3);border:1.5px solid var(--border);border-radius:10px;color:var(--text);padding:12px 16px;font-family:var(--body);font-size:14px;outline:none;text-align:center;margin-bottom:12px;transition:border-color .2s}
+.gate-input:focus{border-color:var(--orange)}
+.gate-btn{width:100%;padding:12px;background:var(--orange);color:#fff;border:none;border-radius:10px;font-family:var(--body);font-weight:700;font-size:14px;cursor:pointer;transition:background .2s}
+.gate-btn:hover{background:var(--orange2)}
+.gate-err{color:var(--red);font-size:12px;margin-top:8px;display:none}
 </style>
 </head>
 <body>
+<!-- ── PASSWORD GATE ── -->
+<div class="gate-overlay" id="gate">
+  <div class="gate-box">
+    <div class="gate-title">Re<span style="color:var(--orange)">Shape</span> Dashboard</div>
+    <div class="gate-sub">Enter the dashboard password to continue</div>
+    <input type="password" class="gate-input" id="gate-pw" placeholder="Password" onkeydown="if(event.key==='Enter')checkGate()">
+    <button class="gate-btn" onclick="checkGate()">Access Dashboard</button>
+    <div class="gate-err" id="gate-err">Incorrect password</div>
+  </div>
+</div>
+<script>
+function checkGate(){
+  var pw=document.getElementById('gate-pw').value;
+  if(pw==='reshape2026'){
+    sessionStorage.setItem('rs_auth','1');
+    document.getElementById('gate').style.display='none';
+    initDashboard();
+  } else {
+    document.getElementById('gate-err').style.display='block';
+    document.getElementById('gate-pw').value='';
+  }
+}
+if(sessionStorage.getItem('rs_auth')==='1'){
+  document.getElementById('gate').style.display='none';
+}
+</script>
 <!-- ── TOP NAV ── -->
 <nav class="topnav">
   <div class="nav-brand">
@@ -1075,22 +1112,69 @@ body{
 </div>
 <script>
 /* ══════════════════════════════════════
+   SUPABASE
+══════════════════════════════════════ */
+var SUPABASE_URL = 'https://lvizldmdficsfpgegehp.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXpsZG1kZmljc2ZwZ2VnZWhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2OTk4NDQsImV4cCI6MjA4OTI3NTg0NH0.72wHbZaTvqNzW6DTb6Ae1vi9QpOg_-KiEO-Jjm9mn0k';
+var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ══════════════════════════════════════
    DATA
 ══════════════════════════════════════ */
-const ALL_LEADS = [
-  { id:1,  name:'Sarah Mitchell',   email:'sarah.m@email.com',       phone:'+44 7700 900001', location:'Colchester', form:'Intake', quality:'High',   age:32, gender:'Female', date:'2026-03-17', source:'Instagram' },
-  { id:2,  name:'James Hargreaves', email:'j.hargreaves@email.com',   phone:'+44 7700 900002', location:'Ipswich',    form:'Waiting List',     quality:'High',   age:38, gender:'Male',   date:'2026-03-16', source:'Instagram' },
-  { id:3,  name:'Emma Thompson',    email:'emma.t@email.com',         phone:'+44 7700 900003', location:'Ipswich',    form:'Summer Shred',       quality:'Med',    age:27, gender:'Female', date:'2026-03-15', source:'Facebook' },
-  { id:4,  name:'Ryan Clarke',      email:'ryan.c@email.com',         phone:'+44 7700 900004', location:'Colchester', form:'10kg Challenge',          quality:'High',   age:34, gender:'Male',   date:'2026-03-14', source:'Referral' },
-  { id:5,  name:'Laura Patel',      email:'laura.p@email.com',        phone:'+44 7700 900005', location:'Ipswich',    form:'Intake', quality:'High',   age:29, gender:'Female', date:'2026-03-13', source:'Google' },
-  { id:6,  name:'Mark Henderson',   email:'mark.h@email.com',         phone:'+44 7700 900006', location:'Colchester', form:'Summer Shred',       quality:'Low',    age:44, gender:'Male',   date:'2026-03-12', source:'Facebook' },
-  { id:7,  name:'Priya Sharma',     email:'priya.s@email.com',        phone:'+44 7700 900007', location:'Ipswich',    form:'Waiting List',     quality:'High',   age:31, gender:'Female', date:'2026-03-11', source:'Instagram' },
-  { id:8,  name:'Tom Aldridge',     email:'tom.a@email.com',          phone:'+44 7700 900008', location:'Colchester', form:'Intake', quality:'High',   age:36, gender:'Male',   date:'2026-03-10', source:'Google' },
-  { id:9,  name:'Chloe Watson',     email:'chloe.w@email.com',        phone:'+44 7700 900009', location:'Ipswich',    form:'10kg Challenge',          quality:'Med',    age:24, gender:'Female', date:'2026-03-09', source:'Referral' },
-  { id:10, name:'Amir Kassem',      email:'amir.k@email.com',         phone:'+44 7700 900010', location:'Colchester', form:'Summer Shred',       quality:'High',   age:40, gender:'Male',   date:'2026-03-08', source:'Facebook' },
-  { id:11, name:'Jen Robbins',      email:'jen.r@email.com',          phone:'+44 7700 900011', location:'Colchester', form:'Intake', quality:'Med',    age:33, gender:'Female', date:'2026-03-07', source:'Instagram' },
-  { id:12, name:'Mike Davies',      email:'mike.d@email.com',         phone:'+44 7700 900012', location:'Ipswich',    form:'Waiting List',     quality:'High',   age:47, gender:'Male',   date:'2026-03-06', source:'Instagram' },
-];
+let ALL_LEADS = [];
+
+function mapLead(row, i) {
+  var name = ((row.first_name || '') + ' ' + (row.last_name || '')).trim() || row.email || 'Unknown';
+  var isCoachable = (row.coachability || '').toLowerCase().includes('coachable');
+  var isLongTerm = (row.looking_for || '').toLowerCase().includes('long');
+  var wantsResults = (row.reason || '').toLowerCase().includes('result');
+  var willInvest = (row.willing_to_invest || '').toLowerCase() === 'yes';
+  var score = (isCoachable ? 1 : 0) + (isLongTerm ? 1 : 0) + (wantsResults ? 1 : 0) + (willInvest ? 1 : 0);
+  var quality = score >= 3 ? 'High' : score >= 2 ? 'Med' : 'Low';
+  var referral = row.referral || '';
+  var source = referral.includes('Social') ? 'Social Media' : referral.includes('Friend') ? 'Referral' : referral.includes('Google') ? 'Google' : referral.includes('Article') ? 'Online Article' : referral || 'Direct';
+  return {
+    id: row.id || i + 1,
+    name: name,
+    firstName: row.first_name || '',
+    lastName: row.last_name || '',
+    email: row.email || '',
+    phone: row.phone || '',
+    location: row.location || 'Unknown',
+    form: row.form_name || 'Intake',
+    quality: quality,
+    age: parseInt(row.age) || 0,
+    gender: row.gender || 'Unknown',
+    date: (row.created_at || '').split('T')[0],
+    source: source,
+    answers: {
+      intent: row.looking_for || '',
+      interest: row.reason || '',
+      coachable: row.coachability || '',
+      goal: row.big_goal || '',
+      importance: parseInt(row.importance) || 0,
+      readyForCoach: row.ready_for_coach || '',
+      timeline: row.timeline ? (Array.isArray(row.timeline) ? row.timeline : [row.timeline]) : [],
+      willingToInvest: row.willing_to_invest || '',
+      hearAbout: row.referral ? (Array.isArray(row.referral) ? row.referral : [row.referral]) : [],
+    }
+  };
+}
+
+async function fetchLeads() {
+  var result = await sb.from('leads').select('*').order('created_at', { ascending: false });
+  if (result.error) { console.error('Supabase error:', result.error); return []; }
+  return (result.data || []).map(mapLead);
+}
+
+async function initDashboard() {
+  ALL_LEADS = await fetchLeads();
+  filtered = [...ALL_LEADS];
+  renderTable();
+  initCharts();
+  updateStats();
+  setLastUpdated();
+}
 const COLORS = {
   orange:  '#ED5C25',
   orange2: '#FF7A42',
@@ -1116,10 +1200,9 @@ let charts = {};
    INIT
 ══════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', () => {
-  renderTable();
-  initCharts();
-  updateStats();
-  setLastUpdated();
+  if (sessionStorage.getItem('rs_auth') === '1') {
+    initDashboard();
+  }
 });
 /* ══════════════════════════════════════
    TABLE
@@ -1503,13 +1586,19 @@ function exportCSV() {
   showToast('CSV exported');
 }
 function logout() {
-  if (confirm('Log out of ReShape dashboard?')) window.location.reload();
+  if (confirm('Log out of ReShape dashboard?')) {
+    sessionStorage.removeItem('rs_auth');
+    window.location.reload();
+  }
 }
-function refreshData() {
+async function refreshData() {
+  ALL_LEADS = await fetchLeads();
+  filtered = [...ALL_LEADS];
+  renderTable();
   updateStats();
   updateCharts();
   setLastUpdated();
-  showToast('Data refreshed');
+  showToast('Data refreshed — ' + ALL_LEADS.length + ' leads');
 }
 function setLastUpdated() {
   document.getElementById('last-updated').textContent = 'Updated just now';
