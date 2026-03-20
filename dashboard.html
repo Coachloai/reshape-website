@@ -533,6 +533,105 @@ body{
   font-size: 12px; color: rgba(240,237,232,0.85);
 }
 .content-modal-cta span:first-child { color: var(--text3); }
+/* ── CONTENT MONTH BAR ── */
+.content-month-bar {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 16px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto; flex-wrap: nowrap;
+}
+.content-month-bar::-webkit-scrollbar { height: 0; }
+.content-month-pill {
+  background: var(--s2); border: 1px solid var(--border);
+  color: var(--text2); padding: 7px 16px; border-radius: 20px;
+  font-family: var(--body); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all .2s; white-space: nowrap;
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+}
+.content-month-pill:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
+.content-month-pill.active { background: var(--odim); border-color: var(--orange); color: var(--orange); font-weight: 600; }
+.content-month-pill .pill-progress {
+  font-size: 10px; font-weight: 700; opacity: 0.7;
+  background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 10px;
+}
+.content-month-pill.active .pill-progress { background: rgba(237,92,37,0.15); }
+.content-add-month-btn {
+  background: transparent; border: 1px dashed var(--border);
+  color: var(--text3); padding: 7px 16px; border-radius: 20px;
+  font-family: var(--body); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all .2s; white-space: nowrap; flex-shrink: 0;
+}
+.content-add-month-btn:hover { border-color: var(--orange); color: var(--orange); }
+/* ── FILMED CHECKBOX ── */
+.content-filmed-check {
+  position: absolute; top: 14px; right: 14px;
+  width: 24px; height: 24px; border-radius: 6px;
+  border: 2px solid var(--border); background: transparent;
+  cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; justify-content: center;
+  color: transparent; font-size: 14px; z-index: 2;
+}
+.content-filmed-check:hover { border-color: var(--green); }
+.content-filmed-check.checked {
+  background: var(--green); border-color: var(--green); color: #fff;
+}
+.content-card.filmed { border-left-color: var(--green) !important; }
+.content-card.filmed .content-hook { opacity: 0.6; }
+/* ── ADD MONTH MODAL ── */
+.add-month-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+  display: none; align-items: center; justify-content: center;
+  padding: 24px; opacity: 0; transition: opacity .25s;
+}
+.add-month-overlay.open { display: flex; opacity: 1; }
+.add-month-modal {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 16px; width: 100%; max-width: 560px;
+  max-height: 85vh; overflow-y: auto; padding: 32px;
+  position: relative; box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+  animation: fadeUp .3s ease;
+}
+.add-month-modal h3 {
+  font-family: var(--head); font-size: 20px; font-weight: 800;
+  letter-spacing: -0.02em; color: var(--text); margin: 0 0 20px;
+}
+.add-month-field { margin-bottom: 16px; }
+.add-month-field label {
+  display: block; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text3); margin-bottom: 6px;
+}
+.add-month-field input, .add-month-field textarea {
+  width: 100%; background: var(--s2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px; color: var(--text);
+  font-family: var(--body); font-size: 13px; outline: none;
+  transition: border-color .2s;
+}
+.add-month-field input:focus, .add-month-field textarea:focus {
+  border-color: var(--orange);
+}
+.add-month-field textarea {
+  min-height: 200px; resize: vertical; font-family: monospace; font-size: 12px;
+}
+.add-month-actions { display: flex; gap: 10px; margin-top: 20px; }
+.add-month-actions .btn-create {
+  flex: 1; background: var(--orange); border: none; color: #fff;
+  padding: 10px 20px; border-radius: 8px; font-family: var(--body);
+  font-size: 14px; font-weight: 600; cursor: pointer; transition: background .2s;
+}
+.add-month-actions .btn-create:hover { background: var(--orange2); }
+.add-month-actions .btn-cancel {
+  background: var(--s3); border: 1px solid var(--border); color: var(--text2);
+  padding: 10px 20px; border-radius: 8px; font-family: var(--body);
+  font-size: 14px; cursor: pointer; transition: all .2s;
+}
+.add-month-actions .btn-cancel:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
+.add-month-error {
+  margin-top: 10px; padding: 10px 14px; background: rgba(231,76,60,0.1);
+  border: 1px solid rgba(231,76,60,0.3); border-radius: 8px;
+  color: var(--red); font-size: 12px; display: none;
+}
 /* ── RESPONSIVE ── */
 @media(max-width:1100px){
   .stats-row{grid-template-columns:1fr 1fr}
@@ -1144,16 +1243,22 @@ if(sessionStorage.getItem('rs_auth')==='1'){
       <div class="page-header fade-in" style="margin-bottom:20px">
         <div>
           <div class="page-title">Content Calendar</div>
-          <div class="page-sub">30-day Instagram strategy · Women 35+ · Fat Loss</div>
+          <div class="page-sub" id="content-page-sub">Select a month to view content</div>
         </div>
         <div class="header-actions">
-          <span class="content-stat-pill" id="content-stat-total">30 posts</span>
+          <span class="content-stat-pill" id="content-stat-total">0 posts</span>
+          <span class="content-stat-pill" id="content-stat-filmed" style="margin-left:6px">0 filmed</span>
         </div>
       </div>
 
-      <!-- Content Filters -->
+      <!-- Month Selector Bar -->
+      <div class="content-month-bar fade-in" id="content-month-bar">
+        <!-- Month pills rendered by JS -->
+      </div>
+
+      <!-- Category Filters -->
       <div class="content-filters fade-in fade-in-1">
-        <button class="content-filter-btn active" data-cat="all" onclick="filterContent('all', this)">All 30 Posts</button>
+        <button class="content-filter-btn active" data-cat="all" onclick="filterContent('all', this)">All Posts</button>
         <button class="content-filter-btn" data-cat="mistake" onclick="filterContent('mistake', this)">
           <span class="content-filter-dot" style="background:#FF6B6B"></span>Mistakes
         </button>
@@ -1175,6 +1280,30 @@ if(sessionStorage.getItem('rs_auth')==='1'){
         <div class="content-modal" onclick="event.stopPropagation()">
           <button class="content-modal-close" onclick="closeContentModal()">&times;</button>
           <div id="content-modal-body"></div>
+        </div>
+      </div>
+
+      <!-- Add Month Modal -->
+      <div class="add-month-overlay" id="add-month-overlay" onclick="closeAddMonthModal()">
+        <div class="add-month-modal" onclick="event.stopPropagation()">
+          <h3>+ Add Content Month</h3>
+          <div class="add-month-field">
+            <label>Month Name</label>
+            <input type="text" id="add-month-name" placeholder="e.g. August">
+          </div>
+          <div class="add-month-field">
+            <label>Year</label>
+            <input type="number" id="add-month-year" placeholder="e.g. 2025" value="2025">
+          </div>
+          <div class="add-month-field">
+            <label>Content Code (paste JS array of post objects)</label>
+            <textarea id="add-month-code" placeholder='Paste your posts array here, e.g.&#10;[&#10;  { day:1, category:"mistake", hook:"...", title:"...", mistake:"...", solution:"...", cta:"..." },&#10;  { day:2, category:"value", hook:"...", title:"...", steps:["..."], cta:"..." },&#10;  ...&#10;]'></textarea>
+          </div>
+          <div class="add-month-error" id="add-month-error"></div>
+          <div class="add-month-actions">
+            <button class="btn-cancel" onclick="closeAddMonthModal()">Cancel</button>
+            <button class="btn-create" onclick="createMonth()">Create</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1765,7 +1894,7 @@ function switchView(view, btn) {
   // Init view-specific content
   if (view === 'leads') renderLeadsView();
   if (view === 'analytics') initAnalyticsCharts();
-  if (view === 'content') renderContentGrid();
+  if (view === 'content') initContentView();
 }
 /* ── LEADS VIEW ── */
 function renderLeadsView() {
@@ -1900,44 +2029,39 @@ function showToast(msg) {
 }
 
 /* ══════════════════════════════════════
-   CONTENT CALENDAR
+   CONTENT CALENDAR — MULTI-MONTH SYSTEM
 ══════════════════════════════════════ */
-var CONTENT_POSTS = [
-  // ── MISTAKES & SOLUTIONS (1–10) ──
-  { day:1, category:"mistake", hook:"You're not lazy. You're just using a fat-loss strategy designed for a 25-year-old.", title:"Mistake #1: Following Generic Diet Advice", mistake:"Using the same diet everyone else is using — usually low-cal, high-cardio — without accounting for how your metabolism and hormones have shifted after 35.", solution:"Switch to a strategy built around your biology: higher protein to preserve muscle, strategic strength training, and eating to support hormonal balance — not against it.", cta:"Drop a 🙋‍♀️ if you've been following advice meant for someone half your age." },
-  { day:2, category:"mistake", hook:"Eating less and doing more is the reason you're not losing fat after 35. Here's the science.", title:"Mistake #2: Cutting Too Many Calories", mistake:"Aggressive calorie restriction tanks your metabolism, spikes cortisol, and accelerates muscle loss — the exact things that make fat loss harder in your 30s and 40s.", solution:"Eat enough to fuel your metabolism. Aim for a modest deficit (200–300 kcal), prioritise protein (1.6–2g per kg of bodyweight), and let consistency do the work.", cta:"Save this if you've ever wondered why eating less stopped working." },
-  { day:3, category:"mistake", hook:"Cardio 5x a week and still not losing belly fat? This is why.", title:"Mistake #3: Overrelying on Cardio", mistake:"Cardio burns calories in the moment but does little for your resting metabolism. Too much cardio elevates cortisol and can actually increase cravings and fat retention — especially around the belly.", solution:"Prioritise 3x strength sessions per week. Muscle is metabolically active tissue — more muscle means more calories burned at rest, 24/7.", cta:"Has this been your story? Share it in the comments 👇" },
-  { day:4, category:"mistake", hook:"The real reason you're exhausted, craving sugar, and not losing weight — it's not your willpower.", title:"Mistake #4: Ignoring Sleep & Stress", mistake:"Poor sleep and chronic stress spike ghrelin (hunger hormone) and cortisol (fat-storage hormone). No nutrition plan can out-run a nervous system that's in survival mode.", solution:"Treat sleep and stress management as part of your fat-loss protocol. 7–8 hours of sleep can reduce cravings by up to 30%. This isn't soft advice — it's physiology.", cta:"Rate your current sleep quality 1–10 in the comments 😴" },
-  { day:5, category:"mistake", hook:"Perfect Monday to Thursday, then it all falls apart. You're not inconsistent — you have the wrong system.", title:"Mistake #5: All-or-Nothing Thinking", mistake:"Believing a slip-up means the whole week is ruined leads to shame cycles that restart every Monday. This pattern is the #1 killer of long-term fat loss.", solution:"Adopt the 80/20 rule. If you're on point 80% of the time, you will lose fat. One imperfect meal changes nothing. A shame-fuelled restart week changes everything.", cta:"Tag a friend who needs to hear this 👇" },
-  { day:6, category:"mistake", hook:"You're skipping breakfast to save calories and unknowingly making fat loss harder. Here's why.", title:"Mistake #6: Under-eating Protein at Breakfast", mistake:"Starting the day with coffee or a carb-heavy breakfast spikes and crashes blood sugar, driving cravings by mid-morning and leading to overeating later in the day.", solution:"Anchor your first meal with 30–40g of protein. This stabilises blood sugar, suppresses appetite hormones, and preserves the muscle mass that keeps your metabolism elevated.", cta:"What does your current breakfast look like? Comment below 👇" },
-  { day:7, category:"mistake", hook:"The 'clean eating' trap — and why it's keeping you stuck at the same weight.", title:"Mistake #7: Eating Clean Without a Structure", mistake:"Eating salads, avoiding junk, and still not losing weight. 'Clean eating' without tracking portions, protein, or overall calories is not a fat-loss strategy — it's a feeling.", solution:"Structure beats willpower. Use simple rules: fill half your plate with protein, quarter with veg, quarter with carbs. You don't need to track every calorie — just anchor every meal.", cta:"Save this post and implement it at your next meal." },
-  { day:8, category:"mistake", hook:"Drinking your calories and wondering why the scale won't move? Read this.", title:"Mistake #8: Liquid Calories Flying Under the Radar", mistake:"Lattes, fruit juices, protein shakes, and wine add 300–700 hidden calories to a day that otherwise looks 'perfect'. These rarely register as food in the brain.", solution:"Audit your drinks first. Stick to water, black coffee, and herbal teas as your base. If you want a glass of wine — enjoy it consciously and account for it. Don't let it be invisible.", cta:"Drop a ☕ if you had no idea your morning coffee was this calorie-dense." },
-  { day:9, category:"mistake", hook:"Your weekend habits are undoing 5 days of effort. Here's the maths and the fix.", title:"Mistake #9: Weekend Eating Erasing the Weekday Deficit", mistake:"A 500-calorie daily deficit Monday–Friday = 2,500 calorie weekly deficit. Two 'treat' days at +1,000 calories each = 2,000 surplus. Net loss: almost nothing.", solution:"You don't need to diet on weekends — you need to be mindful. Keep protein high, stay hydrated, and let yourself enjoy food without letting it become a full derailment.", cta:"Does this hit a little too close to home? Comment 'same' below 👀" },
-  { day:10, category:"mistake", hook:"You've been trying to lose fat without lifting weights. That's why your metabolism feels broken.", title:"Mistake #10: Skipping Strength Training", mistake:"Women lose 3–8% of muscle mass per decade from their mid-30s onward. Less muscle = slower resting metabolism. Cardio and dieting without lifting accelerates this process.", solution:"3x per week of compound strength training (squats, hinges, presses, rows) is non-negotiable for women over 35. Muscle doesn't make you bulky — it makes your body burn fat while you sleep.", cta:"Are you currently lifting weights? Yes or No 👇" },
-
-  // ── STEP-BY-STEP VALUE (11–20) ──
-  { day:11, category:"value", hook:"How to lose fat after 35 without a single diet. A step-by-step breakdown.", title:"The 5-Step Fat Loss Reset for Women Over 35", steps:["Step 1 — Set your protein target first. 1.6–2g per kg of bodyweight. Build every meal around this.","Step 2 — Strength train 3x a week. Pick compound movements. Progressive overload is your best friend.","Step 3 — Fix your sleep before you fix your diet. 7–8 hours changes your hormones, cravings, and energy.","Step 4 — Walk 7,000–10,000 steps daily. Low-effort, zero cortisol, massive metabolic impact.","Step 5 — Stay consistent at 80%. Stop chasing perfect. Chase repeatable."], cta:"Save this and share it with a woman who needs it 📌" },
-  { day:12, category:"value", hook:"Build a meal that burns fat, kills cravings, and keeps you full for 4+ hours. Here's exactly how.", title:"The Perfect Fat-Loss Plate (No Tracking Required)", steps:["Step 1 — Protein first: chicken, salmon, eggs, Greek yoghurt, or cottage cheese. 30–40g per meal.","Step 2 — Fill half your plate with non-starchy veg. Volume without calories.","Step 3 — Add a fist-sized portion of complex carbs: rice, oats, sweet potato, or legumes.","Step 4 — Include a thumb of healthy fat: olive oil, avocado, or nuts.","Step 5 — Drink 500ml of water before the meal. Hunger and thirst are easily confused."], cta:"Screenshot this and put it on your fridge 📸" },
-  { day:13, category:"value", hook:"I asked 100 women what stopped them from losing fat. Here's what they said — and how to fix each one.", title:"The Top 5 Barriers to Fat Loss (and How to Break Through Each)", steps:["Barrier 1 — 'I don't have time.' Fix: Prep 3 meals once a week. Consistency > perfection.","Barrier 2 — 'I don't know what to eat.' Fix: Learn 5 high-protein meals you enjoy. Rotate them.","Barrier 3 — 'I lose motivation.' Fix: Build systems not willpower. Schedule your sessions like meetings.","Barrier 4 — 'Nothing works for me.' Fix: Your protocol isn't wrong — it's likely under-dosed on protein and strength training.","Barrier 5 — 'I'm too stressed.' Fix: Stress management IS part of fat loss. Start with sleep and a 10-minute walk post-dinner."], cta:"Which barrier is yours? Comment the number 👇" },
-  { day:14, category:"value", hook:"A morning routine that sets your hormones up for fat loss before 9am. Steal it.", title:"The Fat-Loss Morning Protocol", steps:["Step 1 — Wake up and drink 500ml of water immediately. Rehydration kickstarts metabolism.","Step 2 — Get 10 minutes of natural light. This resets cortisol rhythm and improves sleep quality tonight.","Step 3 — Eat a protein-rich breakfast within 60–90 minutes of waking. No skipping.","Step 4 — Walk for 15 minutes after breakfast. Blood sugar management, zero effort.","Step 5 — No social media for 30 minutes. Reducing early cortisol spikes protects your fat-burning environment all day."], cta:"Which step are you adding to your routine first? 👇" },
-  { day:15, category:"value", hook:"How to eat out, travel, and still lose fat. A system that actually works in real life.", title:"The Real-Life Fat Loss Framework", steps:["Step 1 — Eat a protein snack before going out. Arriving hungry is the #1 cause of poor choices.","Step 2 — Always order protein first when reading a menu. Build the meal from there.","Step 3 — Swap one side for veg at every restaurant. Simple, painless, effective.","Step 4 — Drink one glass of water per alcoholic drink. Keeps calories down and reduces the next-day damage.","Step 5 — Return to normal eating at the next meal. One night never derailed anyone. The spiral after it does."], cta:"Save this before your next dinner out 🍽️" },
-  { day:16, category:"value", hook:"How to build a strength training routine if you've never lifted weights (or stopped years ago). Step by step.", title:"Strength Training for Beginners 35+", steps:["Step 1 — Start with 3x per week, 30–40 minutes per session. More is not better at the start.","Step 2 — Learn these 5 movements: squat, hip hinge, push, pull, carry. Master form before adding weight.","Step 3 — Add weight slowly. If you can do 15 reps easily, the weight is too light.","Step 4 — Rest 60–90 seconds between sets. Strength requires recovery, not just effort.","Step 5 — Track your lifts. Numbers going up = muscle building = metabolism increasing."], cta:"Share this with a woman who's been avoiding the weights section 💪" },
-  { day:17, category:"value", hook:"How to stop stress eating in 4 steps. This is what actually works.", title:"The Stress Eating Interruption Protocol", steps:["Step 1 — Pause for 90 seconds before eating in response to an emotion. The urge often passes.","Step 2 — Ask: 'Am I physically hungry or emotionally hungry?' Physical hunger builds slowly. Emotional hunger is sudden.","Step 3 — If emotional — identify the feeling. Name it. Write it. Move your body for 10 minutes instead.","Step 4 — If you eat anyway — remove the guilt. Guilt is not a strategy. Observe, learn, move on."], cta:"Save this for the next time a difficult day hits 📌" },
-  { day:18, category:"value", hook:"How to get back on track after a bad week. A 3-day reset that isn't a detox.", title:"The 3-Day Fat Loss Reset", steps:["Day 1 — Hydration focus. 2.5–3L of water. Reduce processed food and alcohol. Sleep 8 hours.","Day 2 — Protein at every meal. Walk 8,000 steps. One strength session. No restriction, just structure.","Day 3 — Review your week ahead. Plan 3 meals and 3 workouts. Remove friction. You're back."], cta:"You don't need a week — you need 3 days. Tag someone who needs a reset 👇" },
-  { day:19, category:"value", hook:"The exact weekly schedule I'd give a busy woman over 35 who wants to lose fat without losing her mind.", title:"The Ideal Fat-Loss Week", steps:["Mon: Strength session A (45 min) + 8k steps","Tue: Walk + high-protein meals + early sleep","Wed: Strength session B (45 min) + 8k steps","Thu: Active recovery — yoga, walk, stretch","Fri: Strength session C (45 min) + 8k steps","Sat: Leisure activity (hike, swim, cycle) — move without it feeling like exercise","Sun: Meal prep (60 min) + rest + plan the week ahead"], cta:"Screenshot this and build your week around it 📅" },
-  { day:20, category:"value", hook:"5 high-protein meals you can make in under 15 minutes. No chef skills required.", title:"Quick High-Protein Meals for Busy Women", steps:["1 — Greek yoghurt + protein powder + berries + a handful of walnuts (35g protein, 5 min)","2 — Scrambled eggs (3) + smoked salmon + avocado on sourdough (32g protein, 10 min)","3 — Cottage cheese bowl + cucumber + cherry tomatoes + olive oil (28g protein, 3 min)","4 — Grilled chicken strips + pre-bagged salad + hummus + pita (40g protein, 10 min)","5 — Tuna + white beans + lemon + olive oil in a bowl (36g protein, 5 min)"], cta:"Save this for your next 'I don't know what to eat' moment 🍳" },
-
-  // ── COMMON QUESTIONS (21–30) ──
-  { day:21, category:"question", hook:"Why am I gaining weight even though I'm eating the same as I always have? A hormonal explanation.", question:"Why is fat loss harder after 35 even when I'm doing everything right?", answer:"After 35, oestrogen begins to decline, which shifts fat storage toward the abdomen. Insulin sensitivity decreases, meaning carbs are processed less efficiently. Muscle mass drops, slowing your resting metabolism. The same input produces a different output — because your hormones have changed the equation. This isn't failure. It's biology asking for a smarter approach.", cta:"Share this with a woman in her 30s or 40s who blames herself 👇" },
-  { day:22, category:"question", hook:"Do I really need to count calories to lose fat? The honest answer.", question:"Do I have to track calories to lose body fat?", answer:"No — but you need to understand your intake. Tracking calories is a tool, not a requirement. What matters is that you're in a modest calorie deficit, getting enough protein, and eating consistently. You can achieve this through simple plate-building rules, portion awareness, and anchoring meals around protein. Tracking is useful for a few weeks to build intuition. After that, most women don't need it.", cta:"Have you tried calorie tracking? Did it help or hurt? Comment below 👇" },
-  { day:23, category:"question", hook:"Is belly fat after 35 actually different from regular fat? Yes. Here's the science in plain English.", question:"Why is belly fat after 35 so stubborn?", answer:"Visceral fat (the fat around your organs and waist) is strongly influenced by cortisol and oestrogen. As oestrogen declines, the body shifts from storing fat in the hips and thighs to storing it abdominally. Cortisol from chronic stress amplifies this. Belly fat is the last to go — not because you're failing, but because it's the most hormonally reactive fat in the body. Strength training, sleep, and stress reduction directly target this.", cta:"Belly fat is not a willpower problem. Save this and share it 📌" },
-  { day:24, category:"question", hook:"Can I lose fat while also going through perimenopause? Here's what the research actually says.", question:"Can I still lose fat in perimenopause?", answer:"Absolutely — but the strategy needs to match the phase. During perimenopause, your body becomes more sensitive to poor sleep, high stress, and low protein. The women who succeed in this phase prioritise strength training (to preserve muscle), eat a high-protein diet (to support hormones and satiety), and make sleep and stress management non-negotiable. It's harder — but it's very possible with the right approach.", cta:"Are you in perimenopause? Has fat loss felt different? Share below 👇" },
-  { day:25, category:"question", hook:"Why am I so hungry all the time even after eating? The hormone answer every woman over 35 needs to hear.", question:"Why are my cravings so much worse now than they used to be?", answer:"Hormonal shifts after 35 directly affect ghrelin (hunger hormone) and leptin (fullness hormone). Lower oestrogen can make leptin signalling weaker, meaning your brain takes longer to register fullness. Poor sleep amplifies ghrelin further. The fix isn't more willpower — it's adequate protein at each meal, improved sleep quality, and managing blood sugar through smart carbohydrate pairing.", cta:"Tag a woman who struggles with cravings and blame herself for it 👇" },
-  { day:26, category:"question", hook:"How much protein do I actually need to lose fat and keep my muscle? Here's a number you can use today.", question:"How much protein should I eat per day to lose fat?", answer:"For women over 35 aiming to lose fat and preserve muscle: target 1.6–2g of protein per kg of bodyweight. For a 70kg woman, that's 112–140g per day. Spread this across 3–4 meals. Hitting this target reduces hunger, preserves metabolism, and accelerates body recomposition. Most women are eating half this amount — and wondering why nothing is working.", cta:"Calculate your target and drop the number in the comments 💪" },
-  { day:27, category:"question", hook:"Should I do fasting to lose fat after 35? Here's an honest answer with no agenda.", question:"Is intermittent fasting good for fat loss after 35?", answer:"Intermittent fasting can work — but it's not magic, and for some women over 35 it backfires. Skipping breakfast can spike cortisol, increase cravings later in the day, and make hitting protein targets harder. IF works best when it helps you naturally eat less without adding stress. If fasting makes you anxious, ravenous, or leads to overeating later — it's not the right tool for your body right now.", cta:"Have you tried fasting? Did it work? Let me know 👇" },
-  { day:28, category:"question", hook:"I've had 3 kids. Is it actually possible to get my pre-baby body back? Real talk.", question:"Can I get a toned, lean body after having children?", answer:"You may not get your exact pre-baby body back — and that's not the goal. But building a stronger, leaner, more energetic body? Absolutely. Postnatal hormonal changes, core function, and sleep deprivation are real challenges — but they're workable. The women who succeed focus on strength training, protein, sleep, and consistency over perfection. Your body has done something extraordinary. Let's build it stronger.", cta:"Share this with a mum who thinks her window has closed 🙌" },
-  { day:29, category:"question", hook:"How long does it actually take to lose body fat? An honest timeline so you can stop quitting too soon.", question:"How quickly can I expect to lose fat?", answer:"A realistic and sustainable rate for women is 0.5–1% of bodyweight per week. For a 70kg woman, that's 0.35–0.7kg per week. In 12 weeks done correctly, that's 4–8kg of actual body fat — not water weight, not muscle. Visible changes often appear between weeks 4–8. The women who quit at week 3 never see results that were 4 weeks away. Trust the process and measure the right things.", cta:"Save this as a reminder the next time you want to quit 📌" },
-  { day:30, category:"question", hook:"What's the single most important thing I can do right now to start losing fat? One answer. No overwhelm.", question:"Where do I start if I'm completely overwhelmed?", answer:"Start with one thing: eat 30g of protein at every meal, for the next 7 days. Don't change anything else. This one shift will reduce cravings, stabilise your energy, protect your muscle, and create momentum. Fat loss doesn't begin with the perfect plan. It begins with a first step, repeated. Do this for a week — then add the next layer.", cta:"Comment 'I'm starting today' and I'll send you my free high-protein meal guide 👇" },
+var DEFAULT_POSTS = [
+  {day:1,category:"mistake",hook:"You're not lazy. You're just using a fat-loss strategy designed for a 25-year-old.",title:"Mistake #1: Following Generic Diet Advice",mistake:"Using the same diet everyone else is using — usually low-cal, high-cardio — without accounting for how your metabolism and hormones have shifted after 35.",solution:"Switch to a strategy built around your biology: higher protein to preserve muscle, strategic strength training, and eating to support hormonal balance — not against it.",cta:"Drop a 🙋‍♀️ if you've been following advice meant for someone half your age."},
+  {day:2,category:"mistake",hook:"Eating less and doing more is the reason you're not losing fat after 35. Here's the science.",title:"Mistake #2: Cutting Too Many Calories",mistake:"Aggressive calorie restriction tanks your metabolism, spikes cortisol, and accelerates muscle loss — the exact things that make fat loss harder in your 30s and 40s.",solution:"Eat enough to fuel your metabolism. Aim for a modest deficit (200–300 kcal), prioritise protein (1.6–2g per kg of bodyweight), and let consistency do the work.",cta:"Save this if you've ever wondered why eating less stopped working."},
+  {day:3,category:"mistake",hook:"Cardio 5x a week and still not losing belly fat? This is why.",title:"Mistake #3: Overrelying on Cardio",mistake:"Cardio burns calories in the moment but does little for your resting metabolism. Too much cardio elevates cortisol and can actually increase cravings and fat retention — especially around the belly.",solution:"Prioritise 3x strength sessions per week. Muscle is metabolically active tissue — more muscle means more calories burned at rest, 24/7.",cta:"Has this been your story? Share it in the comments 👇"},
+  {day:4,category:"mistake",hook:"The real reason you're exhausted, craving sugar, and not losing weight — it's not your willpower.",title:"Mistake #4: Ignoring Sleep & Stress",mistake:"Poor sleep and chronic stress spike ghrelin (hunger hormone) and cortisol (fat-storage hormone). No nutrition plan can out-run a nervous system that's in survival mode.",solution:"Treat sleep and stress management as part of your fat-loss protocol. 7–8 hours of sleep can reduce cravings by up to 30%. This isn't soft advice — it's physiology.",cta:"Rate your current sleep quality 1–10 in the comments 😴"},
+  {day:5,category:"mistake",hook:"Perfect Monday to Thursday, then it all falls apart. You're not inconsistent — you have the wrong system.",title:"Mistake #5: All-or-Nothing Thinking",mistake:"Believing a slip-up means the whole week is ruined leads to shame cycles that restart every Monday. This pattern is the #1 killer of long-term fat loss.",solution:"Adopt the 80/20 rule. If you're on point 80% of the time, you will lose fat. One imperfect meal changes nothing. A shame-fuelled restart week changes everything.",cta:"Tag a friend who needs to hear this 👇"},
+  {day:6,category:"mistake",hook:"You're skipping breakfast to save calories and unknowingly making fat loss harder. Here's why.",title:"Mistake #6: Under-eating Protein at Breakfast",mistake:"Starting the day with coffee or a carb-heavy breakfast spikes and crashes blood sugar, driving cravings by mid-morning and leading to overeating later in the day.",solution:"Anchor your first meal with 30–40g of protein. This stabilises blood sugar, suppresses appetite hormones, and preserves the muscle mass that keeps your metabolism elevated.",cta:"What does your current breakfast look like? Comment below 👇"},
+  {day:7,category:"mistake",hook:"The 'clean eating' trap — and why it's keeping you stuck at the same weight.",title:"Mistake #7: Eating Clean Without a Structure",mistake:"Eating salads, avoiding junk, and still not losing weight. 'Clean eating' without tracking portions, protein, or overall calories is not a fat-loss strategy — it's a feeling.",solution:"Structure beats willpower. Use simple rules: fill half your plate with protein, quarter with veg, quarter with carbs. You don't need to track every calorie — just anchor every meal.",cta:"Save this post and implement it at your next meal."},
+  {day:8,category:"mistake",hook:"Drinking your calories and wondering why the scale won't move? Read this.",title:"Mistake #8: Liquid Calories Flying Under the Radar",mistake:"Lattes, fruit juices, protein shakes, and wine add 300–700 hidden calories to a day that otherwise looks 'perfect'. These rarely register as food in the brain.",solution:"Audit your drinks first. Stick to water, black coffee, and herbal teas as your base. If you want a glass of wine — enjoy it consciously and account for it. Don't let it be invisible.",cta:"Drop a ☕ if you had no idea your morning coffee was this calorie-dense."},
+  {day:9,category:"mistake",hook:"Your weekend habits are undoing 5 days of effort. Here's the maths and the fix.",title:"Mistake #9: Weekend Eating Erasing the Weekday Deficit",mistake:"A 500-calorie daily deficit Monday–Friday = 2,500 calorie weekly deficit. Two 'treat' days at +1,000 calories each = 2,000 surplus. Net loss: almost nothing.",solution:"You don't need to diet on weekends — you need to be mindful. Keep protein high, stay hydrated, and let yourself enjoy food without letting it become a full derailment.",cta:"Does this hit a little too close to home? Comment 'same' below 👀"},
+  {day:10,category:"mistake",hook:"You've been trying to lose fat without lifting weights. That's why your metabolism feels broken.",title:"Mistake #10: Skipping Strength Training",mistake:"Women lose 3–8% of muscle mass per decade from their mid-30s onward. Less muscle = slower resting metabolism. Cardio and dieting without lifting accelerates this process.",solution:"3x per week of compound strength training (squats, hinges, presses, rows) is non-negotiable for women over 35. Muscle doesn't make you bulky — it makes your body burn fat while you sleep.",cta:"Are you currently lifting weights? Yes or No 👇"},
+  {day:11,category:"value",hook:"How to lose fat after 35 without a single diet. A step-by-step breakdown.",title:"The 5-Step Fat Loss Reset for Women Over 35",steps:["Step 1 — Set your protein target first. 1.6–2g per kg of bodyweight. Build every meal around this.","Step 2 — Strength train 3x a week. Pick compound movements. Progressive overload is your best friend.","Step 3 — Fix your sleep before you fix your diet. 7–8 hours changes your hormones, cravings, and energy.","Step 4 — Walk 7,000–10,000 steps daily. Low-effort, zero cortisol, massive metabolic impact.","Step 5 — Stay consistent at 80%. Stop chasing perfect. Chase repeatable."],cta:"Save this and share it with a woman who needs it 📌"},
+  {day:12,category:"value",hook:"Build a meal that burns fat, kills cravings, and keeps you full for 4+ hours. Here's exactly how.",title:"The Perfect Fat-Loss Plate (No Tracking Required)",steps:["Step 1 — Protein first: chicken, salmon, eggs, Greek yoghurt, or cottage cheese. 30–40g per meal.","Step 2 — Fill half your plate with non-starchy veg. Volume without calories.","Step 3 — Add a fist-sized portion of complex carbs: rice, oats, sweet potato, or legumes.","Step 4 — Include a thumb of healthy fat: olive oil, avocado, or nuts.","Step 5 — Drink 500ml of water before the meal. Hunger and thirst are easily confused."],cta:"Screenshot this and put it on your fridge 📸"},
+  {day:13,category:"value",hook:"I asked 100 women what stopped them from losing fat. Here's what they said — and how to fix each one.",title:"The Top 5 Barriers to Fat Loss (and How to Break Through Each)",steps:["Barrier 1 — 'I don't have time.' Fix: Prep 3 meals once a week. Consistency > perfection.","Barrier 2 — 'I don't know what to eat.' Fix: Learn 5 high-protein meals you enjoy. Rotate them.","Barrier 3 — 'I lose motivation.' Fix: Build systems not willpower. Schedule your sessions like meetings.","Barrier 4 — 'Nothing works for me.' Fix: Your protocol isn't wrong — it's likely under-dosed on protein and strength training.","Barrier 5 — 'I'm too stressed.' Fix: Stress management IS part of fat loss. Start with sleep and a 10-minute walk post-dinner."],cta:"Which barrier is yours? Comment the number 👇"},
+  {day:14,category:"value",hook:"A morning routine that sets your hormones up for fat loss before 9am. Steal it.",title:"The Fat-Loss Morning Protocol",steps:["Step 1 — Wake up and drink 500ml of water immediately. Rehydration kickstarts metabolism.","Step 2 — Get 10 minutes of natural light. This resets cortisol rhythm and improves sleep quality tonight.","Step 3 — Eat a protein-rich breakfast within 60–90 minutes of waking. No skipping.","Step 4 — Walk for 15 minutes after breakfast. Blood sugar management, zero effort.","Step 5 — No social media for 30 minutes. Reducing early cortisol spikes protects your fat-burning environment all day."],cta:"Which step are you adding to your routine first? 👇"},
+  {day:15,category:"value",hook:"How to eat out, travel, and still lose fat. A system that actually works in real life.",title:"The Real-Life Fat Loss Framework",steps:["Step 1 — Eat a protein snack before going out. Arriving hungry is the #1 cause of poor choices.","Step 2 — Always order protein first when reading a menu. Build the meal from there.","Step 3 — Swap one side for veg at every restaurant. Simple, painless, effective.","Step 4 — Drink one glass of water per alcoholic drink. Keeps calories down and reduces the next-day damage.","Step 5 — Return to normal eating at the next meal. One night never derailed anyone. The spiral after it does."],cta:"Save this before your next dinner out 🍽️"},
+  {day:16,category:"value",hook:"How to build a strength training routine if you've never lifted weights (or stopped years ago). Step by step.",title:"Strength Training for Beginners 35+",steps:["Step 1 — Start with 3x per week, 30–40 minutes per session. More is not better at the start.","Step 2 — Learn these 5 movements: squat, hip hinge, push, pull, carry. Master form before adding weight.","Step 3 — Add weight slowly. If you can do 15 reps easily, the weight is too light.","Step 4 — Rest 60–90 seconds between sets. Strength requires recovery, not just effort.","Step 5 — Track your lifts. Numbers going up = muscle building = metabolism increasing."],cta:"Share this with a woman who's been avoiding the weights section 💪"},
+  {day:17,category:"value",hook:"How to stop stress eating in 4 steps. This is what actually works.",title:"The Stress Eating Interruption Protocol",steps:["Step 1 — Pause for 90 seconds before eating in response to an emotion. The urge often passes.","Step 2 — Ask: 'Am I physically hungry or emotionally hungry?' Physical hunger builds slowly. Emotional hunger is sudden.","Step 3 — If emotional — identify the feeling. Name it. Write it. Move your body for 10 minutes instead.","Step 4 — If you eat anyway — remove the guilt. Guilt is not a strategy. Observe, learn, move on."],cta:"Save this for the next time a difficult day hits 📌"},
+  {day:18,category:"value",hook:"How to get back on track after a bad week. A 3-day reset that isn't a detox.",title:"The 3-Day Fat Loss Reset",steps:["Day 1 — Hydration focus. 2.5–3L of water. Reduce processed food and alcohol. Sleep 8 hours.","Day 2 — Protein at every meal. Walk 8,000 steps. One strength session. No restriction, just structure.","Day 3 — Review your week ahead. Plan 3 meals and 3 workouts. Remove friction. You're back."],cta:"You don't need a week — you need 3 days. Tag someone who needs a reset 👇"},
+  {day:19,category:"value",hook:"The exact weekly schedule I'd give a busy woman over 35 who wants to lose fat without losing her mind.",title:"The Ideal Fat-Loss Week",steps:["Mon: Strength session A (45 min) + 8k steps","Tue: Walk + high-protein meals + early sleep","Wed: Strength session B (45 min) + 8k steps","Thu: Active recovery — yoga, walk, stretch","Fri: Strength session C (45 min) + 8k steps","Sat: Leisure activity (hike, swim, cycle) — move without it feeling like exercise","Sun: Meal prep (60 min) + rest + plan the week ahead"],cta:"Screenshot this and build your week around it 📅"},
+  {day:20,category:"value",hook:"5 high-protein meals you can make in under 15 minutes. No chef skills required.",title:"Quick High-Protein Meals for Busy Women",steps:["1 — Greek yoghurt + protein powder + berries + a handful of walnuts (35g protein, 5 min)","2 — Scrambled eggs (3) + smoked salmon + avocado on sourdough (32g protein, 10 min)","3 — Cottage cheese bowl + cucumber + cherry tomatoes + olive oil (28g protein, 3 min)","4 — Grilled chicken strips + pre-bagged salad + hummus + pita (40g protein, 10 min)","5 — Tuna + white beans + lemon + olive oil in a bowl (36g protein, 5 min)"],cta:"Save this for your next 'I don't know what to eat' moment 🍳"},
+  {day:21,category:"question",hook:"Why am I gaining weight even though I'm eating the same as I always have? A hormonal explanation.",question:"Why is fat loss harder after 35 even when I'm doing everything right?",answer:"After 35, oestrogen begins to decline, which shifts fat storage toward the abdomen. Insulin sensitivity decreases, meaning carbs are processed less efficiently. Muscle mass drops, slowing your resting metabolism. The same input produces a different output — because your hormones have changed the equation. This isn't failure. It's biology asking for a smarter approach.",cta:"Share this with a woman in her 30s or 40s who blames herself 👇"},
+  {day:22,category:"question",hook:"Do I really need to count calories to lose fat? The honest answer.",question:"Do I have to track calories to lose body fat?",answer:"No — but you need to understand your intake. Tracking calories is a tool, not a requirement. What matters is that you're in a modest calorie deficit, getting enough protein, and eating consistently. You can achieve this through simple plate-building rules, portion awareness, and anchoring meals around protein. Tracking is useful for a few weeks to build intuition. After that, most women don't need it.",cta:"Have you tried calorie tracking? Did it help or hurt? Comment below 👇"},
+  {day:23,category:"question",hook:"Is belly fat after 35 actually different from regular fat? Yes. Here's the science in plain English.",question:"Why is belly fat after 35 so stubborn?",answer:"Visceral fat (the fat around your organs and waist) is strongly influenced by cortisol and oestrogen. As oestrogen declines, the body shifts from storing fat in the hips and thighs to storing it abdominally. Cortisol from chronic stress amplifies this. Belly fat is the last to go — not because you're failing, but because it's the most hormonally reactive fat in the body. Strength training, sleep, and stress reduction directly target this.",cta:"Belly fat is not a willpower problem. Save this and share it 📌"},
+  {day:24,category:"question",hook:"Can I lose fat while also going through perimenopause? Here's what the research actually says.",question:"Can I still lose fat in perimenopause?",answer:"Absolutely — but the strategy needs to match the phase. During perimenopause, your body becomes more sensitive to poor sleep, high stress, and low protein. The women who succeed in this phase prioritise strength training (to preserve muscle), eat a high-protein diet (to support hormones and satiety), and make sleep and stress management non-negotiable. It's harder — but it's very possible with the right approach.",cta:"Are you in perimenopause? Has fat loss felt different? Share below 👇"},
+  {day:25,category:"question",hook:"Why am I so hungry all the time even after eating? The hormone answer every woman over 35 needs to hear.",question:"Why are my cravings so much worse now than they used to be?",answer:"Hormonal shifts after 35 directly affect ghrelin (hunger hormone) and leptin (fullness hormone). Lower oestrogen can make leptin signalling weaker, meaning your brain takes longer to register fullness. Poor sleep amplifies ghrelin further. The fix isn't more willpower — it's adequate protein at each meal, improved sleep quality, and managing blood sugar through smart carbohydrate pairing.",cta:"Tag a woman who struggles with cravings and blame herself for it 👇"},
+  {day:26,category:"question",hook:"How much protein do I actually need to lose fat and keep my muscle? Here's a number you can use today.",question:"How much protein should I eat per day to lose fat?",answer:"For women over 35 aiming to lose fat and preserve muscle: target 1.6–2g of protein per kg of bodyweight. For a 70kg woman, that's 112–140g per day. Spread this across 3–4 meals. Hitting this target reduces hunger, preserves metabolism, and accelerates body recomposition. Most women are eating half this amount — and wondering why nothing is working.",cta:"Calculate your target and drop the number in the comments 💪"},
+  {day:27,category:"question",hook:"Should I do fasting to lose fat after 35? Here's an honest answer with no agenda.",question:"Is intermittent fasting good for fat loss after 35?",answer:"Intermittent fasting can work — but it's not magic, and for some women over 35 it backfires. Skipping breakfast can spike cortisol, increase cravings later in the day, and make hitting protein targets harder. IF works best when it helps you naturally eat less without adding stress. If fasting makes you anxious, ravenous, or leads to overeating later — it's not the right tool for your body right now.",cta:"Have you tried fasting? Did it work? Let me know 👇"},
+  {day:28,category:"question",hook:"I've had 3 kids. Is it actually possible to get my pre-baby body back? Real talk.",question:"Can I get a toned, lean body after having children?",answer:"You may not get your exact pre-baby body back — and that's not the goal. But building a stronger, leaner, more energetic body? Absolutely. Postnatal hormonal changes, core function, and sleep deprivation are real challenges — but they're workable. The women who succeed focus on strength training, protein, sleep, and consistency over perfection. Your body has done something extraordinary. Let's build it stronger.",cta:"Share this with a mum who thinks her window has closed 🙌"},
+  {day:29,category:"question",hook:"How long does it actually take to lose body fat? An honest timeline so you can stop quitting too soon.",question:"How quickly can I expect to lose fat?",answer:"A realistic and sustainable rate for women is 0.5–1% of bodyweight per week. For a 70kg woman, that's 0.35–0.7kg per week. In 12 weeks done correctly, that's 4–8kg of actual body fat — not water weight, not muscle. Visible changes often appear between weeks 4–8. The women who quit at week 3 never see results that were 4 weeks away. Trust the process and measure the right things.",cta:"Save this as a reminder the next time you want to quit 📌"},
+  {day:30,category:"question",hook:"What's the single most important thing I can do right now to start losing fat? One answer. No overwhelm.",question:"Where do I start if I'm completely overwhelmed?",answer:"Start with one thing: eat 30g of protein at every meal, for the next 7 days. Don't change anything else. This one shift will reduce cravings, stabilise your energy, protect your muscle, and create momentum. Fat loss doesn't begin with the perfect plan. It begins with a first step, repeated. Do this for a week — then add the next layer.",cta:"Comment 'I'm starting today' and I'll send you my free high-protein meal guide 👇"},
 ];
 
 var CONTENT_CAT_CFG = {
@@ -1946,25 +2070,131 @@ var CONTENT_CAT_CFG = {
   question: { label:"Q&A",                color:"#FFD93D", bg:"rgba(255,217,61,0.08)",  icon:"💬" },
 };
 
+var contentMonths = [];
+var currentMonthId = null;
 var contentFilter = 'all';
+var filmedState = {};
 
+/* ── PERSISTENCE ── */
+function loadContentData() {
+  try {
+    var saved = localStorage.getItem('reshape_content_months');
+    if (saved) {
+      contentMonths = JSON.parse(saved);
+    }
+  } catch(e) { contentMonths = []; }
+
+  // If empty, seed with default posts
+  if (!contentMonths.length) {
+    contentMonths = [{ id: 'month_1', name: 'Month 1', year: '2025', posts: DEFAULT_POSTS }];
+    saveContentMonths();
+  }
+
+  try {
+    var f = localStorage.getItem('reshape_content_filmed');
+    if (f) filmedState = JSON.parse(f);
+  } catch(e) { filmedState = {}; }
+
+  if (!currentMonthId) currentMonthId = contentMonths[0].id;
+}
+
+function saveContentMonths() {
+  try { localStorage.setItem('reshape_content_months', JSON.stringify(contentMonths)); } catch(e) {}
+}
+
+function saveFilmedState() {
+  try { localStorage.setItem('reshape_content_filmed', JSON.stringify(filmedState)); } catch(e) {}
+}
+
+/* ── INIT ── */
+function initContentView() {
+  loadContentData();
+  contentFilter = 'all';
+  // Reset category filter buttons
+  document.querySelectorAll('.content-filter-btn').forEach(function(b) {
+    b.classList.remove('active');
+    if (b.getAttribute('data-cat') === 'all') b.classList.add('active');
+  });
+  renderMonthBar();
+  renderContentGrid();
+}
+
+/* ── MONTH BAR ── */
+function renderMonthBar() {
+  var bar = document.getElementById('content-month-bar');
+  if (!bar) return;
+  var html = '';
+  contentMonths.forEach(function(m) {
+    var filmed = getFilmedCount(m.id, m.posts.length);
+    var activeClass = m.id === currentMonthId ? ' active' : '';
+    html += '<button class="content-month-pill' + activeClass + '" onclick="switchContentMonth(\'' + m.id + '\')">';
+    html += m.name + ' ' + m.year;
+    html += '<span class="pill-progress">' + filmed + '/' + m.posts.length + '</span>';
+    html += '</button>';
+  });
+  html += '<button class="content-add-month-btn" onclick="openAddMonthModal()">+ Add Month</button>';
+  bar.innerHTML = html;
+}
+
+function getFilmedCount(monthId, total) {
+  var count = 0;
+  for (var key in filmedState) {
+    if (key.startsWith(monthId + '-') && filmedState[key]) count++;
+  }
+  return count;
+}
+
+function switchContentMonth(id) {
+  currentMonthId = id;
+  contentFilter = 'all';
+  document.querySelectorAll('.content-filter-btn').forEach(function(b) {
+    b.classList.remove('active');
+    if (b.getAttribute('data-cat') === 'all') b.classList.add('active');
+  });
+  renderMonthBar();
+  renderContentGrid();
+}
+
+/* ── CATEGORY FILTER ── */
 function filterContent(cat, btn) {
   contentFilter = cat;
-  document.querySelectorAll('.content-filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.content-filter-btn').forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
   renderContentGrid();
 }
 
+/* ── GRID ── */
 function renderContentGrid() {
   var grid = document.getElementById('content-grid');
   if (!grid) return;
-  var list = contentFilter === 'all' ? CONTENT_POSTS : CONTENT_POSTS.filter(function(p){ return p.category === contentFilter; });
-  var stat = document.getElementById('content-stat-total');
-  if (stat) stat.textContent = list.length + ' posts';
+
+  var month = contentMonths.find(function(m) { return m.id === currentMonthId; });
+  if (!month) { grid.innerHTML = '<p style="color:var(--text3)">No month selected</p>'; return; }
+
+  // Update subtitle
+  var sub = document.getElementById('content-page-sub');
+  if (sub) sub.textContent = month.name + ' ' + month.year + ' · ' + month.posts.length + '-day content plan';
+
+  var allPosts = month.posts;
+  var list = contentFilter === 'all' ? allPosts : allPosts.filter(function(p) { return p.category === contentFilter; });
+
+  // Stats
+  var filmed = getFilmedCount(month.id, allPosts.length);
+  var statTotal = document.getElementById('content-stat-total');
+  var statFilmed = document.getElementById('content-stat-filmed');
+  if (statTotal) statTotal.textContent = list.length + ' posts';
+  if (statFilmed) statFilmed.textContent = filmed + '/' + allPosts.length + ' filmed';
 
   grid.innerHTML = list.map(function(post) {
-    var cfg = CONTENT_CAT_CFG[post.category];
-    return '<div class="content-card" onclick="openContentModal(' + post.day + ')" style="border-left:3px solid ' + cfg.color + '">' +
+    var cfg = CONTENT_CAT_CFG[post.category] || { label:'Post', color:'#888', icon:'📝' };
+    var fKey = currentMonthId + '-' + post.day;
+    var isFilmed = filmedState[fKey];
+    var filmedClass = isFilmed ? ' filmed' : '';
+    var checkClass = isFilmed ? ' checked' : '';
+    var borderColor = isFilmed ? 'var(--green)' : cfg.color;
+
+    return '<div class="content-card' + filmedClass + '" onclick="openContentModal(' + post.day + ')" style="border-left:3px solid ' + borderColor + '">' +
+      '<div class="content-filmed-check' + checkClass + '" onclick="toggleFilmed(\'' + currentMonthId + '\',' + post.day + ',event)">✓</div>' +
       '<div class="content-card-top">' +
         '<div style="display:flex;gap:8px;align-items:center">' +
           '<span class="content-day-badge" style="background:' + cfg.color + ';color:#0A0A0A">DAY ' + post.day + '</span>' +
@@ -1977,14 +2207,27 @@ function renderContentGrid() {
   }).join('');
 }
 
+/* ── FILMED TOGGLE ── */
+function toggleFilmed(monthId, day, event) {
+  event.stopPropagation();
+  var key = monthId + '-' + day;
+  filmedState[key] = !filmedState[key];
+  if (!filmedState[key]) delete filmedState[key];
+  saveFilmedState();
+  renderMonthBar();
+  renderContentGrid();
+}
+
+/* ── DETAIL MODAL ── */
 function openContentModal(day) {
-  var post = CONTENT_POSTS.find(function(p){ return p.day === day; });
+  var month = contentMonths.find(function(m) { return m.id === currentMonthId; });
+  if (!month) return;
+  var post = month.posts.find(function(p) { return p.day === day; });
   if (!post) return;
-  var cfg = CONTENT_CAT_CFG[post.category];
+  var cfg = CONTENT_CAT_CFG[post.category] || { label:'Post', color:'#888', icon:'📝' };
   var body = document.getElementById('content-modal-body');
   var html = '';
 
-  // Badge + Title
   html += '<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">';
   html += '<span class="content-day-badge" style="background:' + cfg.color + ';color:#0A0A0A">DAY ' + post.day + '</span>';
   html += '<span style="font-size:14px">' + cfg.icon + '</span>';
@@ -1999,16 +2242,12 @@ function openContentModal(day) {
     html += '<div class="content-modal-section-label" style="color:#4ECDC4">✅ The Solution</div>';
     html += '<p class="content-modal-body-text">' + post.solution + '</p>';
   }
-
-  if (post.category === 'value') {
+  if (post.category === 'value' && post.steps) {
     html += '<div class="content-modal-section-label" style="color:#4ECDC4">📋 Steps</div>';
     html += '<div style="display:flex;flex-direction:column;gap:8px">';
-    post.steps.forEach(function(s) {
-      html += '<div class="content-modal-step">' + s + '</div>';
-    });
+    post.steps.forEach(function(s) { html += '<div class="content-modal-step">' + s + '</div>'; });
     html += '</div>';
   }
-
   if (post.category === 'question') {
     html += '<div class="content-modal-section-label" style="color:#FFD93D">❓ Question</div>';
     html += '<p class="content-modal-body-text" style="font-weight:600;font-style:italic">' + post.question + '</p>';
@@ -2016,24 +2255,81 @@ function openContentModal(day) {
     html += '<p class="content-modal-body-text">' + post.answer + '</p>';
   }
 
-  // CTA
-  html += '<div class="content-modal-cta">';
-  html += '<span>📣 CTA: </span>';
-  html += '<span>' + post.cta + '</span>';
-  html += '</div>';
+  html += '<div class="content-modal-cta"><span>📣 CTA: </span><span>' + post.cta + '</span></div>';
 
   body.innerHTML = html;
-  var overlay = document.getElementById('content-modal-overlay');
-  overlay.classList.add('open');
+  document.getElementById('content-modal-overlay').classList.add('open');
 }
 
 function closeContentModal() {
   document.getElementById('content-modal-overlay').classList.remove('open');
 }
 
-// Close modal on Escape
+/* ── ADD MONTH MODAL ── */
+function openAddMonthModal() {
+  document.getElementById('add-month-name').value = '';
+  document.getElementById('add-month-year').value = new Date().getFullYear();
+  document.getElementById('add-month-code').value = '';
+  document.getElementById('add-month-error').style.display = 'none';
+  document.getElementById('add-month-overlay').classList.add('open');
+}
+
+function closeAddMonthModal() {
+  document.getElementById('add-month-overlay').classList.remove('open');
+}
+
+function createMonth() {
+  var name = document.getElementById('add-month-name').value.trim();
+  var year = document.getElementById('add-month-year').value.trim();
+  var code = document.getElementById('add-month-code').value.trim();
+  var errEl = document.getElementById('add-month-error');
+
+  if (!name) { errEl.textContent = 'Please enter a month name.'; errEl.style.display = 'block'; return; }
+  if (!year) { errEl.textContent = 'Please enter a year.'; errEl.style.display = 'block'; return; }
+  if (!code) { errEl.textContent = 'Please paste the content code.'; errEl.style.display = 'block'; return; }
+
+  var posts = null;
+  // Try JSON first
+  try { posts = JSON.parse(code); } catch(e) {}
+  // Try JS eval as fallback
+  if (!posts) {
+    try { posts = (new Function('return ' + code))(); } catch(e2) {
+      errEl.textContent = 'Could not parse the code. Make sure it\'s a valid JS array of post objects. Error: ' + e2.message;
+      errEl.style.display = 'block';
+      return;
+    }
+  }
+
+  if (!Array.isArray(posts) || posts.length === 0) {
+    errEl.textContent = 'Code must be an array with at least one post object.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  // Validate posts have required fields
+  var valid = posts.every(function(p) { return p.day && p.category && p.hook && p.title; });
+  if (!valid) {
+    errEl.textContent = 'Each post needs at least: day, category, hook, and title.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  var id = 'month_' + Date.now();
+  contentMonths.push({ id: id, name: name, year: year, posts: posts });
+  saveContentMonths();
+  currentMonthId = id;
+  closeAddMonthModal();
+  renderMonthBar();
+  renderContentGrid();
+  showToast('Created "' + name + ' ' + year + '" with ' + posts.length + ' posts');
+}
+
+// Close modals on Escape
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeContentModal();
+  if (e.key === 'Escape') {
+    closeContentModal();
+    closeAddMonthModal();
+  }
 });
 </script>
 <!-- ══════════════════════════════════════
