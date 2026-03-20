@@ -2288,30 +2288,44 @@ function createMonth() {
   if (!year) { errEl.textContent = 'Please enter a year.'; errEl.style.display = 'block'; return; }
   if (!code) { errEl.textContent = 'Please paste the content code.'; errEl.style.display = 'block'; return; }
 
-  // Clean the pasted code — strip JSX/React/import stuff, extract just the posts array
-  var cleaned = code;
-  // Remove import statements
-  cleaned = cleaned.replace(/^import\s+.*$/gm, '');
-  // Remove export default function ... { ... } wrapper and helper components
-  cleaned = cleaned.replace(/export\s+default\s+function\s+[\s\S]*$/, '');
-  cleaned = cleaned.replace(/function\s+\w+\s*\(\s*\{[^}]*\}\s*\)\s*\{[\s\S]*?\n\}/g, '');
-  // Remove const categoryConfig / categoryConfig lines (not the posts)
-  cleaned = cleaned.replace(/const\s+categoryConfig\s*=\s*\{[\s\S]*?\};/g, '');
-  // Extract the array: find "const posts = [" or "var posts = [" or just a bare "["
-  var arrayMatch = cleaned.match(/(?:const|var|let)\s+\w+\s*=\s*(\[[\s\S]*\]);?/);
-  if (arrayMatch) {
-    cleaned = arrayMatch[1];
-  } else {
-    // Try to find a bare array
-    var bracketStart = cleaned.indexOf('[');
-    var bracketEnd = cleaned.lastIndexOf(']');
-    if (bracketStart !== -1 && bracketEnd > bracketStart) {
-      cleaned = cleaned.substring(bracketStart, bracketEnd + 1);
+  // Smart extraction — find the posts array from any format (full JSX, bare array, JSON)
+  function extractArray(src) {
+    // Find the first top-level [ and its matching ] using bracket counting
+    var start = -1;
+    // Look for "const/var/let posts = [" or "const/var/let SOMETHING = ["
+    var varMatch = src.match(/(?:const|var|let)\s+\w+\s*=\s*\[/);
+    if (varMatch) {
+      start = src.indexOf(varMatch[0]) + varMatch[0].length - 1; // position of [
+    } else {
+      start = src.indexOf('[');
     }
+    if (start === -1) return null;
+
+    var depth = 0;
+    var inStr = false;
+    var strChar = '';
+    var end = -1;
+    for (var i = start; i < src.length; i++) {
+      var c = src[i];
+      if (inStr) {
+        if (c === '\\') { i++; continue; }
+        if (c === strChar) inStr = false;
+        continue;
+      }
+      if (c === '"' || c === "'" || c === '`') { inStr = true; strChar = c; continue; }
+      if (c === '[') depth++;
+      if (c === ']') { depth--; if (depth === 0) { end = i; break; } }
+    }
+    if (end === -1) return null;
+    return src.substring(start, end + 1);
   }
-  cleaned = cleaned.trim();
-  // Remove trailing comma before ]
-  cleaned = cleaned.replace(/,\s*\]$/g, ']');
+
+  var cleaned = extractArray(code);
+  if (!cleaned) {
+    errEl.textContent = 'Could not find a posts array in the pasted code. Make sure it contains [...].';
+    errEl.style.display = 'block';
+    return;
+  }
 
   var posts = null;
   // Try JSON first
@@ -2319,7 +2333,7 @@ function createMonth() {
   // Try JS eval as fallback (handles trailing commas, unquoted keys, etc.)
   if (!posts) {
     try { posts = (new Function('return ' + cleaned))(); } catch(e2) {
-      errEl.textContent = 'Could not parse the code. Paste just the posts array or the full JSX file. Error: ' + e2.message;
+      errEl.textContent = 'Could not parse the posts array. Error: ' + e2.message;
       errEl.style.display = 'block';
       return;
     }
