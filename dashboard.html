@@ -2288,13 +2288,38 @@ function createMonth() {
   if (!year) { errEl.textContent = 'Please enter a year.'; errEl.style.display = 'block'; return; }
   if (!code) { errEl.textContent = 'Please paste the content code.'; errEl.style.display = 'block'; return; }
 
+  // Clean the pasted code — strip JSX/React/import stuff, extract just the posts array
+  var cleaned = code;
+  // Remove import statements
+  cleaned = cleaned.replace(/^import\s+.*$/gm, '');
+  // Remove export default function ... { ... } wrapper and helper components
+  cleaned = cleaned.replace(/export\s+default\s+function\s+[\s\S]*$/, '');
+  cleaned = cleaned.replace(/function\s+\w+\s*\(\s*\{[^}]*\}\s*\)\s*\{[\s\S]*?\n\}/g, '');
+  // Remove const categoryConfig / categoryConfig lines (not the posts)
+  cleaned = cleaned.replace(/const\s+categoryConfig\s*=\s*\{[\s\S]*?\};/g, '');
+  // Extract the array: find "const posts = [" or "var posts = [" or just a bare "["
+  var arrayMatch = cleaned.match(/(?:const|var|let)\s+\w+\s*=\s*(\[[\s\S]*\]);?/);
+  if (arrayMatch) {
+    cleaned = arrayMatch[1];
+  } else {
+    // Try to find a bare array
+    var bracketStart = cleaned.indexOf('[');
+    var bracketEnd = cleaned.lastIndexOf(']');
+    if (bracketStart !== -1 && bracketEnd > bracketStart) {
+      cleaned = cleaned.substring(bracketStart, bracketEnd + 1);
+    }
+  }
+  cleaned = cleaned.trim();
+  // Remove trailing comma before ]
+  cleaned = cleaned.replace(/,\s*\]$/g, ']');
+
   var posts = null;
   // Try JSON first
-  try { posts = JSON.parse(code); } catch(e) {}
-  // Try JS eval as fallback
+  try { posts = JSON.parse(cleaned); } catch(e) {}
+  // Try JS eval as fallback (handles trailing commas, unquoted keys, etc.)
   if (!posts) {
-    try { posts = (new Function('return ' + code))(); } catch(e2) {
-      errEl.textContent = 'Could not parse the code. Make sure it\'s a valid JS array of post objects. Error: ' + e2.message;
+    try { posts = (new Function('return ' + cleaned))(); } catch(e2) {
+      errEl.textContent = 'Could not parse the code. Paste just the posts array or the full JSX file. Error: ' + e2.message;
       errEl.style.display = 'block';
       return;
     }
