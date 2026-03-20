@@ -445,13 +445,13 @@ body{
   padding: 5px 14px; border-radius: 20px;
 }
 .content-filters {
-  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
+  display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;
 }
 .content-filter-btn {
   background: var(--s2); border: 1px solid var(--border);
-  color: var(--text2); padding: 7px 16px; border-radius: 20px;
+  color: var(--text2); padding: 8px 20px; border-radius: 8px;
   font-family: var(--body); font-size: 13px; font-weight: 500;
-  cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: 6px;
+  cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: 8px;
 }
 .content-filter-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
 .content-filter-btn.active { background: var(--odim); border-color: var(--orange); color: var(--orange); font-weight: 600; }
@@ -535,33 +535,33 @@ body{
 .content-modal-cta span:first-child { color: var(--text3); }
 /* ── CONTENT MONTH BAR ── */
 .content-month-bar {
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 16px; padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-  overflow-x: auto; flex-wrap: nowrap;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 18px; padding: 12px 16px;
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: var(--r); overflow-x: auto; flex-wrap: nowrap;
 }
 .content-month-bar::-webkit-scrollbar { height: 0; }
 .content-month-pill {
-  background: var(--s2); border: 1px solid var(--border);
-  color: var(--text2); padding: 7px 16px; border-radius: 20px;
+  background: var(--s3); border: 1px solid var(--border);
+  color: var(--text2); padding: 8px 18px; border-radius: 8px;
   font-family: var(--body); font-size: 13px; font-weight: 500;
   cursor: pointer; transition: all .2s; white-space: nowrap;
-  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: 10px; flex-shrink: 0;
 }
 .content-month-pill:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
-.content-month-pill.active { background: var(--odim); border-color: var(--orange); color: var(--orange); font-weight: 600; }
+.content-month-pill.active { background: var(--orange); border-color: var(--orange); color: #fff; font-weight: 600; }
 .content-month-pill .pill-progress {
-  font-size: 10px; font-weight: 700; opacity: 0.7;
-  background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 10px;
+  font-size: 10px; font-weight: 700;
+  background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 10px;
 }
-.content-month-pill.active .pill-progress { background: rgba(237,92,37,0.15); }
+.content-month-pill.active .pill-progress { background: rgba(255,255,255,0.2); color: #fff; }
 .content-add-month-btn {
-  background: transparent; border: 1px dashed var(--border);
-  color: var(--text3); padding: 7px 16px; border-radius: 20px;
+  background: transparent; border: 1px dashed rgba(255,255,255,0.15);
+  color: var(--text3); padding: 8px 18px; border-radius: 8px;
   font-family: var(--body); font-size: 13px; font-weight: 500;
   cursor: pointer; transition: all .2s; white-space: nowrap; flex-shrink: 0;
 }
-.content-add-month-btn:hover { border-color: var(--orange); color: var(--orange); }
+.content-add-month-btn:hover { border-color: var(--orange); color: var(--orange); background: var(--odim); }
 /* ── FILMED CHECKBOX ── */
 .content-filmed-check {
   position: absolute; top: 14px; right: 14px;
