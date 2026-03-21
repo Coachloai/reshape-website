@@ -824,24 +824,14 @@ textarea.form-input{min-height:100px;resize:vertical}
 <section class="section" style="padding:72px 0">
   <div class="container">
     <div class="section-center" style="max-width:560px;margin:0 auto 40px">
-      <p class="eyebrow" style="margin-bottom:14px">Meet Your Coach</p>
-      <h2 class="h2" style="margin-bottom:12px">Meet your <em style="color:var(--orange)">future coaches</em></h2>
+      <p class="eyebrow" style="margin-bottom:14px">Meet Your Coaches</p>
+      <h2 class="h2" style="margin-bottom:12px">Know your <em style="color:var(--orange)">future coaches</em></h2>
       <p style="font-size:16px;color:var(--text2);font-weight:300">The coaches behind your transformation. See how they work, what they stand for, and why clients trust them.</p>
     </div>
-    <div class="video-card" style="max-width:860px;margin:0 auto">
-      <div class="video-inner">
-        <img src="https://images.unsplash.com/photo-1549576490-b0b4831ef60a?w=900&q=80&fit=crop" alt="" loading="lazy">
-        <div class="video-content">
-          <div>
-
-            <h2 class="video-title">Embed your coach intro video here</h2>
-          </div>
-          <button class="play-ring" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><polygon points="6,3 20,12 6,21"/></svg>
-          </button>
-          <p class="video-hint">Replace with Perspective, Vimeo, YouTube, or native video embed</p>
-        </div>
-      </div>
+    <div style="max-width:860px;margin:0 auto;border-radius:16px;overflow:hidden;border:1px solid var(--border)">
+      <video controls playsinline preload="metadata" poster="https://lvizldmdficsfpgegehp.supabase.co/storage/v1/object/public/images/video/coach-poster.jpg" style="width:100%;display:block;background:#000">
+        <source src="https://lvizldmdficsfpgegehp.supabase.co/storage/v1/object/public/images/video/coach-intro.mp4" type="video/mp4">
+      </video>
     </div>
   </div>
 </section>
