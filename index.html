@@ -298,7 +298,7 @@ body{
 }
 .proof-stat-num{font-family:var(--head);font-size:26px;font-weight:900;color:var(--orange);letter-spacing:-0.03em}
 .proof-stat-lbl{font-size:12px;color:var(--text3);margin-top:2px}
-.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.proof-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 .proof-card{
   background:var(--s1);
   border:1px solid rgba(237,92,37,0.12);
@@ -309,7 +309,7 @@ body{
 }
 .proof-card:hover{border-color:rgba(237,92,37,0.3);transform:translateY(-3px)}
 .proof-img{
-  aspect-ratio:4/3;border-radius:20px;
+  aspect-ratio:1/1;border-radius:20px;
   border:1px dashed rgba(255,255,255,0.08);
   background:linear-gradient(135deg,#1a1a1a,#0d0d0d);
   margin-bottom:20px;
@@ -320,7 +320,7 @@ body{
 .proof-img-placeholder{
   display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text4);font-size:12px;text-align:center;
 }
-.proof-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.7}
+.proof-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1}
 .proof-name{font-family:var(--head);font-size:22px;font-weight:800;letter-spacing:-0.02em}
 .proof-result{font-size:13px;font-weight:600;color:var(--orange);margin-top:3px;margin-bottom:12px}
 .proof-quote{font-size:15px;line-height:1.7;color:var(--text2)}
@@ -916,27 +916,35 @@ textarea.form-input{min-height:100px;resize:vertical}
     <div class="proof-grid">
       <div class="proof-card rv">
         <div class="proof-img">
-          <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80&fit=crop" alt="" loading="lazy">
+          <img src="images/proof-1.jpg" alt="ReShape coaching team with client results" loading="lazy" style="object-position:center 15%">
+        </div>
+        <div class="proof-name">Nicole</div>
+        <div class="proof-result">Confidence back in 90 days</div>
+        <p class="proof-quote">"I stopped guessing, started following a system, and everything changed."</p>
+      </div>
+      <div class="proof-card rv" style="transition-delay:.1s">
+        <div class="proof-img">
+          <img src="images/proof-2.jpg" alt="Coach Loai with client transformation" loading="lazy" style="object-position:center 15%">
         </div>
         <div class="proof-name">Sarah</div>
         <div class="proof-result">−11kg in 12 weeks</div>
         <p class="proof-quote">"I finally had structure, accountability, and a plan I could actually stick to."</p>
       </div>
-      <div class="proof-card rv" style="transition-delay:.1s">
-        <div class="proof-img">
-          <img src="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=600&q=80&fit=crop" alt="" loading="lazy">
-        </div>
-        <div class="proof-name">James</div>
-        <div class="proof-result">−9kg and 10cm off waist</div>
-        <p class="proof-quote">"This was the first time fat loss felt clear, simple, and repeatable."</p>
-      </div>
       <div class="proof-card rv" style="transition-delay:.2s">
         <div class="proof-img">
-          <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=80&fit=crop" alt="" loading="lazy">
+          <img src="images/proof-3.jpg" alt="Sam showing his old trousers after transformation" loading="lazy" style="object-position:center 15%">
         </div>
-        <div class="proof-name">Nicole</div>
-        <div class="proof-result">Confidence back in 90 days</div>
-        <p class="proof-quote">"I stopped guessing, started following a system, and everything changed."</p>
+        <div class="proof-name">Sam</div>
+        <div class="proof-result">−9kg and 10cm off waist</div>
+        <p class="proof-quote">"The old trousers say it all. This programme changed my life."</p>
+      </div>
+      <div class="proof-card rv" style="transition-delay:.3s">
+        <div class="proof-img">
+          <img src="images/proof-4.jpg" alt="Coach Loai with two transformed clients" loading="lazy" style="object-position:center 15%">
+        </div>
+        <div class="proof-name">The Team</div>
+        <div class="proof-result">Coached. Committed. Changed.</div>
+        <p class="proof-quote">"This was the first time fat loss felt clear, simple, and repeatable."</p>
       </div>
     </div>
   </div>
