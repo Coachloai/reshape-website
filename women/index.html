@@ -562,7 +562,7 @@ footer{
    TICKER
 ═══════════════════════════════════════ */
 .ticker{overflow:hidden;border-bottom:1px solid var(--border);padding:12px 0;background:var(--s2)}
-.ticker-track{display:flex;gap:10px;width:max-content;animation:tickRoll 32s linear infinite}
+.ticker-track{display:flex;gap:10px;width:max-content;animation:tickRoll 45s linear infinite}
 @keyframes tickRoll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .tick{
   display:flex;align-items:center;gap:10px;
@@ -727,8 +727,8 @@ textarea.form-input{min-height:100px;resize:vertical}
           <span>ReShape 12 Week Challenge</span>
         </div>
         <h1 class="h1 hero-h1">
-          Drop 8–12kg<br>In 12 Weeks
-          <span class="block-orange">Without<br>Starving</span>
+          Lose 24lbs<br>In 12 Weeks
+          <span class="block-orange">Or We Coach You<br>For Free Until You Do</span>
         </h1>
         <div class="hero-guarantee-badge">
           <div class="hero-guarantee-icon">🛡️</div>
@@ -1377,16 +1377,17 @@ textarea.form-input{min-height:100px;resize:vertical}
 
 /* ── TICKER ── */
 const TICKS=[
-  {n:'Sarah M.',k:'−12kg',w:'11 wks'},{n:'James K.',k:'−9kg',w:'12 wks'},
-  {n:'Emma T.',k:'−11kg',w:'10 wks'},{n:'Ryan C.',k:'−13kg',w:'12 wks'},
-  {n:'Laura P.',k:'−14kg',w:'10 wks'},{n:'Mark H.',k:'−8kg',w:'11 wks'},
-  {n:'Priya S.',k:'−10kg',w:'9 wks'},{n:'Tom A.',k:'−12kg',w:'12 wks'},
-  {n:'Chloe W.',k:'−11kg',w:'11 wks'},{n:'Amir K.',k:'−15kg',w:'12 wks'},
+  {n:'Jess T.',k:'−92lbs'},{n:'Lubova',k:'−71lbs'},
+  {n:'Megan H.',k:'−27lbs'},{n:'Paula',k:'−31lbs'},
+  {n:'Jaime',k:'−50lbs'},{n:'Hollie',k:'−23lbs'},
+  {n:'Jo M.',k:'−34lbs'},{n:'Rachel',k:'−35lbs'},
+  {n:'Kimberlee',k:'−35lbs'},{n:'Ali',k:'−32lbs'},
+  {n:'Alisa',k:'−30lbs'},{n:'Carolyn',k:'−51lbs'},
 ];
 const tt=document.getElementById('ticker');
 [...TICKS,...TICKS].forEach(r=>{
   const i=r.n.split(' ').map(x=>x[0]).join('');
-  tt.innerHTML+=`<div class="tick"><div class="tick-av">${i}</div><div><div class="tick-n">${r.n}</div><div class="tick-w">${r.w}</div></div><div class="tick-k">${r.k}</div></div>`;
+  tt.innerHTML+=`<div class="tick"><div class="tick-av">${i}</div><div class="tick-n">${r.n}</div><div class="tick-k">${r.k}</div></div>`;
 });
 /* ── REVEALS ── */
 const ro=new IntersectionObserver(e=>{
