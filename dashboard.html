@@ -863,6 +863,9 @@ if(sessionStorage.getItem('rs_auth')==='1'){
     <button class="sb-btn" data-view="analytics" title="Analytics" onclick="switchView('analytics', this)">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     </button>
+    <button class="sb-btn" data-view="performance" title="Performance" onclick="switchView('performance', this)">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    </button>
     <button class="sb-btn" data-view="content" title="Content" onclick="switchView('content', this)">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="8" y1="18" x2="8" y2="18.01"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
     </button>
@@ -1308,6 +1311,116 @@ if(sessionStorage.getItem('rs_auth')==='1'){
       </div>
     </div>
 
+    <!-- ── VIEW: SETTINGS ── -->
+    <!-- ── VIEW: PERFORMANCE ── -->
+    <div id="view-performance" class="view" style="display:none">
+      <div class="page-header fade-in" style="margin-bottom:20px">
+        <div>
+          <div class="page-title">Performance</div>
+          <div class="page-sub">Page variant comparison &amp; conversion insights</div>
+        </div>
+      </div>
+      <!-- KPI ROW -->
+      <div class="stats-row fade-in" style="grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px">
+        <div class="stat-card primary">
+          <div class="stat-label">Total Leads</div>
+          <div class="stat-value" id="perf-total">0</div>
+          <div class="stat-sub" id="perf-total-sub">All time</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">This Week</div>
+          <div class="stat-value" id="perf-week">0</div>
+          <div class="stat-sub" id="perf-wow" style="font-weight:600">vs last week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Best Page</div>
+          <div class="stat-value" id="perf-best-page" style="font-size:18px">—</div>
+          <div class="stat-sub" id="perf-best-page-sub">Most leads</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Top Location</div>
+          <div class="stat-value" id="perf-top-loc" style="font-size:18px">—</div>
+          <div class="stat-sub" id="perf-top-loc-sub">Leads</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Quality</div>
+          <div class="stat-value" id="perf-avg-q">0%</div>
+          <div class="stat-sub">High-fit rate</div>
+        </div>
+      </div>
+      <!-- ROW 1: Page Performance + Leads by Day -->
+      <div class="charts-row fade-in" style="margin-bottom:20px">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Leads by Page Variant</div>
+              <div class="chart-meta">Main vs Men vs Women</div>
+            </div>
+          </div>
+          <div class="chart-wrap"><canvas id="perf-page-bar"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Leads by Day</div>
+              <div class="chart-meta">Last 30 days</div>
+            </div>
+          </div>
+          <div class="chart-wrap"><canvas id="perf-leads-day"></canvas></div>
+        </div>
+      </div>
+      <!-- ROW 2: Quality by Page + Quality by Source -->
+      <div class="charts-row fade-in" style="margin-bottom:20px">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Lead Quality by Page</div>
+              <div class="chart-meta">High / Med / Low per variant</div>
+            </div>
+          </div>
+          <div class="chart-wrap"><canvas id="perf-quality-page"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Lead Quality by Source</div>
+              <div class="chart-meta">Which channel brings best leads</div>
+            </div>
+          </div>
+          <div class="chart-wrap"><canvas id="perf-quality-source"></canvas></div>
+        </div>
+      </div>
+      <!-- ROW 3: Gender by Page + Intent by Page + Investment by Page -->
+      <div class="charts-bottom fade-in" style="margin-bottom:20px">
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Gender by Page</div></div>
+          <div class="chart-wrap" style="height:180px"><canvas id="perf-gender-page"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Intent by Page</div></div>
+          <div class="chart-wrap" style="height:180px"><canvas id="perf-intent-page"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Investment by Page</div></div>
+          <div class="chart-wrap" style="height:180px"><canvas id="perf-invest-page"></canvas></div>
+        </div>
+      </div>
+      <!-- ROW 4: Location by Page + Age by Page + Timeline -->
+      <div class="charts-bottom fade-in">
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Location by Page</div></div>
+          <div class="chart-wrap" style="height:180px"><canvas id="perf-loc-page"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Age by Page</div></div>
+          <div class="chart-wrap" style="height:180px"><canvas id="perf-age-page"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Timeline Preference</div></div>
+          <div class="chart-wrap" style="height:180px"><canvas id="perf-timeline"></canvas></div>
+        </div>
+      </div>
+    </div>
     <!-- ── VIEW: SETTINGS ── -->
     <div id="view-settings" class="view" style="display:none">
       <div class="page-header fade-in" style="margin-bottom:20px">
@@ -1894,6 +2007,7 @@ function switchView(view, btn) {
   // Init view-specific content
   if (view === 'leads') renderLeadsView();
   if (view === 'analytics') initAnalyticsCharts();
+  if (view === 'performance') initPerfCharts();
   if (view === 'content') initContentView();
 }
 /* ── LEADS VIEW ── */
@@ -2013,6 +2127,246 @@ function initAnalyticsCharts() {
       document.getElementById('quality-legend').innerHTML=
         [{label:'High',val:high,color:COLORS.orange},{label:'Med',val:med,color:'rgba(237,92,37,0.5)'},{label:'Low',val:low,color:'rgba(237,92,37,0.2)'}]
         .map(({label,val,color})=>`<div class="legend-item"><span class="legend-left"><span class="legend-dot" style="background:${color}"></span>${label}</span><span class="legend-val">${val} <span style="color:var(--text3);font-weight:400">(${Math.round(val/total*100)}%)</span></span></div>`).join('');
+    }
+  }, 50);
+}
+/* ══════════════════════════════════════
+   PERFORMANCE VIEW
+══════════════════════════════════════ */
+function initPerfCharts() {
+  setTimeout(() => {
+    const d = filtered;
+    const pages = ['Main Landing Page', 'Men Landing Page', 'Women Landing Page'];
+    const pageLabels = ['Main', 'Men', 'Women'];
+    const byPage = pages.map(p => d.filter(l => l.form === p));
+
+    // ── KPI CARDS ──
+    document.getElementById('perf-total').textContent = d.length;
+    const now = new Date();
+    const thisWeek = d.filter(l => (now - new Date(l.date)) / 864e5 <= 7).length;
+    const lastWeek = d.filter(l => { const diff = (now - new Date(l.date)) / 864e5; return diff > 7 && diff <= 14; }).length;
+    document.getElementById('perf-week').textContent = thisWeek;
+    const wowPct = lastWeek > 0 ? Math.round(((thisWeek - lastWeek) / lastWeek) * 100) : (thisWeek > 0 ? 100 : 0);
+    const wowEl = document.getElementById('perf-wow');
+    if (wowPct > 0) { wowEl.innerHTML = '<span style="color:var(--green)">&#9650; ' + wowPct + '%</span> vs last week'; }
+    else if (wowPct < 0) { wowEl.innerHTML = '<span style="color:var(--red)">&#9660; ' + Math.abs(wowPct) + '%</span> vs last week'; }
+    else { wowEl.textContent = '— vs last week'; }
+
+    // Best page
+    let bestIdx = 0;
+    byPage.forEach((arr, i) => { if (arr.length > byPage[bestIdx].length) bestIdx = i; });
+    document.getElementById('perf-best-page').textContent = pageLabels[bestIdx] || '—';
+    document.getElementById('perf-best-page-sub').textContent = byPage[bestIdx].length + ' leads';
+
+    // Top location
+    const locCounts = {};
+    d.forEach(l => locCounts[l.location] = (locCounts[l.location] || 0) + 1);
+    const topLoc = Object.entries(locCounts).sort((a, b) => b[1] - a[1])[0];
+    document.getElementById('perf-top-loc').textContent = topLoc ? topLoc[0] : '—';
+    document.getElementById('perf-top-loc-sub').textContent = topLoc ? topLoc[1] + ' leads' : '';
+
+    // Avg quality
+    const highCount = d.filter(l => l.quality === 'High').length;
+    document.getElementById('perf-avg-q').textContent = d.length ? Math.round((highCount / d.length) * 100) + '%' : '0%';
+
+    // ── CHART: Leads by Page Variant (bar) ──
+    const c1 = document.getElementById('perf-page-bar');
+    if (c1) {
+      if (charts['perf-page-bar']) charts['perf-page-bar'].destroy();
+      charts['perf-page-bar'] = new Chart(c1.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: pageLabels,
+          datasets: [{ data: byPage.map(a => a.length), backgroundColor: [COLORS.orange, COLORS.orange2, COLORS.orange3], borderRadius: 8, borderSkipped: false, maxBarThickness: 60 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1C1D1F', borderColor: 'rgba(237,92,37,0.3)', borderWidth: 1, padding: 10, titleColor: '#F0EDE8', bodyColor: 'rgba(240,237,232,0.65)' } },
+          scales: { x: { grid: { display: false } }, y: { grid: { color: COLORS.grid }, beginAtZero: true, ticks: { stepSize: 1 } } } }
+      });
+    }
+
+    // ── CHART: Leads by Day (line — last 30d) ──
+    const c2 = document.getElementById('perf-leads-day');
+    if (c2) {
+      if (charts['perf-leads-day']) charts['perf-leads-day'].destroy();
+      const days = 30;
+      const labels = [];
+      const counts = [];
+      for (let i = days - 1; i >= 0; i--) {
+        const dt = new Date(now); dt.setDate(dt.getDate() - i);
+        const key = dt.toISOString().split('T')[0];
+        labels.push(dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }));
+        counts.push(d.filter(l => l.date === key).length);
+      }
+      charts['perf-leads-day'] = new Chart(c2.getContext('2d'), {
+        type: 'line',
+        data: { labels, datasets: [{ data: counts, borderColor: COLORS.orange, borderWidth: 2, pointRadius: 2, pointBackgroundColor: COLORS.orange, tension: 0.4, fill: true,
+          backgroundColor: (ctx) => { const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 200); g.addColorStop(0, 'rgba(237,92,37,0.18)'); g.addColorStop(1, 'rgba(237,92,37,0.00)'); return g; } }] },
+        options: { responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1C1D1F', borderColor: 'rgba(237,92,37,0.3)', borderWidth: 1, padding: 10, titleColor: '#F0EDE8', bodyColor: 'rgba(240,237,232,0.65)' } },
+          scales: { x: { grid: { color: COLORS.grid }, ticks: { maxTicksLimit: 8 } }, y: { grid: { color: COLORS.grid }, beginAtZero: true, ticks: { stepSize: 1 } } } }
+      });
+    }
+
+    // ── CHART: Quality by Page (stacked bar) ──
+    const c3 = document.getElementById('perf-quality-page');
+    if (c3) {
+      if (charts['perf-quality-page']) charts['perf-quality-page'].destroy();
+      charts['perf-quality-page'] = new Chart(c3.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: pageLabels,
+          datasets: [
+            { label: 'High', data: byPage.map(a => a.filter(l => l.quality === 'High').length), backgroundColor: COLORS.orange, borderRadius: 4, borderSkipped: false },
+            { label: 'Med', data: byPage.map(a => a.filter(l => l.quality === 'Med').length), backgroundColor: 'rgba(237,92,37,0.5)', borderRadius: 4, borderSkipped: false },
+            { label: 'Low', data: byPage.map(a => a.filter(l => l.quality === 'Low').length), backgroundColor: 'rgba(237,92,37,0.2)', borderRadius: 4, borderSkipped: false }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: COLORS.text3, boxWidth: 12, padding: 12 } }, tooltip: { backgroundColor: '#1C1D1F', borderColor: 'rgba(237,92,37,0.3)', borderWidth: 1, padding: 10, titleColor: '#F0EDE8', bodyColor: 'rgba(240,237,232,0.65)' } },
+          scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { color: COLORS.grid }, beginAtZero: true, ticks: { stepSize: 1 } } } }
+      });
+    }
+
+    // ── CHART: Quality by Source (stacked bar) ──
+    const c4 = document.getElementById('perf-quality-source');
+    if (c4) {
+      if (charts['perf-quality-source']) charts['perf-quality-source'].destroy();
+      const sources = [...new Set(d.map(l => l.source))];
+      const bySrc = sources.map(s => d.filter(l => l.source === s));
+      charts['perf-quality-source'] = new Chart(c4.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: sources,
+          datasets: [
+            { label: 'High', data: bySrc.map(a => a.filter(l => l.quality === 'High').length), backgroundColor: COLORS.orange, borderRadius: 4, borderSkipped: false },
+            { label: 'Med', data: bySrc.map(a => a.filter(l => l.quality === 'Med').length), backgroundColor: 'rgba(237,92,37,0.5)', borderRadius: 4, borderSkipped: false },
+            { label: 'Low', data: bySrc.map(a => a.filter(l => l.quality === 'Low').length), backgroundColor: 'rgba(237,92,37,0.2)', borderRadius: 4, borderSkipped: false }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: COLORS.text3, boxWidth: 12, padding: 12 } }, tooltip: { backgroundColor: '#1C1D1F', borderColor: 'rgba(237,92,37,0.3)', borderWidth: 1, padding: 10, titleColor: '#F0EDE8', bodyColor: 'rgba(240,237,232,0.65)' } },
+          scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { color: COLORS.grid }, beginAtZero: true, ticks: { stepSize: 1 } } } }
+      });
+    }
+
+    // ── CHART: Gender by Page (grouped bar) ──
+    const c5 = document.getElementById('perf-gender-page');
+    if (c5) {
+      if (charts['perf-gender-page']) charts['perf-gender-page'].destroy();
+      charts['perf-gender-page'] = new Chart(c5.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: pageLabels,
+          datasets: [
+            { label: 'Male', data: byPage.map(a => a.filter(l => l.gender === 'Male').length), backgroundColor: COLORS.orange, borderRadius: 4, borderSkipped: false },
+            { label: 'Female', data: byPage.map(a => a.filter(l => l.gender === 'Female').length), backgroundColor: COLORS.orange3, borderRadius: 4, borderSkipped: false }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: COLORS.text3, boxWidth: 12, padding: 12 } }, tooltip: { backgroundColor: '#1C1D1F', borderColor: 'rgba(237,92,37,0.3)', borderWidth: 1, padding: 10, titleColor: '#F0EDE8', bodyColor: 'rgba(240,237,232,0.65)' } },
+          scales: { x: { grid: { display: false } }, y: { grid: { color: COLORS.grid }, beginAtZero: true, ticks: { stepSize: 1 } } } }
+      });
+    }
+
+    // ── CHART: Intent by Page (grouped bar) ──
+    const c6 = document.getElementById('perf-intent-page');
+    if (c6) {
+      if (charts['perf-intent-page']) charts['perf-intent-page'].destroy();
+      charts['perf-intent-page'] = new Chart(c6.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: pageLabels,
+          datasets: [
+            { label: 'Long Term', data: byPage.map(a => a.filter(l => (l.answers.intent || '').toLowerCase().includes('long')).length), backgroundColor: COLORS.orange, borderRadius: 4, borderSkipped: false },
+            { label: 'Quick Fix', data: byPage.map(a => a.filter(l => (l.answers.intent || '').toLowerCase().includes('quick')).length), backgroundColor: 'rgba(237,92,37,0.3)', borderRadius: 4, borderSkipped: false }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: COLORS.text3, boxWidth: 12, padding: 12 } }, tooltip: { backgroundColor: '#1C1D1F', borderColor: 'rgba(237,92,37,0.3)', borderWidth: 1, padding: 10, titleColor: '#F0EDE8', bodyColor: 'rgba(240,237,232,0.65)' } },
+          scales: { x: { grid: { display: false } }, y: { grid: { color: COLORS.grid }, beginAtZero: true, ticks: { stepSize: 1 } } } }
+      });
+    }
+
+    // ── CHART: Investment by Page (grouped bar) ──
+    const c7 = document.getElementById('perf-invest-page');
+    if (c7) {
+      if (charts['perf-invest-page']) charts['perf-invest-page'].destroy();
+      charts['perf-invest-page'] = new Chart(c7.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: pageLabels,
+          datasets: [
+            { label: 'Yes', data: byPage.map(a => a.filter(l => (l.answers.willingToInvest || '').toLowerCase() === 'yes').length), backgroundColor: COLORS.orange, borderRadius: 4, borderSkipped: false },
+            { label: 'No', data: byPage.map(a => a.filter(l => (l.answers.willingToInvest || '').toLowerCase() === 'no').length), backgroundColor: 'rgba(237,92,37,0.2)', borderRadius: 4, borderSkipped: false }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: COLORS.text3, boxWidth: 12, padding: 12 } }, tooltip: { backgroundColor: '#1C1D1F', borderColor: 'rgba(237,92,37,0.3)', borderWidth: 1, padding: 10, titleColor: '#F0EDE8', bodyColor: 'rgba(240,237,232,0.65)' } },
+          scales: { x: { grid: { display: false } }, y: { grid: { color: COLORS.grid }, beginAtZero: true, ticks: { stepSize: 1 } } } }
+      });
+    }
+
+    // ── CHART: Location by Page (grouped bar) ──
+    const c8 = document.getElementById('perf-loc-page');
+    if (c8) {
+      if (charts['perf-loc-page']) charts['perf-loc-page'].destroy();
+      const locs = [...new Set(d.map(l => l.location))].filter(l => l !== 'Unknown');
+      charts['perf-loc-page'] = new Chart(c8.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: pageLabels,
+          datasets: locs.map((loc, i) => ({
+            label: loc, data: byPage.map(a => a.filter(l => l.location === loc).length),
+            backgroundColor: [COLORS.orange, COLORS.orange2, COLORS.orange3][i] || COLORS.orange4, borderRadius: 4, borderSkipped: false
+          }))
+        },
+        options: { responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: COLORS.text3, boxWidth: 12, padding: 12 } }, tooltip: { backgroundColor: '#1C1D1F', borderColor: 'rgba(237,92,37,0.3)', borderWidth: 1, padding: 10, titleColor: '#F0EDE8', bodyColor: 'rgba(240,237,232,0.65)' } },
+          scales: { x: { grid: { display: false } }, y: { grid: { color: COLORS.grid }, beginAtZero: true, ticks: { stepSize: 1 } } } }
+      });
+    }
+
+    // ── CHART: Age by Page (grouped bar) ──
+    const c9 = document.getElementById('perf-age-page');
+    if (c9) {
+      if (charts['perf-age-page']) charts['perf-age-page'].destroy();
+      const ageBins = ['18-25', '26-35', '36-45', '46+'];
+      function ageBin(age) { return age <= 25 ? '18-25' : age <= 35 ? '26-35' : age <= 45 ? '36-45' : '46+'; }
+      charts['perf-age-page'] = new Chart(c9.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ageBins,
+          datasets: pageLabels.map((lbl, i) => ({
+            label: lbl, data: ageBins.map(bin => byPage[i].filter(l => ageBin(l.age) === bin).length),
+            backgroundColor: [COLORS.orange, COLORS.orange2, COLORS.orange3][i], borderRadius: 4, borderSkipped: false
+          }))
+        },
+        options: { responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: COLORS.text3, boxWidth: 12, padding: 12 } }, tooltip: { backgroundColor: '#1C1D1F', borderColor: 'rgba(237,92,37,0.3)', borderWidth: 1, padding: 10, titleColor: '#F0EDE8', bodyColor: 'rgba(240,237,232,0.65)' } },
+          scales: { x: { grid: { display: false } }, y: { grid: { color: COLORS.grid }, beginAtZero: true, ticks: { stepSize: 1 } } } }
+      });
+    }
+
+    // ── CHART: Timeline Preference (horizontal bar) ──
+    const c10 = document.getElementById('perf-timeline');
+    if (c10) {
+      if (charts['perf-timeline']) charts['perf-timeline'].destroy();
+      const timelines = ['3 months', '6 months', '12 months'];
+      const tlCounts = timelines.map(t => d.filter(l => {
+        const tl = l.answers.timeline;
+        return (Array.isArray(tl) ? tl : [tl]).some(v => (v || '').includes(t.split(' ')[0]));
+      }).length);
+      charts['perf-timeline'] = new Chart(c10.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: timelines,
+          datasets: [{ data: tlCounts, backgroundColor: [COLORS.orange, COLORS.orange2, COLORS.orange3], borderRadius: 6, borderSkipped: false, maxBarThickness: 50 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+          plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1C1D1F', borderColor: 'rgba(237,92,37,0.3)', borderWidth: 1, padding: 10, titleColor: '#F0EDE8', bodyColor: 'rgba(240,237,232,0.65)' } },
+          scales: { x: { grid: { color: COLORS.grid }, beginAtZero: true, ticks: { stepSize: 1 } }, y: { grid: { display: false } } } }
+      });
     }
   }, 50);
 }
