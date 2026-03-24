@@ -905,13 +905,13 @@ if(sessionStorage.getItem('rs_auth')==='1'){
         <input type="date" class="filter-input" id="filter-to">
       </div>
       <div class="filter-group">
-        <label class="filter-label">Form</label>
+        <label class="filter-label">Website</label>
         <select class="filter-select" id="filter-form">
-          <option value="">All Forms</option>
-          <option>Intake</option>
-          <option>Waiting List</option>
-          <option>Summer Shred</option>
-          <option>10kg Challenge</option>
+          <option value="">All Pages</option>
+          <option value="Main Landing Page">reshape.fit</option>
+          <option value="Men Landing Page">reshape.fit/men</option>
+          <option value="Women Landing Page">reshape.fit/women</option>
+          <option value="ReShape Club">reshapeclub.com</option>
         </select>
       </div>
       <div class="filter-group">
@@ -2136,8 +2136,8 @@ function initAnalyticsCharts() {
 function initPerfCharts() {
   setTimeout(() => {
     const d = filtered;
-    const pages = ['Main Landing Page', 'Men Landing Page', 'Women Landing Page'];
-    const pageLabels = ['Main', 'Men', 'Women'];
+    const pages = ['Main Landing Page', 'Men Landing Page', 'Women Landing Page', 'ReShape Club'];
+    const pageLabels = ['reshape.fit', '/men', '/women', 'reshapeclub.com'];
     const byPage = pages.map(p => d.filter(l => l.form === p));
 
     // ── KPI CARDS ──
