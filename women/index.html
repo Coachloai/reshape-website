@@ -4,6 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ReShape — Drop 8–12kg In 12 Weeks</title>
+<!-- Google Analytics 4 (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5G0MKMNTTL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-5G0MKMNTTL', { page_title: 'ReShape - Women', content_group: 'women' });
+</script>
+<!-- Meta Pixel -->
+<script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+  (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '571423748258941');
+  fbq('track', 'PageView');
+  fbq('trackCustom', 'ViewContent', { content_name: 'Women Landing Page', content_category: 'landing_page' });
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=571423748258941&ev=PageView&noscript=1"/></noscript>
+<!-- End Tracking -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
 <style>
 /* ─── RESET ─────────────────────────────── */
@@ -1474,6 +1495,14 @@ window.addEventListener('scroll',()=>{
     updateProgress();
     updateNextButton();
     document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    /* ── GA4 + Meta Pixel: form step tracking ── */
+    var stepNum = index + 1;
+    if (typeof gtag === 'function') {
+      gtag('event', 'form_step_' + stepNum, { event_category: 'form', event_label: 'Step ' + stepNum + ' of 8', page_variant: 'women' });
+    }
+    if (typeof fbq === 'function') {
+      fbq('trackCustom', 'FormStep', { step: stepNum, total_steps: 8, page_variant: 'women' });
+    }
   }
 
   function updateProgress() {
@@ -1590,6 +1619,24 @@ window.addEventListener('scroll',()=>{
       }
     } catch (err) {
       console.error('Submit error:', err);
+    }
+    /* ── GA4 + Meta Pixel: Lead conversion ── */
+    if (typeof gtag === 'function') {
+      gtag('event', 'generate_lead', {
+        event_category: 'conversion',
+        event_label: 'Application Submitted',
+        page_variant: 'women',
+        user_gender: leadData.gender,
+        user_location: leadData.location
+      });
+    }
+    if (typeof fbq === 'function') {
+      fbq('track', 'Lead', {
+        content_name: 'Application Submitted',
+        content_category: 'women',
+        gender: leadData.gender,
+        location: leadData.location
+      });
     }
     form.style.display = 'none';
     document.getElementById('formProgress').style.display = 'none';
