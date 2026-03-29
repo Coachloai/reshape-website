@@ -1600,6 +1600,68 @@ if(sessionStorage.getItem('rs_auth')==='1'){
       <!-- APPOINTMENT TYPE CARDS -->
       <div class="appt-grid fade-in" id="appt-grid"></div>
       <div id="appt-empty" style="display:none;text-align:center;padding:40px;color:var(--text3);font-size:14px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);margin-bottom:20px">No appointment types yet. Click "+ New Appointment Type" to get started.</div>
+      <!-- MANUAL SLOT CREATOR + SLOTS TABLE -->
+      <div class="chart-card fade-in" style="margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div class="chart-title">Time Slots</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select class="filter-select" id="slot-filter-loc" style="width:130px;padding:6px 10px" onchange="renderSlots()">
+              <option value="">All Locations</option>
+              <option>Ipswich</option>
+              <option>Colchester</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="toggleManualSlot()">+ Add Slot</button>
+          </div>
+        </div>
+        <!-- Manual slot form (inline) -->
+        <div id="manual-slot-form" style="display:none;margin-bottom:16px;padding:16px;background:var(--s3);border:1px solid var(--border);border-radius:10px">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr auto;gap:10px;align-items:end">
+            <div class="filter-group">
+              <label class="filter-label">Date</label>
+              <input type="date" class="filter-input" id="ms-date">
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Start</label>
+              <input type="time" class="filter-input" id="ms-start" value="09:00">
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">End</label>
+              <input type="time" class="filter-input" id="ms-end" value="10:00">
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Location</label>
+              <select class="filter-select" id="ms-location">
+                <option>Ipswich</option>
+                <option>Colchester</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Max</label>
+              <input type="number" class="filter-input" id="ms-max" value="10" min="1" max="150" style="width:70px">
+            </div>
+            <button class="btn btn-primary" onclick="createManualSlot()" style="white-space:nowrap">Add</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="leads-table" style="width:100%">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>Capacity</th>
+                <th>Booked</th>
+                <th>Remaining</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="slots-tbody"></tbody>
+          </table>
+        </div>
+        <div id="slots-empty" style="display:none;text-align:center;padding:24px;color:var(--text3);font-size:13px">No upcoming slots.</div>
+      </div>
       <!-- BOOKINGS TABLE -->
       <div class="chart-card fade-in">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
@@ -2585,10 +2647,13 @@ var ALL_APPT_TYPES = [];
 var ALL_BOOKINGS = [];
 var __apptMode = 'rolling';
 
+var ALL_SLOTS = [];
+
 async function initBookingsView() {
-  await Promise.all([fetchApptTypes(), fetchBookings()]);
+  await Promise.all([fetchApptTypes(), fetchSlots(), fetchBookings()]);
   updateBookingStats();
   renderApptCards();
+  renderSlots();
   renderBookings();
 }
 
@@ -2597,6 +2662,14 @@ async function refreshBookings() { await initBookingsView(); showToast('Bookings
 async function fetchApptTypes() {
   try { var r = await sb.from('appointment_types').select('*').order('created_at', { ascending: false }); ALL_APPT_TYPES = r.data || []; }
   catch (e) { ALL_APPT_TYPES = []; }
+}
+
+async function fetchSlots() {
+  try {
+    var today = new Date().toISOString().split('T')[0];
+    var r = await sb.from('booking_slots').select('*').gte('date', today).order('date', { ascending: true }).order('start_time', { ascending: true });
+    ALL_SLOTS = r.data || [];
+  } catch (e) { ALL_SLOTS = []; }
 }
 
 async function fetchBookings() {
@@ -2830,6 +2903,87 @@ async function deleteApptType(id) {
   try {
     await sb.from('appointment_types').delete().eq('id', id);
     showToast('Appointment type deleted');
+    await initBookingsView();
+  } catch (e) { console.error(e); }
+}
+
+/* ── SLOTS TABLE + MANUAL SLOT ── */
+function renderSlots() {
+  var locFilter = (document.getElementById('slot-filter-loc') || {}).value || '';
+  var slots = ALL_SLOTS.filter(function(s) {
+    if (locFilter && s.location !== locFilter) return false;
+    return true;
+  });
+  var tbody = document.getElementById('slots-tbody');
+  var empty = document.getElementById('slots-empty');
+  if (!tbody) return;
+  if (slots.length === 0) { tbody.innerHTML = ''; if (empty) empty.style.display = 'block'; return; }
+  if (empty) empty.style.display = 'none';
+  tbody.innerHTML = slots.map(function(s) {
+    var remaining = s.max_attendees - s.booked_count;
+    var dateStr = new Date(s.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+    var timeStr = s.start_time.substring(0, 5) + ' - ' + s.end_time.substring(0, 5);
+    var appt = ALL_APPT_TYPES.find(function(a) { return a.id === s.appointment_type_id; });
+    var typeName = appt ? appt.name : '<span style="color:var(--text3)">Manual</span>';
+    var statusClass = s.is_active ? (remaining > 0 ? 'tag-high' : 'tag-low') : 'tag-med';
+    var statusText = s.is_active ? (remaining > 0 ? 'Active' : 'Full') : 'Paused';
+    return '<tr>' +
+      '<td style="white-space:nowrap">' + dateStr + '</td>' +
+      '<td>' + timeStr + '</td>' +
+      '<td><span class="tag tag-location">' + s.location + '</span></td>' +
+      '<td style="font-size:12px">' + typeName + '</td>' +
+      '<td style="text-align:center">' + s.max_attendees + '</td>' +
+      '<td style="text-align:center;color:var(--orange);font-weight:700">' + s.booked_count + '</td>' +
+      '<td style="text-align:center">' + remaining + '</td>' +
+      '<td><span class="tag tag-quality ' + statusClass + '">' + statusText + '</span></td>' +
+      '<td style="display:flex;gap:6px">' +
+        '<button class="btn btn-ghost btn-sm" onclick="toggleSlot(\'' + s.id + '\',' + !s.is_active + ')">' + (s.is_active ? 'Pause' : 'Resume') + '</button>' +
+        '<button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:rgba(231,76,60,0.3)" onclick="deleteSlot(\'' + s.id + '\')">Delete</button>' +
+      '</td></tr>';
+  }).join('');
+}
+
+function toggleManualSlot() {
+  var form = document.getElementById('manual-slot-form');
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  if (form.style.display === 'block') {
+    var tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+    document.getElementById('ms-date').value = tomorrow.toISOString().split('T')[0];
+  }
+}
+
+async function createManualSlot() {
+  var date = document.getElementById('ms-date').value;
+  var start = document.getElementById('ms-start').value;
+  var end = document.getElementById('ms-end').value;
+  var loc = document.getElementById('ms-location').value;
+  var max = parseInt(document.getElementById('ms-max').value) || 10;
+  if (!date || !start || !end) { showToast('Please fill in all fields'); return; }
+  try {
+    var res = await sb.from('booking_slots').insert([{
+      date: date, start_time: start, end_time: end,
+      location: loc, max_attendees: max, booked_count: 0, is_active: true
+    }]);
+    if (res.error) { showToast('Error: ' + res.error.message); return; }
+    showToast('Slot added');
+    document.getElementById('manual-slot-form').style.display = 'none';
+    await initBookingsView();
+  } catch (e) { showToast('Error adding slot'); }
+}
+
+async function toggleSlot(id, active) {
+  try {
+    await sb.from('booking_slots').update({ is_active: active }).eq('id', id);
+    showToast('Slot ' + (active ? 'resumed' : 'paused'));
+    await initBookingsView();
+  } catch (e) { console.error(e); }
+}
+
+async function deleteSlot(id) {
+  if (!confirm('Delete this slot?')) return;
+  try {
+    await sb.from('booking_slots').delete().eq('id', id);
+    showToast('Slot deleted');
     await initBookingsView();
   } catch (e) { console.error(e); }
 }
