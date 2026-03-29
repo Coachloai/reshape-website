@@ -869,6 +869,9 @@ if(sessionStorage.getItem('rs_auth')==='1'){
     <button class="sb-btn" data-view="performance" title="Performance" onclick="switchView('performance', this)">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
     </button>
+    <button class="sb-btn" data-view="bookings" title="Bookings" onclick="switchView('bookings', this)">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    </button>
     <button class="sb-btn" data-view="content" title="Content" onclick="switchView('content', this)">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="8" y1="18" x2="8" y2="18.01"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
     </button>
@@ -1422,6 +1425,138 @@ if(sessionStorage.getItem('rs_auth')==='1'){
           <div class="chart-header"><div class="chart-title">Timeline Preference</div></div>
           <div class="chart-wrap" style="height:180px"><canvas id="perf-timeline"></canvas></div>
         </div>
+      </div>
+    </div>
+    <!-- ── VIEW: BOOKINGS ── -->
+    <div id="view-bookings" class="view" style="display:none">
+      <div class="page-header fade-in" style="margin-bottom:20px">
+        <div>
+          <div class="page-title">Bookings</div>
+          <div class="page-sub">Manage availability &amp; view upcoming bookings</div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary" onclick="openSlotForm()">+ Create Slot</button>
+          <button class="btn btn-ghost" onclick="refreshBookings()">Refresh</button>
+        </div>
+      </div>
+      <!-- CREATE SLOT FORM -->
+      <div id="slot-form-wrap" class="chart-card fade-in" style="display:none;margin-bottom:20px">
+        <div class="chart-title" style="margin-bottom:16px">Create Booking Slot</div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:end">
+          <div class="filter-group">
+            <label class="filter-label">Date</label>
+            <input type="date" class="filter-input" id="slot-date">
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Start Time</label>
+            <input type="time" class="filter-input" id="slot-start" value="09:00">
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">End Time</label>
+            <input type="time" class="filter-input" id="slot-end" value="10:00">
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Location</label>
+            <select class="filter-select" id="slot-location">
+              <option>Ipswich</option>
+              <option>Colchester</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Max Attendees</label>
+            <input type="number" class="filter-input" id="slot-max" value="10" min="1" max="150">
+          </div>
+        </div>
+        <!-- Bulk create -->
+        <div style="display:flex;align-items:center;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);cursor:pointer">
+            <input type="checkbox" id="slot-recurring"> Repeat weekly for
+          </label>
+          <select class="filter-select" id="slot-weeks" style="width:80px;padding:6px 10px">
+            <option value="2">2 wks</option>
+            <option value="4" selected>4 wks</option>
+            <option value="8">8 wks</option>
+            <option value="12">12 wks</option>
+          </select>
+          <div style="flex:1"></div>
+          <button class="btn btn-ghost" onclick="closeSlotForm()">Cancel</button>
+          <button class="btn btn-primary" onclick="createSlot()">Create Slot</button>
+        </div>
+      </div>
+      <!-- STATS ROW -->
+      <div class="stats-row fade-in" style="grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px">
+        <div class="stat-card primary">
+          <div class="stat-label">Upcoming Slots</div>
+          <div class="stat-value" id="book-stat-slots">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Bookings</div>
+          <div class="stat-value" id="book-stat-bookings">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Today</div>
+          <div class="stat-value" id="book-stat-today">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">This Week</div>
+          <div class="stat-value" id="book-stat-week">0</div>
+        </div>
+      </div>
+      <!-- SLOTS TABLE -->
+      <div class="chart-card fade-in" style="margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div class="chart-title">Available Slots</div>
+          <div style="display:flex;gap:8px">
+            <select class="filter-select" id="slot-filter-loc" style="width:140px;padding:6px 10px" onchange="renderSlots()">
+              <option value="">All Locations</option>
+              <option>Ipswich</option>
+              <option>Colchester</option>
+            </select>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="leads-table" style="width:100%">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Location</th>
+                <th>Capacity</th>
+                <th>Booked</th>
+                <th>Remaining</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="slots-tbody"></tbody>
+          </table>
+        </div>
+        <div id="slots-empty" style="display:none;text-align:center;padding:32px;color:var(--text3);font-size:14px">No slots created yet. Click "Create Slot" to get started.</div>
+      </div>
+      <!-- BOOKINGS TABLE -->
+      <div class="chart-card fade-in">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div class="chart-title">Upcoming Bookings</div>
+          <span style="font-size:12px;color:var(--text3)" id="bookings-count">0 bookings</span>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="leads-table" style="width:100%">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Location</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="bookings-tbody"></tbody>
+          </table>
+        </div>
+        <div id="bookings-empty" style="display:none;text-align:center;padding:32px;color:var(--text3);font-size:14px">No bookings yet.</div>
       </div>
     </div>
     <!-- ── VIEW: SETTINGS ── -->
@@ -2012,6 +2147,7 @@ function switchView(view, btn) {
   if (view === 'leads') renderLeadsView();
   if (view === 'analytics') initAnalyticsCharts();
   if (view === 'performance') initPerfCharts();
+  if (view === 'bookings') initBookingsView();
   if (view === 'content') initContentView();
 }
 /* ── LEADS VIEW ── */
@@ -2374,6 +2510,175 @@ function initPerfCharts() {
     }
   }, 50);
 }
+/* ══════════════════════════════════════
+   BOOKINGS VIEW
+══════════════════════════════════════ */
+var ALL_SLOTS = [];
+var ALL_BOOKINGS = [];
+
+async function initBookingsView() {
+  await Promise.all([fetchSlots(), fetchBookings()]);
+  updateBookingStats();
+  renderSlots();
+  renderBookings();
+}
+
+async function refreshBookings() {
+  await initBookingsView();
+  showToast('Bookings refreshed');
+}
+
+async function fetchSlots() {
+  try {
+    var today = new Date().toISOString().split('T')[0];
+    var res = await sb.from('booking_slots').select('*').gte('date', today).order('date', { ascending: true }).order('start_time', { ascending: true });
+    ALL_SLOTS = res.data || [];
+  } catch (e) { console.error('Fetch slots error:', e); ALL_SLOTS = []; }
+}
+
+async function fetchBookings() {
+  try {
+    var res = await sb.from('bookings').select('*, booking_slots(date, start_time, end_time, location)').eq('status', 'confirmed').order('created_at', { ascending: false });
+    ALL_BOOKINGS = res.data || [];
+  } catch (e) { console.error('Fetch bookings error:', e); ALL_BOOKINGS = []; }
+}
+
+function updateBookingStats() {
+  var today = new Date().toISOString().split('T')[0];
+  var now = new Date();
+  document.getElementById('book-stat-slots').textContent = ALL_SLOTS.filter(function(s) { return s.is_active; }).length;
+  document.getElementById('book-stat-bookings').textContent = ALL_BOOKINGS.length;
+  document.getElementById('book-stat-today').textContent = ALL_BOOKINGS.filter(function(b) { return b.booking_slots && b.booking_slots.date === today; }).length;
+  document.getElementById('book-stat-week').textContent = ALL_BOOKINGS.filter(function(b) {
+    if (!b.booking_slots) return false;
+    var d = new Date(b.booking_slots.date);
+    return (now - d) / 864e5 <= 7 && d >= new Date(today);
+  }).length;
+}
+
+function renderSlots() {
+  var locFilter = document.getElementById('slot-filter-loc').value;
+  var slots = ALL_SLOTS.filter(function(s) {
+    if (locFilter && s.location !== locFilter) return false;
+    return true;
+  });
+  var tbody = document.getElementById('slots-tbody');
+  var empty = document.getElementById('slots-empty');
+  if (slots.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = slots.map(function(s) {
+    var remaining = s.max_attendees - s.booked_count;
+    var dateStr = new Date(s.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+    var timeStr = s.start_time.substring(0, 5) + ' - ' + s.end_time.substring(0, 5);
+    var statusClass = s.is_active ? (remaining > 0 ? 'tag-high' : 'tag-low') : 'tag-med';
+    var statusText = s.is_active ? (remaining > 0 ? 'Active' : 'Full') : 'Paused';
+    return '<tr>' +
+      '<td style="white-space:nowrap">' + dateStr + '</td>' +
+      '<td>' + timeStr + '</td>' +
+      '<td><span class="tag tag-location">' + s.location + '</span></td>' +
+      '<td style="text-align:center">' + s.max_attendees + '</td>' +
+      '<td style="text-align:center;color:var(--orange);font-weight:700">' + s.booked_count + '</td>' +
+      '<td style="text-align:center">' + remaining + '</td>' +
+      '<td><span class="tag tag-quality ' + statusClass + '">' + statusText + '</span></td>' +
+      '<td style="display:flex;gap:6px">' +
+        '<button class="btn btn-ghost btn-sm" onclick="toggleSlot(\'' + s.id + '\',' + (s.is_active ? 'false' : 'true') + ')">' + (s.is_active ? 'Pause' : 'Resume') + '</button>' +
+        '<button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:rgba(231,76,60,0.3)" onclick="deleteSlot(\'' + s.id + '\')">Delete</button>' +
+      '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+function renderBookings() {
+  var tbody = document.getElementById('bookings-tbody');
+  var empty = document.getElementById('bookings-empty');
+  var countEl = document.getElementById('bookings-count');
+  countEl.textContent = ALL_BOOKINGS.length + ' booking' + (ALL_BOOKINGS.length !== 1 ? 's' : '');
+  if (ALL_BOOKINGS.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = ALL_BOOKINGS.map(function(b, i) {
+    var slot = b.booking_slots || {};
+    var dateStr = slot.date ? new Date(slot.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) : '-';
+    var timeStr = slot.start_time ? slot.start_time.substring(0, 5) + ' - ' + slot.end_time.substring(0, 5) : '-';
+    return '<tr>' +
+      '<td style="color:var(--text3)">' + (i + 1) + '</td>' +
+      '<td class="td-name">' + (b.first_name || '') + ' ' + (b.last_name || '') + '</td>' +
+      '<td class="td-email">' + (b.email || '') + '</td>' +
+      '<td class="td-phone">' + (b.phone || '') + '</td>' +
+      '<td style="white-space:nowrap">' + dateStr + '</td>' +
+      '<td>' + timeStr + '</td>' +
+      '<td><span class="tag tag-location">' + (b.location || slot.location || '') + '</span></td>' +
+      '<td><span class="tag tag-quality tag-high">' + b.status + '</span></td>' +
+    '</tr>';
+  }).join('');
+}
+
+function openSlotForm() {
+  var wrap = document.getElementById('slot-form-wrap');
+  wrap.style.display = 'block';
+  // Set default date to tomorrow
+  var tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  document.getElementById('slot-date').value = tomorrow.toISOString().split('T')[0];
+}
+
+function closeSlotForm() {
+  document.getElementById('slot-form-wrap').style.display = 'none';
+}
+
+async function createSlot() {
+  var date = document.getElementById('slot-date').value;
+  var start = document.getElementById('slot-start').value;
+  var end = document.getElementById('slot-end').value;
+  var loc = document.getElementById('slot-location').value;
+  var max = parseInt(document.getElementById('slot-max').value) || 10;
+  var recurring = document.getElementById('slot-recurring').checked;
+  var weeks = parseInt(document.getElementById('slot-weeks').value) || 4;
+
+  if (!date || !start || !end) { showToast('Please fill in date and times'); return; }
+  if (max < 1 || max > 150) { showToast('Attendees must be 1-150'); return; }
+
+  var slotsToCreate = [];
+  var numWeeks = recurring ? weeks : 1;
+  for (var w = 0; w < numWeeks; w++) {
+    var d = new Date(date + 'T00:00:00');
+    d.setDate(d.getDate() + (w * 7));
+    slotsToCreate.push({
+      date: d.toISOString().split('T')[0],
+      start_time: start,
+      end_time: end,
+      location: loc,
+      max_attendees: max,
+      booked_count: 0,
+      is_active: true
+    });
+  }
+
+  try {
+    var res = await sb.from('booking_slots').insert(slotsToCreate);
+    if (res.error) { showToast('Error: ' + res.error.message); return; }
+    showToast(slotsToCreate.length + ' slot' + (slotsToCreate.length > 1 ? 's' : '') + ' created');
+    closeSlotForm();
+    await initBookingsView();
+  } catch (e) { showToast('Error creating slot'); console.error(e); }
+}
+
+async function toggleSlot(id, active) {
+  try {
+    await sb.from('booking_slots').update({ is_active: active }).eq('id', id);
+    showToast('Slot ' + (active ? 'resumed' : 'paused'));
+    await initBookingsView();
+  } catch (e) { console.error(e); }
+}
+
+async function deleteSlot(id) {
+  if (!confirm('Delete this slot? This cannot be undone.')) return;
+  try {
+    await sb.from('booking_slots').delete().eq('id', id);
+    showToast('Slot deleted');
+    await initBookingsView();
+  } catch (e) { console.error(e); }
+}
+
 let toastTimer;
 function showToast(msg) {
   let t = document.querySelector('.toast');

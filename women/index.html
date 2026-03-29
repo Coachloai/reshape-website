@@ -727,6 +727,56 @@ textarea.form-input{min-height:100px;resize:vertical}
 .form-input.error{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,0.15)}
 .form-error-msg{font-size:12px;color:#EF4444;margin-top:6px;display:none}
 .form-error-msg.visible{display:block}
+/* ═══════════════════════════════════════
+   BOOKING CALENDAR
+═══════════════════════════════════════ */
+.booking-wrap{animation:formFadeIn .5s ease}
+.booking-header{text-align:center;margin-bottom:28px}
+.booking-header h3{font-family:var(--head);font-size:22px;font-weight:800;margin-bottom:6px}
+.booking-header p{font-size:14px;color:var(--text3);line-height:1.6}
+.booking-loc-toggle{display:flex;gap:8px;margin-bottom:24px}
+.booking-loc-btn{flex:1;padding:12px;border:2px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.02);color:var(--text2);font-family:var(--body);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center}
+.booking-loc-btn:hover{border-color:rgba(255,255,255,0.15)}
+.booking-loc-btn.active{border-color:var(--orange);background:var(--odim);color:var(--orange)}
+.booking-dates{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;-webkit-overflow-scrolling:touch}
+.booking-dates::-webkit-scrollbar{height:3px}
+.booking-dates::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+.booking-date{min-width:72px;padding:14px 10px;border:2px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.02);cursor:pointer;text-align:center;transition:all .2s;flex-shrink:0}
+.booking-date:hover{border-color:rgba(255,255,255,0.15);transform:translateY(-2px)}
+.booking-date.active{border-color:var(--orange);background:var(--odim)}
+.booking-date.empty{opacity:.35;cursor:default;pointer-events:none}
+.booking-date-day{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.1em}
+.booking-date-num{font-size:22px;font-weight:800;font-family:var(--head);color:var(--text);margin:4px 0 2px}
+.booking-date.active .booking-date-num{color:var(--orange)}
+.booking-date-month{font-size:10px;color:var(--text4)}
+.booking-date-slots{font-size:10px;color:var(--orange);font-weight:600;margin-top:4px}
+.booking-times{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.booking-time{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border:2px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.02);cursor:pointer;transition:all .2s}
+.booking-time:hover{border-color:rgba(255,255,255,0.15)}
+.booking-time.active{border-color:var(--orange);background:var(--odim)}
+.booking-time.full{opacity:.4;cursor:default;pointer-events:none}
+.booking-time-left{display:flex;flex-direction:column;gap:2px}
+.booking-time-range{font-size:15px;font-weight:600;color:var(--text)}
+.booking-time-spots{font-size:12px;color:var(--text3)}
+.booking-time.active .booking-time-range{color:var(--orange)}
+.booking-time-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.booking-time.active .booking-time-check{background:var(--orange);border-color:var(--orange)}
+.booking-time-check svg{width:12px;height:12px;opacity:0;color:#fff;transition:opacity .2s}
+.booking-time.active .booking-time-check svg{opacity:1}
+.booking-empty{text-align:center;padding:24px;color:var(--text3);font-size:14px}
+.booking-confirm-btn{width:100%;padding:16px;background:var(--orange);color:#fff;border:none;border-radius:14px;font-family:var(--body);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 8px 28px rgba(237,92,37,0.28)}
+.booking-confirm-btn:hover{background:var(--orange3);transform:translateY(-1px)}
+.booking-confirm-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.booking-skip{display:block;text-align:center;margin-top:16px;font-size:13px;color:var(--text4);cursor:pointer;transition:color .2s;background:none;border:none;font-family:var(--body)}
+.booking-skip:hover{color:var(--text2)}
+.booking-done{text-align:center;animation:formFadeIn .5s ease}
+.booking-done-icon{width:72px;height:72px;border-radius:50%;background:var(--odim);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px}
+.booking-done h3{font-family:var(--head);font-size:22px;font-weight:800;margin-bottom:8px}
+.booking-done p{font-size:15px;color:var(--text2);line-height:1.6;max-width:380px;margin:0 auto}
+.booking-done-detail{background:var(--odim);border:1px solid rgba(237,92,37,0.2);border-radius:14px;padding:16px 20px;margin:20px auto 0;max-width:320px;text-align:left}
+.booking-done-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}
+.booking-done-row span:first-child{color:var(--text3)}
+.booking-done-row span:last-child{font-weight:600;color:var(--text)}
 </style>
 </head>
 <body>
@@ -1304,9 +1354,32 @@ textarea.form-input{min-height:100px;resize:vertical}
             </div>
           </form>
           <div class="form-success" id="formSuccess">
-            <div class="form-success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg></div>
-            <h3>Application Submitted!</h3>
-            <p>We've received your application. We will review your details and be in touch within 24 hours.</p>
+            <div class="booking-wrap" id="bookingWrap">
+              <div class="booking-header">
+                <div class="form-success-icon" style="margin-bottom:16px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg></div>
+                <h3>Application Submitted!</h3>
+                <p>Book your in-person visit below, or we'll be in touch within 24 hours.</p>
+              </div>
+              <div class="booking-loc-toggle" id="bookingLocToggle">
+                <button class="booking-loc-btn" data-loc="Ipswich" onclick="selectBookingLoc('Ipswich')">&#128205; Ipswich</button>
+                <button class="booking-loc-btn" data-loc="Colchester" onclick="selectBookingLoc('Colchester')">&#128205; Colchester</button>
+              </div>
+              <div class="booking-dates" id="bookingDates"></div>
+              <div class="booking-times" id="bookingTimes"><div class="booking-empty">Select a date to see available times</div></div>
+              <button class="booking-confirm-btn" id="bookingConfirmBtn" disabled onclick="confirmBooking()">Book My Visit</button>
+              <button class="booking-skip" onclick="skipBooking()">I'll book later</button>
+            </div>
+            <div class="booking-done" id="bookingDone" style="display:none">
+              <div class="booking-done-icon">&#127881;</div>
+              <h3>You're Booked!</h3>
+              <p>We look forward to seeing you. You'll receive a confirmation shortly.</p>
+              <div class="booking-done-detail" id="bookingDoneDetail"></div>
+            </div>
+            <div id="bookingSkipped" style="display:none;text-align:center;padding:40px 20px;animation:formFadeIn .5s ease">
+              <div class="form-success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg></div>
+              <h3>Application Submitted!</h3>
+              <p>We've received your application. We will review your details and be in touch within 24 hours.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -1644,6 +1717,10 @@ window.addEventListener('scroll',()=>{
     form.style.display = 'none';
     document.getElementById('formProgress').style.display = 'none';
     success.classList.add('active');
+    /* ── Init booking calendar with lead data ── */
+    window.__bookingLead = leadData;
+    if (leadData.location) selectBookingLoc(leadData.location);
+    else selectBookingLoc('Ipswich');
   });
 
   form.querySelectorAll('.form-input').forEach(function(input) {
@@ -1657,6 +1734,112 @@ window.addEventListener('scroll',()=>{
   updateProgress();
   updateNextButton();
 })();
+
+/* ══════════════════════════════════════
+   BOOKING CALENDAR
+══════════════════════════════════════ */
+var __bookingSlots = [];
+var __selectedSlotId = null;
+var __selectedLoc = null;
+var __selectedDate = null;
+
+async function selectBookingLoc(loc) {
+  __selectedLoc = loc;
+  __selectedSlotId = null;
+  __selectedDate = null;
+  document.getElementById('bookingConfirmBtn').disabled = true;
+  document.querySelectorAll('.booking-loc-btn').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.loc === loc);
+  });
+  await loadBookingSlots(loc);
+}
+
+async function loadBookingSlots(loc) {
+  var today = new Date().toISOString().split('T')[0];
+  try {
+    if (typeof window.__supabaseClient !== 'undefined') {
+      var res = await window.__supabaseClient.from('booking_slots').select('*').eq('location', loc).eq('is_active', true).gte('date', today).order('date', { ascending: true }).order('start_time', { ascending: true });
+      __bookingSlots = (res.data || []).filter(function(s) { return s.booked_count < s.max_attendees; });
+    } else { __bookingSlots = []; }
+  } catch (e) { console.error('Booking slots error:', e); __bookingSlots = []; }
+  renderBookingDates();
+}
+
+function renderBookingDates() {
+  var container = document.getElementById('bookingDates');
+  var timesEl = document.getElementById('bookingTimes');
+  var dateMap = {};
+  __bookingSlots.forEach(function(s) { if (!dateMap[s.date]) dateMap[s.date] = []; dateMap[s.date].push(s); });
+  var html = '';
+  var now = new Date();
+  for (var i = 0; i < 14; i++) {
+    var d = new Date(now); d.setDate(d.getDate() + i);
+    var key = d.toISOString().split('T')[0];
+    var slotsForDay = dateMap[key] || [];
+    var hasSlots = slotsForDay.length > 0;
+    html += '<div class="booking-date' + (!hasSlots ? ' empty' : '') + (key === __selectedDate ? ' active' : '') + '" data-date="' + key + '" onclick="selectBookingDate(\'' + key + '\')">';
+    html += '<div class="booking-date-day">' + d.toLocaleDateString('en-GB', { weekday: 'short' }) + '</div>';
+    html += '<div class="booking-date-num">' + d.getDate() + '</div>';
+    html += '<div class="booking-date-month">' + d.toLocaleDateString('en-GB', { month: 'short' }) + '</div>';
+    if (hasSlots) html += '<div class="booking-date-slots">' + slotsForDay.length + ' slot' + (slotsForDay.length > 1 ? 's' : '') + '</div>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
+  if (!__selectedDate) timesEl.innerHTML = '<div class="booking-empty">Select a date to see available times</div>';
+}
+
+function selectBookingDate(dateStr) {
+  __selectedDate = dateStr; __selectedSlotId = null;
+  document.getElementById('bookingConfirmBtn').disabled = true;
+  document.querySelectorAll('.booking-date').forEach(function(el) { el.classList.toggle('active', el.dataset.date === dateStr); });
+  renderBookingTimes();
+}
+
+function renderBookingTimes() {
+  var container = document.getElementById('bookingTimes');
+  var slots = __bookingSlots.filter(function(s) { return s.date === __selectedDate; });
+  if (slots.length === 0) { container.innerHTML = '<div class="booking-empty">No available slots for this date</div>'; return; }
+  container.innerHTML = slots.map(function(s) {
+    var remaining = s.max_attendees - s.booked_count;
+    var isFull = remaining <= 0;
+    return '<div class="booking-time' + (isFull ? ' full' : '') + (__selectedSlotId === s.id ? ' active' : '') + '" data-id="' + s.id + '" onclick="selectBookingTime(\'' + s.id + '\')">' +
+      '<div class="booking-time-left"><div class="booking-time-range">' + s.start_time.substring(0, 5) + ' - ' + s.end_time.substring(0, 5) + '</div><div class="booking-time-spots">' + (isFull ? 'Full' : remaining + ' spot' + (remaining > 1 ? 's' : '') + ' remaining') + '</div></div>' +
+      '<div class="booking-time-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div></div>';
+  }).join('');
+}
+
+function selectBookingTime(slotId) {
+  __selectedSlotId = slotId;
+  document.querySelectorAll('.booking-time').forEach(function(el) { el.classList.toggle('active', el.dataset.id === slotId); });
+  document.getElementById('bookingConfirmBtn').disabled = false;
+}
+
+async function confirmBooking() {
+  var btn = document.getElementById('bookingConfirmBtn');
+  btn.disabled = true; btn.textContent = 'Booking...';
+  var lead = window.__bookingLead || {};
+  try {
+    if (typeof window.__supabaseClient !== 'undefined') {
+      await window.__supabaseClient.from('bookings').insert([{ slot_id: __selectedSlotId, first_name: lead.first_name || '', last_name: lead.last_name || '', email: lead.email || '', phone: lead.phone || '', location: __selectedLoc || '' }]);
+      var slot = __bookingSlots.find(function(s) { return s.id === __selectedSlotId; });
+      if (slot) await window.__supabaseClient.from('booking_slots').update({ booked_count: slot.booked_count + 1 }).eq('id', __selectedSlotId);
+      if (typeof gtag === 'function') gtag('event', 'booking_confirmed', { event_category: 'conversion', location: __selectedLoc, date: __selectedDate });
+      if (typeof fbq === 'function') fbq('trackCustom', 'BookingConfirmed', { location: __selectedLoc, date: __selectedDate });
+      var dateObj = new Date(__selectedDate + 'T00:00:00');
+      document.getElementById('bookingWrap').style.display = 'none';
+      document.getElementById('bookingDone').style.display = 'block';
+      document.getElementById('bookingDoneDetail').innerHTML =
+        '<div class="booking-done-row"><span>Date</span><span>' + dateObj.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) + '</span></div>' +
+        '<div class="booking-done-row"><span>Time</span><span>' + (slot ? slot.start_time.substring(0, 5) + ' - ' + slot.end_time.substring(0, 5) : '') + '</span></div>' +
+        '<div class="booking-done-row"><span>Location</span><span>' + __selectedLoc + '</span></div>';
+    }
+  } catch (e) { console.error('Booking error:', e); btn.disabled = false; btn.textContent = 'Book My Visit'; }
+}
+
+function skipBooking() {
+  document.getElementById('bookingWrap').style.display = 'none';
+  document.getElementById('bookingSkipped').style.display = 'block';
+}
 </script>
 </body>
 </html>
