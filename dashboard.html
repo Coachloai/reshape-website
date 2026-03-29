@@ -408,6 +408,47 @@ body{
   padding: 12px 0; border-bottom: 1px solid var(--border2);
 }
 .settings-row:last-child { border-bottom: none; padding-bottom: 0; }
+/* ── APPOINTMENT CARDS ── */
+.appt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;margin-bottom:20px}
+.appt-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:22px;position:relative;transition:border-color .2s}
+.appt-card:hover{border-color:rgba(255,255,255,.12)}
+.appt-card.paused{opacity:.55}
+.appt-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.appt-card-name{font-family:var(--head);font-size:17px;font-weight:800;color:var(--text);letter-spacing:-.01em}
+.appt-card-loc{font-size:12px;color:var(--orange);font-weight:600;margin-top:2px}
+.appt-card-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:.05em;text-transform:uppercase}
+.appt-card-badge.active{background:rgba(46,204,113,.12);color:var(--green);border:1px solid rgba(46,204,113,.25)}
+.appt-card-badge.paused{background:rgba(231,76,60,.1);color:var(--red);border:1px solid rgba(231,76,60,.25)}
+.appt-card-body{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.appt-card-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2)}
+.appt-card-row svg{color:var(--text3);flex-shrink:0}
+.appt-card-days{display:flex;gap:4px}
+.appt-day{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:.02em;border:1px solid var(--border);color:var(--text3)}
+.appt-day.on{background:var(--odim);border-color:rgba(237,92,37,.3);color:var(--orange)}
+.appt-card-actions{display:flex;gap:8px;padding-top:14px;border-top:1px solid var(--border)}
+/* ── CREATE APPOINTMENT FORM ── */
+.appt-form{background:var(--s1);border:1px solid rgba(237,92,37,.2);border-radius:var(--r);padding:24px}
+.appt-form-title{font-family:var(--head);font-size:16px;font-weight:800;margin-bottom:20px;color:var(--text)}
+.appt-form-row{display:grid;gap:14px;margin-bottom:16px}
+.appt-form-row.cols-2{grid-template-columns:1fr 1fr}
+.appt-form-row.cols-3{grid-template-columns:1fr 1fr 1fr}
+.appt-form-row.cols-4{grid-template-columns:1fr 1fr 1fr 1fr}
+.appt-form-group{display:flex;flex-direction:column;gap:6px}
+.appt-form-label{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text3)}
+.appt-form-input{background:var(--s3);border:1.5px solid var(--border);border-radius:8px;color:var(--text);padding:10px 12px;font-family:var(--body);font-size:13px;outline:none;transition:border-color .2s;width:100%}
+.appt-form-input:focus{border-color:rgba(237,92,37,.4)}
+.appt-form-input::placeholder{color:var(--text3)}
+select.appt-form-input{cursor:pointer;appearance:none}
+select.appt-form-input option{background:var(--s3)}
+.appt-weekdays{display:flex;gap:6px}
+.appt-weekday{width:38px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:1.5px solid var(--border);color:var(--text3);cursor:pointer;transition:all .2s;background:transparent}
+.appt-weekday:hover{border-color:rgba(255,255,255,.2)}
+.appt-weekday.selected{background:var(--odim);border-color:var(--orange);color:var(--orange)}
+.appt-mode-group{display:flex;gap:8px;margin-bottom:16px}
+.appt-mode-btn{flex:1;padding:10px;border:1.5px solid var(--border);border-radius:8px;background:transparent;color:var(--text3);font-family:var(--body);font-size:12px;font-weight:600;cursor:pointer;text-align:center;transition:all .2s}
+.appt-mode-btn:hover{border-color:rgba(255,255,255,.2)}
+.appt-mode-btn.selected{border-color:var(--orange);background:var(--odim);color:var(--orange)}
+.appt-form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
 .toggle { position: relative; display: inline-flex; cursor: pointer; }
 .toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
 .toggle-track {
@@ -1432,62 +1473,116 @@ if(sessionStorage.getItem('rs_auth')==='1'){
       <div class="page-header fade-in" style="margin-bottom:20px">
         <div>
           <div class="page-title">Bookings</div>
-          <div class="page-sub">Manage availability &amp; view upcoming bookings</div>
+          <div class="page-sub">Manage appointment types, availability &amp; bookings</div>
         </div>
         <div class="header-actions">
-          <button class="btn btn-primary" onclick="openSlotForm()">+ Create Slot</button>
+          <button class="btn btn-primary" id="btn-new-appt" onclick="toggleApptForm()">+ New Appointment Type</button>
           <button class="btn btn-ghost" onclick="refreshBookings()">Refresh</button>
         </div>
       </div>
-      <!-- CREATE SLOT FORM -->
-      <div id="slot-form-wrap" class="chart-card fade-in" style="display:none;margin-bottom:20px">
-        <div class="chart-title" style="margin-bottom:16px">Create Booking Slot</div>
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:end">
-          <div class="filter-group">
-            <label class="filter-label">Date</label>
-            <input type="date" class="filter-input" id="slot-date">
+      <!-- CREATE APPOINTMENT TYPE FORM -->
+      <div id="appt-form-wrap" class="appt-form fade-in" style="display:none;margin-bottom:20px">
+        <div class="appt-form-title" id="appt-form-title">New Appointment Type</div>
+        <input type="hidden" id="appt-edit-id">
+        <div class="appt-form-row cols-3">
+          <div class="appt-form-group">
+            <label class="appt-form-label">Appointment Name</label>
+            <input type="text" class="appt-form-input" id="appt-name" placeholder="e.g. Gym Tour, Consultation">
           </div>
-          <div class="filter-group">
-            <label class="filter-label">Start Time</label>
-            <input type="time" class="filter-input" id="slot-start" value="09:00">
+          <div class="appt-form-group">
+            <label class="appt-form-label">Duration (minutes)</label>
+            <select class="appt-form-input" id="appt-duration">
+              <option value="15">15 min</option>
+              <option value="30" selected>30 min</option>
+              <option value="45">45 min</option>
+              <option value="60">60 min</option>
+              <option value="90">90 min</option>
+            </select>
           </div>
-          <div class="filter-group">
-            <label class="filter-label">End Time</label>
-            <input type="time" class="filter-input" id="slot-end" value="10:00">
-          </div>
-          <div class="filter-group">
-            <label class="filter-label">Location</label>
-            <select class="filter-select" id="slot-location">
+          <div class="appt-form-group">
+            <label class="appt-form-label">Location</label>
+            <select class="appt-form-input" id="appt-location">
               <option>Ipswich</option>
               <option>Colchester</option>
             </select>
           </div>
-          <div class="filter-group">
-            <label class="filter-label">Max Attendees</label>
-            <input type="number" class="filter-input" id="slot-max" value="10" min="1" max="150">
+        </div>
+        <div class="appt-form-row cols-2">
+          <div class="appt-form-group">
+            <label class="appt-form-label">Open From</label>
+            <input type="time" class="appt-form-input" id="appt-open" value="09:00">
+          </div>
+          <div class="appt-form-group">
+            <label class="appt-form-label">Open Until</label>
+            <input type="time" class="appt-form-input" id="appt-close" value="17:00">
           </div>
         </div>
-        <!-- Bulk create -->
-        <div style="display:flex;align-items:center;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
-          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);cursor:pointer">
-            <input type="checkbox" id="slot-recurring"> Repeat weekly for
-          </label>
-          <select class="filter-select" id="slot-weeks" style="width:80px;padding:6px 10px">
-            <option value="2">2 wks</option>
-            <option value="4" selected>4 wks</option>
-            <option value="8">8 wks</option>
-            <option value="12">12 wks</option>
-          </select>
-          <div style="flex:1"></div>
-          <button class="btn btn-ghost" onclick="closeSlotForm()">Cancel</button>
-          <button class="btn btn-primary" onclick="createSlot()">Create Slot</button>
+        <div class="appt-form-group" style="margin-bottom:16px">
+          <label class="appt-form-label">Repeat On</label>
+          <div class="appt-weekdays" id="appt-weekdays">
+            <div class="appt-weekday selected" data-day="1">Mon</div>
+            <div class="appt-weekday selected" data-day="2">Tue</div>
+            <div class="appt-weekday selected" data-day="3">Wed</div>
+            <div class="appt-weekday selected" data-day="4">Thu</div>
+            <div class="appt-weekday selected" data-day="5">Fri</div>
+            <div class="appt-weekday" data-day="6">Sat</div>
+            <div class="appt-weekday" data-day="0">Sun</div>
+          </div>
+        </div>
+        <div class="appt-form-group" style="margin-bottom:16px">
+          <label class="appt-form-label">Availability</label>
+          <div class="appt-mode-group" id="appt-mode-group">
+            <button class="appt-mode-btn selected" data-mode="rolling" onclick="selectApptMode('rolling')">Rolling</button>
+            <button class="appt-mode-btn" data-mode="range" onclick="selectApptMode('range')">Date Range</button>
+            <button class="appt-mode-btn" data-mode="indefinite" onclick="selectApptMode('indefinite')">Indefinite</button>
+          </div>
+        </div>
+        <!-- Rolling options -->
+        <div id="appt-mode-rolling" class="appt-form-row cols-2">
+          <div class="appt-form-group">
+            <label class="appt-form-label">Rolling Window</label>
+            <select class="appt-form-input" id="appt-rolling-weeks">
+              <option value="1">1 week ahead</option>
+              <option value="2">2 weeks ahead</option>
+              <option value="4" selected>4 weeks ahead</option>
+              <option value="8">8 weeks ahead</option>
+              <option value="12">12 weeks ahead</option>
+            </select>
+          </div>
+          <div class="appt-form-group">
+            <label class="appt-form-label">End Date (optional)</label>
+            <input type="date" class="appt-form-input" id="appt-rolling-end" placeholder="Leave blank for no end">
+          </div>
+        </div>
+        <!-- Range options -->
+        <div id="appt-mode-range" class="appt-form-row cols-2" style="display:none">
+          <div class="appt-form-group">
+            <label class="appt-form-label">Start Date</label>
+            <input type="date" class="appt-form-input" id="appt-range-start">
+          </div>
+          <div class="appt-form-group">
+            <label class="appt-form-label">End Date</label>
+            <input type="date" class="appt-form-input" id="appt-range-end">
+          </div>
+        </div>
+        <!-- Indefinite: no extra fields -->
+        <div class="appt-form-row cols-2">
+          <div class="appt-form-group">
+            <label class="appt-form-label">Max Attendees Per Slot</label>
+            <input type="number" class="appt-form-input" id="appt-max" value="10" min="1" max="150">
+          </div>
+          <div></div>
+        </div>
+        <div class="appt-form-actions">
+          <button class="btn btn-ghost" onclick="toggleApptForm()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveApptType()">Create &amp; Generate Slots</button>
         </div>
       </div>
-      <!-- STATS ROW -->
+      <!-- STATS -->
       <div class="stats-row fade-in" style="grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px">
         <div class="stat-card primary">
-          <div class="stat-label">Upcoming Slots</div>
-          <div class="stat-value" id="book-stat-slots">0</div>
+          <div class="stat-label">Appointment Types</div>
+          <div class="stat-value" id="book-stat-types">0</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Total Bookings</div>
@@ -1502,37 +1597,9 @@ if(sessionStorage.getItem('rs_auth')==='1'){
           <div class="stat-value" id="book-stat-week">0</div>
         </div>
       </div>
-      <!-- SLOTS TABLE -->
-      <div class="chart-card fade-in" style="margin-bottom:20px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-          <div class="chart-title">Available Slots</div>
-          <div style="display:flex;gap:8px">
-            <select class="filter-select" id="slot-filter-loc" style="width:140px;padding:6px 10px" onchange="renderSlots()">
-              <option value="">All Locations</option>
-              <option>Ipswich</option>
-              <option>Colchester</option>
-            </select>
-          </div>
-        </div>
-        <div style="overflow-x:auto">
-          <table class="leads-table" style="width:100%">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Location</th>
-                <th>Capacity</th>
-                <th>Booked</th>
-                <th>Remaining</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="slots-tbody"></tbody>
-          </table>
-        </div>
-        <div id="slots-empty" style="display:none;text-align:center;padding:32px;color:var(--text3);font-size:14px">No slots created yet. Click "Create Slot" to get started.</div>
-      </div>
+      <!-- APPOINTMENT TYPE CARDS -->
+      <div class="appt-grid fade-in" id="appt-grid"></div>
+      <div id="appt-empty" style="display:none;text-align:center;padding:40px;color:var(--text3);font-size:14px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);margin-bottom:20px">No appointment types yet. Click "+ New Appointment Type" to get started.</div>
       <!-- BOOKINGS TABLE -->
       <div class="chart-card fade-in">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
@@ -1547,6 +1614,7 @@ if(sessionStorage.getItem('rs_auth')==='1'){
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
+                <th>Appointment</th>
                 <th>Date</th>
                 <th>Time</th>
                 <th>Location</th>
@@ -2513,40 +2581,33 @@ function initPerfCharts() {
 /* ══════════════════════════════════════
    BOOKINGS VIEW
 ══════════════════════════════════════ */
-var ALL_SLOTS = [];
+var ALL_APPT_TYPES = [];
 var ALL_BOOKINGS = [];
+var __apptMode = 'rolling';
 
 async function initBookingsView() {
-  await Promise.all([fetchSlots(), fetchBookings()]);
+  await Promise.all([fetchApptTypes(), fetchBookings()]);
   updateBookingStats();
-  renderSlots();
+  renderApptCards();
   renderBookings();
 }
 
-async function refreshBookings() {
-  await initBookingsView();
-  showToast('Bookings refreshed');
-}
+async function refreshBookings() { await initBookingsView(); showToast('Bookings refreshed'); }
 
-async function fetchSlots() {
-  try {
-    var today = new Date().toISOString().split('T')[0];
-    var res = await sb.from('booking_slots').select('*').gte('date', today).order('date', { ascending: true }).order('start_time', { ascending: true });
-    ALL_SLOTS = res.data || [];
-  } catch (e) { console.error('Fetch slots error:', e); ALL_SLOTS = []; }
+async function fetchApptTypes() {
+  try { var r = await sb.from('appointment_types').select('*').order('created_at', { ascending: false }); ALL_APPT_TYPES = r.data || []; }
+  catch (e) { ALL_APPT_TYPES = []; }
 }
 
 async function fetchBookings() {
-  try {
-    var res = await sb.from('bookings').select('*, booking_slots(date, start_time, end_time, location)').eq('status', 'confirmed').order('created_at', { ascending: false });
-    ALL_BOOKINGS = res.data || [];
-  } catch (e) { console.error('Fetch bookings error:', e); ALL_BOOKINGS = []; }
+  try { var r = await sb.from('bookings').select('*, booking_slots(date, start_time, end_time, location, appointment_type_id)').eq('status', 'confirmed').order('created_at', { ascending: false }); ALL_BOOKINGS = r.data || []; }
+  catch (e) { ALL_BOOKINGS = []; }
 }
 
 function updateBookingStats() {
   var today = new Date().toISOString().split('T')[0];
   var now = new Date();
-  document.getElementById('book-stat-slots').textContent = ALL_SLOTS.filter(function(s) { return s.is_active; }).length;
+  document.getElementById('book-stat-types').textContent = ALL_APPT_TYPES.filter(function(a) { return a.is_active; }).length;
   document.getElementById('book-stat-bookings').textContent = ALL_BOOKINGS.length;
   document.getElementById('book-stat-today').textContent = ALL_BOOKINGS.filter(function(b) { return b.booking_slots && b.booking_slots.date === today; }).length;
   document.getElementById('book-stat-week').textContent = ALL_BOOKINGS.filter(function(b) {
@@ -2556,35 +2617,33 @@ function updateBookingStats() {
   }).length;
 }
 
-function renderSlots() {
-  var locFilter = document.getElementById('slot-filter-loc').value;
-  var slots = ALL_SLOTS.filter(function(s) {
-    if (locFilter && s.location !== locFilter) return false;
-    return true;
-  });
-  var tbody = document.getElementById('slots-tbody');
-  var empty = document.getElementById('slots-empty');
-  if (slots.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+var DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var DAY_SHORT = ['S','M','T','W','T','F','S'];
+
+function renderApptCards() {
+  var grid = document.getElementById('appt-grid');
+  var empty = document.getElementById('appt-empty');
+  if (ALL_APPT_TYPES.length === 0) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
   empty.style.display = 'none';
-  tbody.innerHTML = slots.map(function(s) {
-    var remaining = s.max_attendees - s.booked_count;
-    var dateStr = new Date(s.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-    var timeStr = s.start_time.substring(0, 5) + ' - ' + s.end_time.substring(0, 5);
-    var statusClass = s.is_active ? (remaining > 0 ? 'tag-high' : 'tag-low') : 'tag-med';
-    var statusText = s.is_active ? (remaining > 0 ? 'Active' : 'Full') : 'Paused';
-    return '<tr>' +
-      '<td style="white-space:nowrap">' + dateStr + '</td>' +
-      '<td>' + timeStr + '</td>' +
-      '<td><span class="tag tag-location">' + s.location + '</span></td>' +
-      '<td style="text-align:center">' + s.max_attendees + '</td>' +
-      '<td style="text-align:center;color:var(--orange);font-weight:700">' + s.booked_count + '</td>' +
-      '<td style="text-align:center">' + remaining + '</td>' +
-      '<td><span class="tag tag-quality ' + statusClass + '">' + statusText + '</span></td>' +
-      '<td style="display:flex;gap:6px">' +
-        '<button class="btn btn-ghost btn-sm" onclick="toggleSlot(\'' + s.id + '\',' + (s.is_active ? 'false' : 'true') + ')">' + (s.is_active ? 'Pause' : 'Resume') + '</button>' +
-        '<button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:rgba(231,76,60,0.3)" onclick="deleteSlot(\'' + s.id + '\')">Delete</button>' +
-      '</td>' +
-    '</tr>';
+  grid.innerHTML = ALL_APPT_TYPES.map(function(a) {
+    var days = a.weekdays || [];
+    var modeLabel = a.availability_mode === 'rolling' ? 'Rolling ' + (a.rolling_weeks || 4) + ' weeks' + (a.range_end ? ' until ' + new Date(a.range_end + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '') :
+      a.availability_mode === 'range' ? (a.range_start ? new Date(a.range_start + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '') + ' \u2192 ' + (a.range_end ? new Date(a.range_end + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '') :
+      'Open indefinitely';
+    return '<div class="appt-card' + (a.is_active ? '' : ' paused') + '">' +
+      '<div class="appt-card-header"><div><div class="appt-card-name">' + a.name + '</div><div class="appt-card-loc">\uD83D\uDCCD ' + a.location + '</div></div>' +
+      '<span class="appt-card-badge ' + (a.is_active ? 'active' : 'paused') + '">' + (a.is_active ? 'Active' : 'Paused') + '</span></div>' +
+      '<div class="appt-card-body">' +
+        '<div class="appt-card-row"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + a.duration + ' min \u00b7 ' + (a.open_time||'').substring(0,5) + ' \u2013 ' + (a.close_time||'').substring(0,5) + '</div>' +
+        '<div class="appt-card-row"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Max ' + a.max_attendees + ' per slot</div>' +
+        '<div class="appt-card-row"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + modeLabel + '</div>' +
+        '<div class="appt-card-days">' + [1,2,3,4,5,6,0].map(function(d) { return '<div class="appt-day' + (days.includes(d) ? ' on' : '') + '">' + DAY_SHORT[d] + '</div>'; }).join('') + '</div>' +
+      '</div>' +
+      '<div class="appt-card-actions">' +
+        '<button class="btn btn-ghost btn-sm" onclick="toggleApptType(\'' + a.id + '\',' + !a.is_active + ')">' + (a.is_active ? 'Pause' : 'Resume') + '</button>' +
+        '<button class="btn btn-ghost btn-sm" onclick="regenerateSlots(\'' + a.id + '\')">Regenerate Slots</button>' +
+        '<button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:rgba(231,76,60,0.3)" onclick="deleteApptType(\'' + a.id + '\')">Delete</button>' +
+      '</div></div>';
   }).join('');
 }
 
@@ -2597,6 +2656,7 @@ function renderBookings() {
   empty.style.display = 'none';
   tbody.innerHTML = ALL_BOOKINGS.map(function(b, i) {
     var slot = b.booking_slots || {};
+    var appt = ALL_APPT_TYPES.find(function(a) { return a.id === slot.appointment_type_id; });
     var dateStr = slot.date ? new Date(slot.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) : '-';
     var timeStr = slot.start_time ? slot.start_time.substring(0, 5) + ' - ' + slot.end_time.substring(0, 5) : '-';
     return '<tr>' +
@@ -2604,77 +2664,172 @@ function renderBookings() {
       '<td class="td-name">' + (b.first_name || '') + ' ' + (b.last_name || '') + '</td>' +
       '<td class="td-email">' + (b.email || '') + '</td>' +
       '<td class="td-phone">' + (b.phone || '') + '</td>' +
+      '<td>' + (appt ? appt.name : '-') + '</td>' +
       '<td style="white-space:nowrap">' + dateStr + '</td>' +
       '<td>' + timeStr + '</td>' +
       '<td><span class="tag tag-location">' + (b.location || slot.location || '') + '</span></td>' +
-      '<td><span class="tag tag-quality tag-high">' + b.status + '</span></td>' +
-    '</tr>';
+      '<td><span class="tag tag-quality tag-high">' + b.status + '</span></td></tr>';
   }).join('');
 }
 
-function openSlotForm() {
-  var wrap = document.getElementById('slot-form-wrap');
-  wrap.style.display = 'block';
-  // Set default date to tomorrow
-  var tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  document.getElementById('slot-date').value = tomorrow.toISOString().split('T')[0];
-}
-
-function closeSlotForm() {
-  document.getElementById('slot-form-wrap').style.display = 'none';
-}
-
-async function createSlot() {
-  var date = document.getElementById('slot-date').value;
-  var start = document.getElementById('slot-start').value;
-  var end = document.getElementById('slot-end').value;
-  var loc = document.getElementById('slot-location').value;
-  var max = parseInt(document.getElementById('slot-max').value) || 10;
-  var recurring = document.getElementById('slot-recurring').checked;
-  var weeks = parseInt(document.getElementById('slot-weeks').value) || 4;
-
-  if (!date || !start || !end) { showToast('Please fill in date and times'); return; }
-  if (max < 1 || max > 150) { showToast('Attendees must be 1-150'); return; }
-
-  var slotsToCreate = [];
-  var numWeeks = recurring ? weeks : 1;
-  for (var w = 0; w < numWeeks; w++) {
-    var d = new Date(date + 'T00:00:00');
-    d.setDate(d.getDate() + (w * 7));
-    slotsToCreate.push({
-      date: d.toISOString().split('T')[0],
-      start_time: start,
-      end_time: end,
-      location: loc,
-      max_attendees: max,
-      booked_count: 0,
-      is_active: true
+/* ── APPOINTMENT FORM ── */
+function toggleApptForm() {
+  var wrap = document.getElementById('appt-form-wrap');
+  var isOpen = wrap.style.display !== 'none';
+  wrap.style.display = isOpen ? 'none' : 'block';
+  if (!isOpen) {
+    document.getElementById('appt-edit-id').value = '';
+    document.getElementById('appt-form-title').textContent = 'New Appointment Type';
+    document.getElementById('appt-name').value = '';
+    document.getElementById('appt-duration').value = '30';
+    document.getElementById('appt-location').value = 'Ipswich';
+    document.getElementById('appt-open').value = '09:00';
+    document.getElementById('appt-close').value = '17:00';
+    document.getElementById('appt-max').value = '10';
+    document.getElementById('appt-rolling-weeks').value = '4';
+    document.getElementById('appt-rolling-end').value = '';
+    selectApptMode('rolling');
+    document.querySelectorAll('.appt-weekday').forEach(function(el) {
+      var d = parseInt(el.dataset.day);
+      el.classList.toggle('selected', [1,2,3,4,5].includes(d));
     });
   }
-
-  try {
-    var res = await sb.from('booking_slots').insert(slotsToCreate);
-    if (res.error) { showToast('Error: ' + res.error.message); return; }
-    showToast(slotsToCreate.length + ' slot' + (slotsToCreate.length > 1 ? 's' : '') + ' created');
-    closeSlotForm();
-    await initBookingsView();
-  } catch (e) { showToast('Error creating slot'); console.error(e); }
 }
 
-async function toggleSlot(id, active) {
+document.querySelectorAll('.appt-weekday').forEach(function(el) {
+  el.addEventListener('click', function() { el.classList.toggle('selected'); });
+});
+
+function selectApptMode(mode) {
+  __apptMode = mode;
+  document.querySelectorAll('.appt-mode-btn').forEach(function(b) { b.classList.toggle('selected', b.dataset.mode === mode); });
+  document.getElementById('appt-mode-rolling').style.display = mode === 'rolling' ? 'grid' : 'none';
+  document.getElementById('appt-mode-range').style.display = mode === 'range' ? 'grid' : 'none';
+}
+
+async function saveApptType() {
+  var name = document.getElementById('appt-name').value.trim();
+  if (!name) { showToast('Please enter an appointment name'); return; }
+  var duration = parseInt(document.getElementById('appt-duration').value);
+  var location = document.getElementById('appt-location').value;
+  var openTime = document.getElementById('appt-open').value;
+  var closeTime = document.getElementById('appt-close').value;
+  var maxAtt = parseInt(document.getElementById('appt-max').value) || 10;
+  var weekdays = [];
+  document.querySelectorAll('.appt-weekday.selected').forEach(function(el) { weekdays.push(parseInt(el.dataset.day)); });
+  if (weekdays.length === 0) { showToast('Select at least one day'); return; }
+  var rollingWeeks = parseInt(document.getElementById('appt-rolling-weeks').value) || 4;
+  var rollingEnd = document.getElementById('appt-rolling-end').value || null;
+  var rangeStart = document.getElementById('appt-range-start').value || null;
+  var rangeEnd = document.getElementById('appt-range-end').value || null;
+
+  var apptData = {
+    name: name, duration: duration, location: location,
+    weekdays: weekdays, open_time: openTime, close_time: closeTime,
+    max_attendees: maxAtt, availability_mode: __apptMode,
+    rolling_weeks: __apptMode === 'rolling' ? rollingWeeks : null,
+    range_start: __apptMode === 'range' ? rangeStart : null,
+    range_end: __apptMode === 'rolling' ? rollingEnd : (__apptMode === 'range' ? rangeEnd : null),
+    is_active: true
+  };
+
   try {
-    await sb.from('booking_slots').update({ is_active: active }).eq('id', id);
-    showToast('Slot ' + (active ? 'resumed' : 'paused'));
+    var res = await sb.from('appointment_types').insert([apptData]).select();
+    if (res.error) { showToast('Error: ' + res.error.message); return; }
+    var newAppt = res.data[0];
+    // Generate slots
+    var slotCount = await generateSlotsForAppt(newAppt);
+    showToast('"' + name + '" created with ' + slotCount + ' slots');
+    toggleApptForm();
+    await initBookingsView();
+  } catch (e) { showToast('Error creating appointment type'); console.error(e); }
+}
+
+async function generateSlotsForAppt(appt) {
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  var endDate;
+  if (appt.availability_mode === 'rolling') {
+    endDate = new Date(today);
+    endDate.setDate(endDate.getDate() + (appt.rolling_weeks || 4) * 7);
+    if (appt.range_end) {
+      var re = new Date(appt.range_end + 'T00:00:00');
+      if (re < endDate) endDate = re;
+    }
+  } else if (appt.availability_mode === 'range') {
+    today = appt.range_start ? new Date(appt.range_start + 'T00:00:00') : today;
+    endDate = appt.range_end ? new Date(appt.range_end + 'T00:00:00') : new Date(today.getTime() + 90 * 864e5);
+  } else {
+    endDate = new Date(today.getTime() + 90 * 864e5); // 90 days for indefinite
+  }
+  var now = new Date(); now.setHours(0,0,0,0);
+  if (today < now) today = now;
+
+  var slots = [];
+  var d = new Date(today);
+  while (d <= endDate) {
+    var dayOfWeek = d.getDay();
+    if ((appt.weekdays || []).includes(dayOfWeek)) {
+      // Generate time slots for this day
+      var openMin = timeToMin(appt.open_time);
+      var closeMin = timeToMin(appt.close_time);
+      var dur = appt.duration || 30;
+      for (var t = openMin; t + dur <= closeMin; t += dur) {
+        slots.push({
+          appointment_type_id: appt.id,
+          date: d.toISOString().split('T')[0],
+          start_time: minToTime(t),
+          end_time: minToTime(t + dur),
+          location: appt.location,
+          max_attendees: appt.max_attendees,
+          booked_count: 0,
+          is_active: true
+        });
+      }
+    }
+    d.setDate(d.getDate() + 1);
+  }
+  if (slots.length > 0) {
+    // Insert in batches of 500
+    for (var i = 0; i < slots.length; i += 500) {
+      var batch = slots.slice(i, i + 500);
+      await sb.from('booking_slots').insert(batch);
+    }
+  }
+  return slots.length;
+}
+
+function timeToMin(t) { var p = (t || '00:00').split(':'); return parseInt(p[0]) * 60 + parseInt(p[1]); }
+function minToTime(m) { var h = Math.floor(m / 60); var mm = m % 60; return (h < 10 ? '0' : '') + h + ':' + (mm < 10 ? '0' : '') + mm; }
+
+async function toggleApptType(id, active) {
+  try {
+    await sb.from('appointment_types').update({ is_active: active }).eq('id', id);
+    // Also toggle all related slots
+    await sb.from('booking_slots').update({ is_active: active }).eq('appointment_type_id', id);
+    showToast('Appointment type ' + (active ? 'resumed' : 'paused'));
     await initBookingsView();
   } catch (e) { console.error(e); }
 }
 
-async function deleteSlot(id) {
-  if (!confirm('Delete this slot? This cannot be undone.')) return;
+async function regenerateSlots(id) {
+  if (!confirm('This will delete existing unbooked slots and regenerate them. Continue?')) return;
   try {
-    await sb.from('booking_slots').delete().eq('id', id);
-    showToast('Slot deleted');
+    var appt = ALL_APPT_TYPES.find(function(a) { return a.id === id; });
+    if (!appt) return;
+    // Delete existing unbooked slots
+    await sb.from('booking_slots').delete().eq('appointment_type_id', id).eq('booked_count', 0);
+    var count = await generateSlotsForAppt(appt);
+    showToast(count + ' slots regenerated');
+    await initBookingsView();
+  } catch (e) { showToast('Error regenerating'); console.error(e); }
+}
+
+async function deleteApptType(id) {
+  if (!confirm('Delete this appointment type and all its slots? This cannot be undone.')) return;
+  try {
+    await sb.from('appointment_types').delete().eq('id', id);
+    showToast('Appointment type deleted');
     await initBookingsView();
   } catch (e) { console.error(e); }
 }

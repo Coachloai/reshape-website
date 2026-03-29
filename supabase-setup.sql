@@ -60,11 +60,38 @@ CREATE POLICY "Anyone can read leads"
   USING (true);
 
 -- ============================================================
--- 4. Booking Slots — Admin-created available time slots
+-- 4. Appointment Types — Admin-defined appointment templates
+-- ============================================================
+CREATE TABLE IF NOT EXISTS appointment_types (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  name TEXT NOT NULL,
+  duration INTEGER NOT NULL DEFAULT 30,
+  location TEXT NOT NULL DEFAULT 'Ipswich',
+  weekdays INTEGER[] NOT NULL DEFAULT '{1,2,3,4,5}',
+  open_time TIME NOT NULL DEFAULT '09:00',
+  close_time TIME NOT NULL DEFAULT '17:00',
+  max_attendees INTEGER NOT NULL DEFAULT 1 CHECK (max_attendees BETWEEN 1 AND 150),
+  availability_mode TEXT NOT NULL DEFAULT 'rolling',
+  rolling_weeks INTEGER DEFAULT 4,
+  range_start DATE,
+  range_end DATE,
+  is_active BOOLEAN NOT NULL DEFAULT true
+);
+
+ALTER TABLE appointment_types ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can read appointment types" ON appointment_types FOR SELECT USING (true);
+CREATE POLICY "Anyone can insert appointment types" ON appointment_types FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anyone can update appointment types" ON appointment_types FOR UPDATE USING (true);
+CREATE POLICY "Anyone can delete appointment types" ON appointment_types FOR DELETE USING (true);
+
+-- ============================================================
+-- 5. Booking Slots — Auto-generated from appointment types
 -- ============================================================
 CREATE TABLE IF NOT EXISTS booking_slots (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  appointment_type_id UUID REFERENCES appointment_types(id) ON DELETE CASCADE,
   date DATE NOT NULL,
   start_time TIME NOT NULL,
   end_time TIME NOT NULL,
