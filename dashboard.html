@@ -1061,7 +1061,7 @@ if(sessionStorage.getItem('rs_auth')==='1'){
               <th onclick="sortTable('email')" data-col="email"><div class="th-inner">Email<span class="sort-icon">↕</span></div></th>
               <th onclick="sortTable('phone')" data-col="phone"><div class="th-inner">Phone<span class="sort-icon">↕</span></div></th>
               <th onclick="sortTable('location')" data-col="location"><div class="th-inner">Location<span class="sort-icon">↕</span></div></th>
-              <th onclick="sortTable('form')" data-col="form"><div class="th-inner">Form<span class="sort-icon">↕</span></div></th>
+              <th onclick="sortTable('form')" data-col="form"><div class="th-inner">Page<span class="sort-icon">↕</span></div></th>
               <th onclick="sortTable('quality')" data-col="quality"><div class="th-inner">Quality<span class="sort-icon">↕</span></div></th>
               <th onclick="sortTable('date')" data-col="date"><div class="th-inner">Date<span class="sort-icon">↕</span></div></th>
               <th></th>
@@ -1135,13 +1135,13 @@ if(sessionStorage.getItem('rs_auth')==='1'){
           </select>
         </div>
         <div class="filter-group">
-          <label class="filter-label">Form</label>
+          <label class="filter-label">Website</label>
           <select class="filter-select" id="lv-form">
-            <option value="">All Forms</option>
-            <option>Intake</option>
-            <option>Waiting List</option>
-            <option>Summer Shred</option>
-            <option>10kg Challenge</option>
+            <option value="">All Pages</option>
+            <option value="Main Landing Page">reshape.fit</option>
+            <option value="Men Landing Page">reshape.fit/men</option>
+            <option value="Women Landing Page">reshape.fit/women</option>
+            <option value="ReShape Club">reshapeclub.com</option>
           </select>
         </div>
         <div class="filter-divider"></div>
@@ -1175,7 +1175,7 @@ if(sessionStorage.getItem('rs_auth')==='1'){
                 <th onclick="sortTable('email')" data-col="email"><div class="th-inner">Email<span class="sort-icon">↕</span></div></th>
                 <th onclick="sortTable('phone')" data-col="phone"><div class="th-inner">Phone<span class="sort-icon">↕</span></div></th>
                 <th onclick="sortTable('location')" data-col="location"><div class="th-inner">Location<span class="sort-icon">↕</span></div></th>
-                <th onclick="sortTable('form')" data-col="form"><div class="th-inner">Form<span class="sort-icon">↕</span></div></th>
+                <th onclick="sortTable('form')" data-col="form"><div class="th-inner">Page<span class="sort-icon">↕</span></div></th>
                 <th onclick="sortTable('quality')" data-col="quality"><div class="th-inner">Quality<span class="sort-icon">↕</span></div></th>
                 <th onclick="sortTable('date')" data-col="date"><div class="th-inner">Date<span class="sort-icon">↕</span></div></th>
                 <th></th>
@@ -1525,6 +1525,7 @@ function mapLead(row, i) {
     phone: row.phone || '',
     location: row.location || 'Unknown',
     form: row.form_name || 'Intake',
+    formLabel: ({'Main Landing Page':'reshape.fit','Men Landing Page':'reshape.fit/men','Women Landing Page':'reshape.fit/women','ReShape Club':'reshapeclub.com'})[row.form_name] || row.form_name || 'Unknown',
     quality: quality,
     age: parseInt(row.age) || 0,
     gender: row.gender || 'Unknown',
@@ -1619,7 +1620,7 @@ function renderTable() {
         <td class="td-email">${l.email}</td>
         <td class="td-phone">${l.phone}</td>
         <td><span class="tag tag-location">${l.location}</span></td>
-        <td><span class="tag tag-form">${l.form}</span></td>
+        <td><span class="tag tag-form">${l.formLabel}</span></td>
         <td><span class="tag tag-quality ${qClass}">${l.quality}</span></td>
         <td style="color:var(--text3);white-space:nowrap">${d}</td>
         <td><button class="btn-view" onclick="event.stopPropagation();openLeadModal(${l.id})">View →</button></td>
@@ -1958,11 +1959,11 @@ function updateCharts() {
 function viewLead(id) {
   const l = ALL_LEADS.find(x => x.id === id);
   if (!l) return;
-  alert(`Lead #${l.id}: ${l.name}\n${l.email} · ${l.phone}\nLocation: ${l.location}\nForm: ${l.form}\nQuality: ${l.quality}\nDate: ${l.date}`);
+  alert(`Lead #${l.id}: ${l.name}\n${l.email} · ${l.phone}\nLocation: ${l.location}\nPage: ${l.formLabel}\nQuality: ${l.quality}\nDate: ${l.date}`);
 }
 function exportCSV() {
-  const headers = ['#','Name','Email','Phone','Location','Form','Quality','Age','Gender','Date','Source'];
-  const rows = filtered.map(l => [l.id,l.name,l.email,l.phone,l.location,l.form,l.quality,l.age,l.gender,l.date,l.source]);
+  const headers = ['#','Name','Email','Phone','Location','Page','Quality','Age','Gender','Date','Source'];
+  const rows = filtered.map(l => [l.id,l.name,l.email,l.phone,l.location,l.formLabel,l.quality,l.age,l.gender,l.date,l.source]);
   const csv  = [headers, ...rows].map(r => r.join(',')).join('\n');
   const a    = document.createElement('a');
   a.href     = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
@@ -2028,7 +2029,7 @@ function renderLeadsView() {
         <td class="td-email">${l.email}</td>
         <td class="td-phone">${l.phone}</td>
         <td><span class="tag tag-location">${l.location}</span></td>
-        <td><span class="tag tag-form">${l.form}</span></td>
+        <td><span class="tag tag-form">${l.formLabel}</span></td>
         <td><span class="tag tag-quality ${qClass}">${l.quality}</span></td>
         <td style="color:var(--text3);white-space:nowrap">${d}</td>
         <td><button class="btn-view" onclick="event.stopPropagation();openLeadModal(${l.id})">View →</button></td>
@@ -2773,7 +2774,7 @@ function openLeadModal(id) {
   const a = l.answers || {};
   document.getElementById('modal-name').textContent = l.name;
   document.getElementById('modal-id').textContent   =
-    'Lead #' + l.id + ' \u00b7 ' + l.form + ' \u00b7 ' +
+    'Lead #' + l.id + ' \u00b7 ' + l.formLabel + ' \u00b7 ' +
     new Date(l.date).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
   const qClass      = l.quality === 'High' ? 'tag-high' : l.quality === 'Med' ? 'tag-med' : 'tag-low';
   const imp         = a.importance || 0;
@@ -2852,7 +2853,7 @@ function openLeadModal(id) {
   );
   // Meta
   html += section('Application Meta',
-    field('Form', '<span class="tag tag-form">' + l.form + '</span>') +
+    field('Page', '<span class="tag tag-form">' + l.formLabel + '</span>') +
     field('Lead Quality', '<span class="tag tag-quality ' + qClass + '">' + l.quality + '</span>') +
     field('Date Submitted', dateStr) +
     field('Source', l.source)
@@ -2899,7 +2900,7 @@ function buildDrawer(type) {
   const total = filtered.length || 1;
   if (type === 'total') {
     const byForm={}, bySource={};
-    filtered.forEach(l=>{byForm[l.form]=(byForm[l.form]||0)+1; bySource[l.source]=(bySource[l.source]||0)+1;});
+    filtered.forEach(l=>{byForm[l.formLabel]=(byForm[l.formLabel]||0)+1; bySource[l.source]=(bySource[l.source]||0)+1;});
     const recent=[...filtered].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
     return `<div><div class="drawer-section-title">Summary</div>
       <div class="drawer-stat-grid">
@@ -2908,7 +2909,7 @@ function buildDrawer(type) {
         <div class="drawer-stat"><div class="drawer-stat-num">${filtered.filter(l=>(new Date()-new Date(l.date))/864e5<=7).length}</div><div class="drawer-stat-lbl">This week</div></div>
         <div class="drawer-stat"><div class="drawer-stat-num">${Math.round(filtered.filter(l=>l.quality==='High').length/total*100)}%</div><div class="drawer-stat-lbl">Quality rate</div></div>
       </div></div>
-    <div><div class="drawer-section-title">By Form</div><div class="drawer-bar-list">
+    <div><div class="drawer-section-title">By Page</div><div class="drawer-bar-list">
       ${Object.entries(byForm).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
         <div class="drawer-bar-item"><div class="drawer-bar-label"><span>${k}</span><span>${v}</span></div>
         <div class="drawer-bar-track"><div class="drawer-bar-fill" style="width:${Math.round(v/total*100)}%"></div></div></div>`).join('')}
