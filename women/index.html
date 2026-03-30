@@ -1469,6 +1469,8 @@ textarea.form-input{min-height:100px;resize:vertical}
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../api/config.js"></script>
+<script src="../api/automations.js"></script>
 <script>
 /* ── SUPABASE INIT ── */
 (function() {
@@ -1737,6 +1739,10 @@ window.addEventListener('scroll',()=>{
     window.__bookingLead = leadData;
     if (leadData.location) selectBookingLoc(leadData.location);
     else selectBookingLoc('Ipswich');
+    /* ── Queue nurture sequence ── */
+    if (typeof queueSequence === 'function' && window.__supabaseClient) {
+      queueSequence('form_submitted', leadData, null, window.__supabaseClient);
+    }
   });
 
   form.querySelectorAll('.form-input').forEach(function(input) {

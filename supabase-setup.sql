@@ -160,3 +160,36 @@ CREATE POLICY "Anyone can update bookings"
 CREATE POLICY "Anyone can delete bookings"
   ON bookings FOR DELETE
   USING (true);
+
+-- ============================================================
+-- 6. Message Queue — Automated nurture messages
+-- ============================================================
+CREATE TABLE IF NOT EXISTS message_queue (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  lead_email TEXT NOT NULL,
+  lead_phone TEXT,
+  lead_name TEXT,
+  sequence TEXT NOT NULL,
+  step_index INTEGER NOT NULL DEFAULT 0,
+  channel TEXT NOT NULL CHECK (channel IN ('email', 'sms', 'whatsapp')),
+  subject TEXT,
+  body TEXT NOT NULL,
+  send_at TIMESTAMPTZ NOT NULL,
+  sent_at TIMESTAMPTZ,
+  status TEXT NOT NULL DEFAULT 'queued' CHECK (status IN ('queued', 'sending', 'sent', 'failed', 'cancelled')),
+  error TEXT,
+  external_id TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_mq_status ON message_queue(status);
+CREATE INDEX IF NOT EXISTS idx_mq_send_at ON message_queue(send_at);
+CREATE INDEX IF NOT EXISTS idx_mq_sequence ON message_queue(sequence);
+CREATE INDEX IF NOT EXISTS idx_mq_email ON message_queue(lead_email);
+
+ALTER TABLE message_queue ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "mq_read" ON message_queue FOR SELECT USING (true);
+CREATE POLICY "mq_insert" ON message_queue FOR INSERT WITH CHECK (true);
+CREATE POLICY "mq_update" ON message_queue FOR UPDATE USING (true);
+CREATE POLICY "mq_delete" ON message_queue FOR DELETE USING (true);
+GRANT ALL ON message_queue TO anon, authenticated, service_role;
