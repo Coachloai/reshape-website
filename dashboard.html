@@ -449,6 +449,24 @@ select.appt-form-input option{background:var(--s3)}
 .appt-mode-btn:hover{border-color:rgba(255,255,255,.2)}
 .appt-mode-btn.selected{border-color:var(--orange);background:var(--odim);color:var(--orange)}
 .appt-form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+/* ── DRAWER OVERLAY ── */
+.drawer-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s}
+.drawer-overlay.open{opacity:1;pointer-events:auto}
+.drawer-panel{position:fixed;top:0;right:0;bottom:0;z-index:201;width:460px;max-width:92vw;background:var(--s1);border-left:1px solid var(--border);transform:translateX(100%);transition:transform .35s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;overflow:hidden}
+.drawer-overlay.open .drawer-panel{transform:translateX(0)}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);flex-shrink:0}
+.drawer-title{font-family:var(--head);font-size:17px;font-weight:800;color:var(--text)}
+.drawer-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:18px}
+.drawer-close:hover{background:var(--s3);color:var(--text)}
+.drawer-body{flex:1;overflow-y:auto;padding:24px}
+.drawer-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0}
+/* ── FUNNEL CHIPS ── */
+.funnel-chips{display:flex;flex-wrap:wrap;gap:6px}
+.funnel-chip{padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;transition:all .2s;background:transparent;font-family:var(--body)}
+.funnel-chip:hover{border-color:rgba(255,255,255,.2)}
+.funnel-chip.selected{border-color:var(--orange);background:var(--odim);color:var(--orange)}
+.appt-card-funnels{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.appt-funnel-tag{font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(237,92,37,.08);color:var(--orange);border:1px solid rgba(237,92,37,.2);font-weight:600}
 .toggle { position: relative; display: inline-flex; cursor: pointer; }
 .toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
 .toggle-track {
@@ -1480,102 +1498,112 @@ if(sessionStorage.getItem('rs_auth')==='1'){
           <button class="btn btn-ghost" onclick="refreshBookings()">Refresh</button>
         </div>
       </div>
-      <!-- CREATE APPOINTMENT TYPE FORM -->
-      <div id="appt-form-wrap" class="appt-form fade-in" style="display:none;margin-bottom:20px">
-        <div class="appt-form-title" id="appt-form-title">New Appointment Type</div>
-        <input type="hidden" id="appt-edit-id">
-        <div class="appt-form-row cols-3">
-          <div class="appt-form-group">
-            <label class="appt-form-label">Appointment Name</label>
-            <input type="text" class="appt-form-input" id="appt-name" placeholder="e.g. Gym Tour, Consultation">
+      <!-- APPOINTMENT DRAWER (slides from right) -->
+      <div class="drawer-overlay" id="appt-drawer" onclick="if(event.target===this)toggleApptForm()">
+        <div class="drawer-panel">
+          <div class="drawer-header">
+            <div class="drawer-title" id="appt-form-title">New Appointment Type</div>
+            <button class="drawer-close" onclick="toggleApptForm()">&times;</button>
           </div>
-          <div class="appt-form-group">
-            <label class="appt-form-label">Duration (minutes)</label>
-            <select class="appt-form-input" id="appt-duration">
-              <option value="15">15 min</option>
-              <option value="30" selected>30 min</option>
-              <option value="45">45 min</option>
-              <option value="60">60 min</option>
-              <option value="90">90 min</option>
-            </select>
+          <div class="drawer-body">
+            <input type="hidden" id="appt-edit-id">
+            <div class="appt-form-group" style="margin-bottom:16px">
+              <label class="appt-form-label">Appointment Name</label>
+              <input type="text" class="appt-form-input" id="appt-name" placeholder="e.g. Gym Tour, Consultation">
+            </div>
+            <div class="appt-form-row cols-2" style="margin-bottom:16px">
+              <div class="appt-form-group">
+                <label class="appt-form-label">Duration</label>
+                <select class="appt-form-input" id="appt-duration">
+                  <option value="15">15 min</option>
+                  <option value="30" selected>30 min</option>
+                  <option value="45">45 min</option>
+                  <option value="60">60 min</option>
+                  <option value="90">90 min</option>
+                </select>
+              </div>
+              <div class="appt-form-group">
+                <label class="appt-form-label">Location</label>
+                <select class="appt-form-input" id="appt-location">
+                  <option>Ipswich</option>
+                  <option>Colchester</option>
+                </select>
+              </div>
+            </div>
+            <div class="appt-form-row cols-2" style="margin-bottom:16px">
+              <div class="appt-form-group">
+                <label class="appt-form-label">Open From</label>
+                <input type="time" class="appt-form-input" id="appt-open" value="09:00">
+              </div>
+              <div class="appt-form-group">
+                <label class="appt-form-label">Open Until</label>
+                <input type="time" class="appt-form-input" id="appt-close" value="17:00">
+              </div>
+            </div>
+            <div class="appt-form-group" style="margin-bottom:16px">
+              <label class="appt-form-label">Max Attendees Per Slot</label>
+              <input type="number" class="appt-form-input" id="appt-max" value="10" min="1" max="150" style="width:120px">
+            </div>
+            <div class="appt-form-group" style="margin-bottom:20px">
+              <label class="appt-form-label">Repeat On</label>
+              <div class="appt-weekdays" id="appt-weekdays">
+                <div class="appt-weekday selected" data-day="1">Mon</div>
+                <div class="appt-weekday selected" data-day="2">Tue</div>
+                <div class="appt-weekday selected" data-day="3">Wed</div>
+                <div class="appt-weekday selected" data-day="4">Thu</div>
+                <div class="appt-weekday selected" data-day="5">Fri</div>
+                <div class="appt-weekday" data-day="6">Sat</div>
+                <div class="appt-weekday" data-day="0">Sun</div>
+              </div>
+            </div>
+            <div class="appt-form-group" style="margin-bottom:16px">
+              <label class="appt-form-label">Show On Funnels</label>
+              <div class="funnel-chips" id="appt-funnels">
+                <button class="funnel-chip selected" data-funnel="Main Landing Page">reshape.fit</button>
+                <button class="funnel-chip selected" data-funnel="Men Landing Page">reshape.fit/men</button>
+                <button class="funnel-chip selected" data-funnel="Women Landing Page">reshape.fit/women</button>
+                <button class="funnel-chip" data-funnel="ReShape Club">reshapeclub.com</button>
+              </div>
+            </div>
+            <div class="appt-form-group" style="margin-bottom:16px">
+              <label class="appt-form-label">Availability</label>
+              <div class="appt-mode-group" id="appt-mode-group">
+                <button class="appt-mode-btn selected" data-mode="rolling" onclick="selectApptMode('rolling')">Rolling</button>
+                <button class="appt-mode-btn" data-mode="range" onclick="selectApptMode('range')">Date Range</button>
+                <button class="appt-mode-btn" data-mode="indefinite" onclick="selectApptMode('indefinite')">Indefinite</button>
+              </div>
+            </div>
+            <div id="appt-mode-rolling" class="appt-form-row cols-2" style="margin-bottom:16px">
+              <div class="appt-form-group">
+                <label class="appt-form-label">Rolling Window</label>
+                <select class="appt-form-input" id="appt-rolling-weeks">
+                  <option value="1">1 week ahead</option>
+                  <option value="2">2 weeks ahead</option>
+                  <option value="4" selected>4 weeks ahead</option>
+                  <option value="8">8 weeks ahead</option>
+                  <option value="12">12 weeks ahead</option>
+                </select>
+              </div>
+              <div class="appt-form-group">
+                <label class="appt-form-label">End Date (optional)</label>
+                <input type="date" class="appt-form-input" id="appt-rolling-end">
+              </div>
+            </div>
+            <div id="appt-mode-range" class="appt-form-row cols-2" style="display:none;margin-bottom:16px">
+              <div class="appt-form-group">
+                <label class="appt-form-label">Start Date</label>
+                <input type="date" class="appt-form-input" id="appt-range-start">
+              </div>
+              <div class="appt-form-group">
+                <label class="appt-form-label">End Date</label>
+                <input type="date" class="appt-form-input" id="appt-range-end">
+              </div>
+            </div>
           </div>
-          <div class="appt-form-group">
-            <label class="appt-form-label">Location</label>
-            <select class="appt-form-input" id="appt-location">
-              <option>Ipswich</option>
-              <option>Colchester</option>
-            </select>
+          <div class="drawer-footer">
+            <button class="btn btn-ghost" onclick="toggleApptForm()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveApptType()">Create &amp; Generate Slots</button>
           </div>
-        </div>
-        <div class="appt-form-row cols-2">
-          <div class="appt-form-group">
-            <label class="appt-form-label">Open From</label>
-            <input type="time" class="appt-form-input" id="appt-open" value="09:00">
-          </div>
-          <div class="appt-form-group">
-            <label class="appt-form-label">Open Until</label>
-            <input type="time" class="appt-form-input" id="appt-close" value="17:00">
-          </div>
-        </div>
-        <div class="appt-form-group" style="margin-bottom:16px">
-          <label class="appt-form-label">Repeat On</label>
-          <div class="appt-weekdays" id="appt-weekdays">
-            <div class="appt-weekday selected" data-day="1">Mon</div>
-            <div class="appt-weekday selected" data-day="2">Tue</div>
-            <div class="appt-weekday selected" data-day="3">Wed</div>
-            <div class="appt-weekday selected" data-day="4">Thu</div>
-            <div class="appt-weekday selected" data-day="5">Fri</div>
-            <div class="appt-weekday" data-day="6">Sat</div>
-            <div class="appt-weekday" data-day="0">Sun</div>
-          </div>
-        </div>
-        <div class="appt-form-group" style="margin-bottom:16px">
-          <label class="appt-form-label">Availability</label>
-          <div class="appt-mode-group" id="appt-mode-group">
-            <button class="appt-mode-btn selected" data-mode="rolling" onclick="selectApptMode('rolling')">Rolling</button>
-            <button class="appt-mode-btn" data-mode="range" onclick="selectApptMode('range')">Date Range</button>
-            <button class="appt-mode-btn" data-mode="indefinite" onclick="selectApptMode('indefinite')">Indefinite</button>
-          </div>
-        </div>
-        <!-- Rolling options -->
-        <div id="appt-mode-rolling" class="appt-form-row cols-2">
-          <div class="appt-form-group">
-            <label class="appt-form-label">Rolling Window</label>
-            <select class="appt-form-input" id="appt-rolling-weeks">
-              <option value="1">1 week ahead</option>
-              <option value="2">2 weeks ahead</option>
-              <option value="4" selected>4 weeks ahead</option>
-              <option value="8">8 weeks ahead</option>
-              <option value="12">12 weeks ahead</option>
-            </select>
-          </div>
-          <div class="appt-form-group">
-            <label class="appt-form-label">End Date (optional)</label>
-            <input type="date" class="appt-form-input" id="appt-rolling-end" placeholder="Leave blank for no end">
-          </div>
-        </div>
-        <!-- Range options -->
-        <div id="appt-mode-range" class="appt-form-row cols-2" style="display:none">
-          <div class="appt-form-group">
-            <label class="appt-form-label">Start Date</label>
-            <input type="date" class="appt-form-input" id="appt-range-start">
-          </div>
-          <div class="appt-form-group">
-            <label class="appt-form-label">End Date</label>
-            <input type="date" class="appt-form-input" id="appt-range-end">
-          </div>
-        </div>
-        <!-- Indefinite: no extra fields -->
-        <div class="appt-form-row cols-2">
-          <div class="appt-form-group">
-            <label class="appt-form-label">Max Attendees Per Slot</label>
-            <input type="number" class="appt-form-input" id="appt-max" value="10" min="1" max="150">
-          </div>
-          <div></div>
-        </div>
-        <div class="appt-form-actions">
-          <button class="btn btn-ghost" onclick="toggleApptForm()">Cancel</button>
-          <button class="btn btn-primary" onclick="saveApptType()">Create &amp; Generate Slots</button>
         </div>
       </div>
       <!-- STATS -->
@@ -2711,6 +2739,7 @@ function renderApptCards() {
         '<div class="appt-card-row"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Max ' + a.max_attendees + ' per slot</div>' +
         '<div class="appt-card-row"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + modeLabel + '</div>' +
         '<div class="appt-card-days">' + [1,2,3,4,5,6,0].map(function(d) { return '<div class="appt-day' + (days.includes(d) ? ' on' : '') + '">' + DAY_SHORT[d] + '</div>'; }).join('') + '</div>' +
+        '<div class="appt-card-funnels">' + (a.funnels || []).map(function(f) { var lbl = ({'Main Landing Page':'reshape.fit','Men Landing Page':'/men','Women Landing Page':'/women','ReShape Club':'reshapeclub.com'})[f] || f; return '<span class="appt-funnel-tag">' + lbl + '</span>'; }).join('') + '</div>' +
       '</div>' +
       '<div class="appt-card-actions">' +
         '<button class="btn btn-ghost btn-sm" onclick="toggleApptType(\'' + a.id + '\',' + !a.is_active + ')">' + (a.is_active ? 'Pause' : 'Resume') + '</button>' +
@@ -2745,12 +2774,14 @@ function renderBookings() {
   }).join('');
 }
 
-/* ── APPOINTMENT FORM ── */
+/* ── APPOINTMENT DRAWER ── */
 function toggleApptForm() {
-  var wrap = document.getElementById('appt-form-wrap');
-  var isOpen = wrap.style.display !== 'none';
-  wrap.style.display = isOpen ? 'none' : 'block';
-  if (!isOpen) {
+  var drawer = document.getElementById('appt-drawer');
+  var isOpen = drawer.classList.contains('open');
+  if (isOpen) {
+    drawer.classList.remove('open');
+  } else {
+    drawer.classList.add('open');
     document.getElementById('appt-edit-id').value = '';
     document.getElementById('appt-form-title').textContent = 'New Appointment Type';
     document.getElementById('appt-name').value = '';
@@ -2766,10 +2797,16 @@ function toggleApptForm() {
       var d = parseInt(el.dataset.day);
       el.classList.toggle('selected', [1,2,3,4,5].includes(d));
     });
+    document.querySelectorAll('.funnel-chip').forEach(function(el) {
+      el.classList.toggle('selected', el.dataset.funnel !== 'ReShape Club');
+    });
   }
 }
 
 document.querySelectorAll('.appt-weekday').forEach(function(el) {
+  el.addEventListener('click', function() { el.classList.toggle('selected'); });
+});
+document.querySelectorAll('.funnel-chip').forEach(function(el) {
   el.addEventListener('click', function() { el.classList.toggle('selected'); });
 });
 
@@ -2791,6 +2828,9 @@ async function saveApptType() {
   var weekdays = [];
   document.querySelectorAll('.appt-weekday.selected').forEach(function(el) { weekdays.push(parseInt(el.dataset.day)); });
   if (weekdays.length === 0) { showToast('Select at least one day'); return; }
+  var funnels = [];
+  document.querySelectorAll('.funnel-chip.selected').forEach(function(el) { funnels.push(el.dataset.funnel); });
+  if (funnels.length === 0) { showToast('Select at least one funnel'); return; }
   var rollingWeeks = parseInt(document.getElementById('appt-rolling-weeks').value) || 4;
   var rollingEnd = document.getElementById('appt-rolling-end').value || null;
   var rangeStart = document.getElementById('appt-range-start').value || null;
@@ -2800,6 +2840,7 @@ async function saveApptType() {
     name: name, duration: duration, location: location,
     weekdays: weekdays, open_time: openTime, close_time: closeTime,
     max_attendees: maxAtt, availability_mode: __apptMode,
+    funnels: funnels,
     rolling_weeks: __apptMode === 'rolling' ? rollingWeeks : null,
     range_start: __apptMode === 'range' ? rangeStart : null,
     range_end: __apptMode === 'rolling' ? rollingEnd : (__apptMode === 'range' ? rangeEnd : null),
