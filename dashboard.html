@@ -1628,67 +1628,50 @@ if(sessionStorage.getItem('rs_auth')==='1'){
       <!-- APPOINTMENT TYPE CARDS -->
       <div class="appt-grid fade-in" id="appt-grid"></div>
       <div id="appt-empty" style="display:none;text-align:center;padding:40px;color:var(--text3);font-size:14px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);margin-bottom:20px">No appointment types yet. Click "+ New Appointment Type" to get started.</div>
-      <!-- MANUAL SLOT CREATOR + SLOTS TABLE -->
+      <!-- TIME SLOTS (paginated, date-grouped) -->
       <div class="chart-card fade-in" style="margin-bottom:20px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-          <div class="chart-title">Time Slots</div>
+          <div>
+            <div class="chart-title">Time Slots</div>
+            <div class="chart-meta" id="slots-summary">0 slots</div>
+          </div>
           <div style="display:flex;gap:8px;align-items:center">
-            <select class="filter-select" id="slot-filter-loc" style="width:130px;padding:6px 10px" onchange="renderSlots()">
+            <select class="filter-select" id="slot-filter-loc" style="width:130px;padding:6px 10px" onchange="slotPage=1;renderSlots()">
               <option value="">All Locations</option>
               <option>Ipswich</option>
               <option>Colchester</option>
             </select>
+            <select class="filter-select" id="slot-filter-week" style="width:130px;padding:6px 10px" onchange="slotPage=1;renderSlots()">
+              <option value="7">Next 7 days</option>
+              <option value="14" selected>Next 14 days</option>
+              <option value="30">Next 30 days</option>
+              <option value="0">All upcoming</option>
+            </select>
             <button class="btn btn-primary btn-sm" onclick="toggleManualSlot()">+ Add Slot</button>
           </div>
         </div>
-        <!-- Manual slot form (inline) -->
+        <!-- Manual slot form -->
         <div id="manual-slot-form" style="display:none;margin-bottom:16px;padding:16px;background:var(--s3);border:1px solid var(--border);border-radius:10px">
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr auto;gap:10px;align-items:end">
-            <div class="filter-group">
-              <label class="filter-label">Date</label>
-              <input type="date" class="filter-input" id="ms-date">
-            </div>
-            <div class="filter-group">
-              <label class="filter-label">Start</label>
-              <input type="time" class="filter-input" id="ms-start" value="09:00">
-            </div>
-            <div class="filter-group">
-              <label class="filter-label">End</label>
-              <input type="time" class="filter-input" id="ms-end" value="10:00">
-            </div>
-            <div class="filter-group">
-              <label class="filter-label">Location</label>
-              <select class="filter-select" id="ms-location">
-                <option>Ipswich</option>
-                <option>Colchester</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label class="filter-label">Max</label>
-              <input type="number" class="filter-input" id="ms-max" value="10" min="1" max="150" style="width:70px">
-            </div>
+            <div class="filter-group"><label class="filter-label">Date</label><input type="date" class="filter-input" id="ms-date"></div>
+            <div class="filter-group"><label class="filter-label">Start</label><input type="time" class="filter-input" id="ms-start" value="09:00"></div>
+            <div class="filter-group"><label class="filter-label">End</label><input type="time" class="filter-input" id="ms-end" value="10:00"></div>
+            <div class="filter-group"><label class="filter-label">Location</label><select class="filter-select" id="ms-location"><option>Ipswich</option><option>Colchester</option></select></div>
+            <div class="filter-group"><label class="filter-label">Max</label><input type="number" class="filter-input" id="ms-max" value="10" min="1" max="150" style="width:70px"></div>
             <button class="btn btn-primary" onclick="createManualSlot()" style="white-space:nowrap">Add</button>
           </div>
         </div>
-        <div style="overflow-x:auto">
-          <table class="leads-table" style="width:100%">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Location</th>
-                <th>Type</th>
-                <th>Capacity</th>
-                <th>Booked</th>
-                <th>Remaining</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="slots-tbody"></tbody>
-          </table>
-        </div>
+        <!-- Grouped by date -->
+        <div id="slots-grouped" style="max-height:480px;overflow-y:auto"></div>
         <div id="slots-empty" style="display:none;text-align:center;padding:24px;color:var(--text3);font-size:13px">No upcoming slots.</div>
+        <!-- Pagination -->
+        <div id="slots-pagination" style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+          <span style="font-size:12px;color:var(--text3)" id="slots-page-info">Page 1</span>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-ghost btn-sm" id="slots-prev" onclick="slotPage--;renderSlots()" disabled>&larr; Prev</button>
+            <button class="btn btn-ghost btn-sm" id="slots-next" onclick="slotPage++;renderSlots()">Next &rarr;</button>
+          </div>
+        </div>
       </div>
       <!-- BOOKINGS TABLE -->
       <div class="chart-card fade-in">
@@ -2948,40 +2931,80 @@ async function deleteApptType(id) {
   } catch (e) { console.error(e); }
 }
 
-/* ── SLOTS TABLE + MANUAL SLOT ── */
+/* ── SLOTS TABLE (paginated, date-grouped) ── */
+var slotPage = 1;
+var SLOTS_PER_PAGE = 20;
+
 function renderSlots() {
   var locFilter = (document.getElementById('slot-filter-loc') || {}).value || '';
+  var weekFilter = parseInt((document.getElementById('slot-filter-week') || {}).value || '14');
+  var today = new Date(); today.setHours(0,0,0,0);
   var slots = ALL_SLOTS.filter(function(s) {
     if (locFilter && s.location !== locFilter) return false;
+    if (weekFilter > 0) {
+      var slotDate = new Date(s.date + 'T00:00:00');
+      var diff = (slotDate - today) / 864e5;
+      if (diff > weekFilter) return false;
+    }
     return true;
   });
-  var tbody = document.getElementById('slots-tbody');
+  var container = document.getElementById('slots-grouped');
   var empty = document.getElementById('slots-empty');
-  if (!tbody) return;
-  if (slots.length === 0) { tbody.innerHTML = ''; if (empty) empty.style.display = 'block'; return; }
-  if (empty) empty.style.display = 'none';
-  tbody.innerHTML = slots.map(function(s) {
-    var remaining = s.max_attendees - s.booked_count;
-    var dateStr = new Date(s.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-    var timeStr = s.start_time.substring(0, 5) + ' - ' + s.end_time.substring(0, 5);
-    var appt = ALL_APPT_TYPES.find(function(a) { return a.id === s.appointment_type_id; });
-    var typeName = appt ? appt.name : '<span style="color:var(--text3)">Manual</span>';
-    var statusClass = s.is_active ? (remaining > 0 ? 'tag-high' : 'tag-low') : 'tag-med';
-    var statusText = s.is_active ? (remaining > 0 ? 'Active' : 'Full') : 'Paused';
-    return '<tr>' +
-      '<td style="white-space:nowrap">' + dateStr + '</td>' +
-      '<td>' + timeStr + '</td>' +
-      '<td><span class="tag tag-location">' + s.location + '</span></td>' +
-      '<td style="font-size:12px">' + typeName + '</td>' +
-      '<td style="text-align:center">' + s.max_attendees + '</td>' +
-      '<td style="text-align:center;color:var(--orange);font-weight:700">' + s.booked_count + '</td>' +
-      '<td style="text-align:center">' + remaining + '</td>' +
-      '<td><span class="tag tag-quality ' + statusClass + '">' + statusText + '</span></td>' +
-      '<td style="display:flex;gap:6px">' +
-        '<button class="btn btn-ghost btn-sm" onclick="toggleSlot(\'' + s.id + '\',' + !s.is_active + ')">' + (s.is_active ? 'Pause' : 'Resume') + '</button>' +
-        '<button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:rgba(231,76,60,0.3)" onclick="deleteSlot(\'' + s.id + '\')">Delete</button>' +
-      '</td></tr>';
-  }).join('');
+  var summary = document.getElementById('slots-summary');
+  if (!container) return;
+  summary.textContent = slots.length + ' slot' + (slots.length !== 1 ? 's' : '') + ' total';
+  if (slots.length === 0) { container.innerHTML = ''; empty.style.display = 'block'; document.getElementById('slots-pagination').style.display = 'none'; return; }
+  empty.style.display = 'none';
+  document.getElementById('slots-pagination').style.display = 'flex';
+  // Paginate
+  var totalPages = Math.ceil(slots.length / SLOTS_PER_PAGE);
+  if (slotPage > totalPages) slotPage = totalPages;
+  if (slotPage < 1) slotPage = 1;
+  var start = (slotPage - 1) * SLOTS_PER_PAGE;
+  var pageSlots = slots.slice(start, start + SLOTS_PER_PAGE);
+  document.getElementById('slots-page-info').textContent = 'Page ' + slotPage + ' of ' + totalPages + ' \u00b7 ' + slots.length + ' slots';
+  document.getElementById('slots-prev').disabled = slotPage <= 1;
+  document.getElementById('slots-next').disabled = slotPage >= totalPages;
+  // Group by date
+  var grouped = {};
+  pageSlots.forEach(function(s) { if (!grouped[s.date]) grouped[s.date] = []; grouped[s.date].push(s); });
+  var html = '';
+  Object.keys(grouped).sort().forEach(function(date) {
+    var d = new Date(date + 'T00:00:00');
+    var dateLabel = d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+    var isToday = date === new Date().toISOString().split('T')[0];
+    html += '<div style="margin-bottom:16px">';
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:6px 0">';
+    html += '<span style="font-size:13px;font-weight:700;color:var(--text)">' + dateLabel + '</span>';
+    if (isToday) html += '<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--orange);color:#fff">TODAY</span>';
+    html += '<span style="font-size:11px;color:var(--text3)">' + grouped[date].length + ' slot' + (grouped[date].length > 1 ? 's' : '') + '</span>';
+    html += '</div>';
+    html += '<table class="leads-table" style="width:100%;margin-bottom:0"><thead><tr>';
+    html += '<th>Time</th><th>Location</th><th>Type</th><th>Capacity</th><th>Booked</th><th>Left</th><th>Status</th><th>Actions</th>';
+    html += '</tr></thead><tbody>';
+    grouped[date].forEach(function(s) {
+      var remaining = s.max_attendees - s.booked_count;
+      var timeStr = s.start_time.substring(0, 5) + ' \u2013 ' + s.end_time.substring(0, 5);
+      var appt = ALL_APPT_TYPES.find(function(a) { return a.id === s.appointment_type_id; });
+      var typeName = appt ? appt.name : '<span style="color:var(--text3)">Manual</span>';
+      var statusClass = s.is_active ? (remaining > 0 ? 'tag-high' : 'tag-low') : 'tag-med';
+      var statusText = s.is_active ? (remaining > 0 ? 'Open' : 'Full') : 'Paused';
+      html += '<tr>' +
+        '<td style="font-weight:600">' + timeStr + '</td>' +
+        '<td><span class="tag tag-location">' + s.location + '</span></td>' +
+        '<td style="font-size:12px">' + typeName + '</td>' +
+        '<td style="text-align:center">' + s.max_attendees + '</td>' +
+        '<td style="text-align:center;color:var(--orange);font-weight:700">' + s.booked_count + '</td>' +
+        '<td style="text-align:center">' + remaining + '</td>' +
+        '<td><span class="tag tag-quality ' + statusClass + '">' + statusText + '</span></td>' +
+        '<td style="display:flex;gap:4px">' +
+          '<button class="btn btn-ghost btn-sm" style="padding:4px 10px;font-size:11px" onclick="toggleSlot(\'' + s.id + '\',' + !s.is_active + ')">' + (s.is_active ? 'Pause' : 'Resume') + '</button>' +
+          '<button class="btn btn-ghost btn-sm" style="padding:4px 10px;font-size:11px;color:var(--red);border-color:rgba(231,76,60,0.3)" onclick="deleteSlot(\'' + s.id + '\')">Del</button>' +
+        '</td></tr>';
+    });
+    html += '</tbody></table></div>';
+  });
+  container.innerHTML = html;
 }
 
 function toggleManualSlot() {
