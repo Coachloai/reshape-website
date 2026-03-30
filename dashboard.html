@@ -1507,10 +1507,12 @@ if(sessionStorage.getItem('rs_auth')==='1'){
           </div>
           <div class="drawer-body">
             <input type="hidden" id="appt-edit-id">
+            <!-- Name -->
             <div class="appt-form-group" style="margin-bottom:16px">
               <label class="appt-form-label">Appointment Name</label>
               <input type="text" class="appt-form-input" id="appt-name" placeholder="e.g. Gym Tour, Consultation">
             </div>
+            <!-- Duration + Max -->
             <div class="appt-form-row cols-2" style="margin-bottom:16px">
               <div class="appt-form-group">
                 <label class="appt-form-label">Duration</label>
@@ -1520,30 +1522,36 @@ if(sessionStorage.getItem('rs_auth')==='1'){
                   <option value="45">45 min</option>
                   <option value="60">60 min</option>
                   <option value="90">90 min</option>
+                  <option value="120">120 min</option>
                 </select>
               </div>
               <div class="appt-form-group">
-                <label class="appt-form-label">Location</label>
-                <select class="appt-form-input" id="appt-location">
-                  <option>Ipswich</option>
-                  <option>Colchester</option>
-                </select>
+                <label class="appt-form-label">Max Attendees Per Slot</label>
+                <input type="number" class="appt-form-input" id="appt-max" value="10" min="1" max="150">
               </div>
             </div>
-            <div class="appt-form-row cols-2" style="margin-bottom:16px">
-              <div class="appt-form-group">
-                <label class="appt-form-label">Open From</label>
-                <input type="time" class="appt-form-input" id="appt-open" value="09:00">
-              </div>
-              <div class="appt-form-group">
-                <label class="appt-form-label">Open Until</label>
-                <input type="time" class="appt-form-input" id="appt-close" value="17:00">
-              </div>
-            </div>
+            <!-- Locations (multi-select) -->
             <div class="appt-form-group" style="margin-bottom:16px">
-              <label class="appt-form-label">Max Attendees Per Slot</label>
-              <input type="number" class="appt-form-input" id="appt-max" value="10" min="1" max="150" style="width:120px">
+              <label class="appt-form-label">Locations</label>
+              <div class="funnel-chips" id="appt-locations">
+                <button class="funnel-chip selected" data-loc="Ipswich">Ipswich</button>
+                <button class="funnel-chip" data-loc="Colchester">Colchester</button>
+              </div>
             </div>
+            <!-- Time Windows -->
+            <div class="appt-form-group" style="margin-bottom:16px">
+              <label class="appt-form-label">Time Windows</label>
+              <div id="appt-time-windows">
+                <div class="appt-tw-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+                  <input type="time" class="appt-form-input appt-tw-from" value="09:00" style="flex:1">
+                  <span style="color:var(--text3);font-size:13px">to</span>
+                  <input type="time" class="appt-form-input appt-tw-to" value="17:00" style="flex:1">
+                  <button class="btn btn-ghost btn-sm" style="padding:6px 8px;color:var(--red);border-color:rgba(231,76,60,.3);flex-shrink:0" onclick="this.closest('.appt-tw-row').remove()" title="Remove">&times;</button>
+                </div>
+              </div>
+              <button class="btn btn-ghost btn-sm" style="margin-top:4px" onclick="addTimeWindow()">+ Add time window</button>
+            </div>
+            <!-- Weekdays -->
             <div class="appt-form-group" style="margin-bottom:20px">
               <label class="appt-form-label">Repeat On</label>
               <div class="appt-weekdays" id="appt-weekdays">
@@ -1556,6 +1564,7 @@ if(sessionStorage.getItem('rs_auth')==='1'){
                 <div class="appt-weekday" data-day="0">Sun</div>
               </div>
             </div>
+            <!-- Funnels -->
             <div class="appt-form-group" style="margin-bottom:16px">
               <label class="appt-form-label">Show On Funnels</label>
               <div class="funnel-chips" id="appt-funnels">
@@ -1565,6 +1574,7 @@ if(sessionStorage.getItem('rs_auth')==='1'){
                 <button class="funnel-chip" data-funnel="ReShape Club">reshapeclub.com</button>
               </div>
             </div>
+            <!-- Availability -->
             <div class="appt-form-group" style="margin-bottom:16px">
               <label class="appt-form-label">Availability</label>
               <div class="appt-mode-group" id="appt-mode-group">
@@ -1602,7 +1612,7 @@ if(sessionStorage.getItem('rs_auth')==='1'){
           </div>
           <div class="drawer-footer">
             <button class="btn btn-ghost" onclick="toggleApptForm()">Cancel</button>
-            <button class="btn btn-primary" onclick="saveApptType()">Create &amp; Generate Slots</button>
+            <button class="btn btn-primary" id="appt-save-btn" onclick="saveApptType()">Create &amp; Generate Slots</button>
           </div>
         </div>
       </div>
@@ -2714,19 +2724,22 @@ function renderApptCards() {
     var modeLabel = a.availability_mode === 'rolling' ? 'Rolling ' + (a.rolling_weeks || 4) + ' weeks' + (a.range_end ? ' until ' + new Date(a.range_end + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '') :
       a.availability_mode === 'range' ? (a.range_start ? new Date(a.range_start + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '') + ' \u2192 ' + (a.range_end ? new Date(a.range_end + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '') :
       'Open indefinitely';
+    var locs = a.locations || [a.location || 'Ipswich'];
+    var tw = a.time_windows || [{from:(a.open_time||'09:00').substring(0,5), to:(a.close_time||'17:00').substring(0,5)}];
+    var twLabel = tw.map(function(w){return w.from+' \u2013 '+w.to}).join(' + ');
     return '<div class="appt-card' + (a.is_active ? '' : ' paused') + '">' +
-      '<div class="appt-card-header"><div><div class="appt-card-name">' + a.name + '</div><div class="appt-card-loc">\uD83D\uDCCD ' + a.location + '</div></div>' +
+      '<div class="appt-card-header"><div><div class="appt-card-name">' + a.name + '</div><div class="appt-card-loc">\uD83D\uDCCD ' + locs.join(' + ') + '</div></div>' +
       '<span class="appt-card-badge ' + (a.is_active ? 'active' : 'paused') + '">' + (a.is_active ? 'Active' : 'Paused') + '</span></div>' +
       '<div class="appt-card-body">' +
-        '<div class="appt-card-row"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + a.duration + ' min \u00b7 ' + (a.open_time||'').substring(0,5) + ' \u2013 ' + (a.close_time||'').substring(0,5) + '</div>' +
+        '<div class="appt-card-row"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + a.duration + ' min \u00b7 ' + twLabel + '</div>' +
         '<div class="appt-card-row"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Max ' + a.max_attendees + ' per slot</div>' +
         '<div class="appt-card-row"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + modeLabel + '</div>' +
         '<div class="appt-card-days">' + [1,2,3,4,5,6,0].map(function(d) { return '<div class="appt-day' + (days.includes(d) ? ' on' : '') + '">' + DAY_SHORT[d] + '</div>'; }).join('') + '</div>' +
         '<div class="appt-card-funnels">' + (a.funnels || []).map(function(f) { var lbl = ({'Main Landing Page':'reshape.fit','Men Landing Page':'/men','Women Landing Page':'/women','ReShape Club':'reshapeclub.com'})[f] || f; return '<span class="appt-funnel-tag">' + lbl + '</span>'; }).join('') + '</div>' +
       '</div>' +
       '<div class="appt-card-actions">' +
+        '<button class="btn btn-ghost btn-sm" onclick="editApptType(\'' + a.id + '\')" style="border-color:rgba(237,92,37,.3);color:var(--orange)">Edit</button>' +
         '<button class="btn btn-ghost btn-sm" onclick="toggleApptType(\'' + a.id + '\',' + !a.is_active + ')">' + (a.is_active ? 'Pause' : 'Resume') + '</button>' +
-        '<button class="btn btn-ghost btn-sm" onclick="regenerateSlots(\'' + a.id + '\')">Regenerate Slots</button>' +
         '<button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:rgba(231,76,60,0.3)" onclick="deleteApptType(\'' + a.id + '\')">Delete</button>' +
       '</div></div>';
   }).join('');
@@ -2761,36 +2774,75 @@ function renderBookings() {
 function toggleApptForm() {
   var drawer = document.getElementById('appt-drawer');
   var isOpen = drawer.classList.contains('open');
-  if (isOpen) {
-    drawer.classList.remove('open');
-  } else {
-    drawer.classList.add('open');
-    document.getElementById('appt-edit-id').value = '';
-    document.getElementById('appt-form-title').textContent = 'New Appointment Type';
-    document.getElementById('appt-name').value = '';
-    document.getElementById('appt-duration').value = '30';
-    document.getElementById('appt-location').value = 'Ipswich';
-    document.getElementById('appt-open').value = '09:00';
-    document.getElementById('appt-close').value = '17:00';
-    document.getElementById('appt-max').value = '10';
-    document.getElementById('appt-rolling-weeks').value = '4';
-    document.getElementById('appt-rolling-end').value = '';
-    selectApptMode('rolling');
-    document.querySelectorAll('.appt-weekday').forEach(function(el) {
-      var d = parseInt(el.dataset.day);
-      el.classList.toggle('selected', [1,2,3,4,5].includes(d));
-    });
-    document.querySelectorAll('.funnel-chip').forEach(function(el) {
-      el.classList.toggle('selected', el.dataset.funnel !== 'ReShape Club');
-    });
-  }
+  if (isOpen) { drawer.classList.remove('open'); return; }
+  // Reset form for new
+  drawer.classList.add('open');
+  document.getElementById('appt-edit-id').value = '';
+  document.getElementById('appt-form-title').textContent = 'New Appointment Type';
+  document.getElementById('appt-save-btn').textContent = 'Create & Generate Slots';
+  document.getElementById('appt-name').value = '';
+  document.getElementById('appt-duration').value = '30';
+  document.getElementById('appt-max').value = '10';
+  document.getElementById('appt-rolling-weeks').value = '4';
+  document.getElementById('appt-rolling-end').value = '';
+  document.getElementById('appt-range-start').value = '';
+  document.getElementById('appt-range-end').value = '';
+  selectApptMode('rolling');
+  // Reset locations
+  document.querySelectorAll('#appt-locations .funnel-chip').forEach(function(el) { el.classList.toggle('selected', el.dataset.loc === 'Ipswich'); });
+  // Reset weekdays
+  document.querySelectorAll('.appt-weekday').forEach(function(el) { el.classList.toggle('selected', [1,2,3,4,5].includes(parseInt(el.dataset.day))); });
+  // Reset funnels
+  document.querySelectorAll('#appt-funnels .funnel-chip').forEach(function(el) { el.classList.toggle('selected', el.dataset.funnel !== 'ReShape Club'); });
+  // Reset time windows to single default
+  document.getElementById('appt-time-windows').innerHTML = '<div class="appt-tw-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><input type="time" class="appt-form-input appt-tw-from" value="09:00" style="flex:1"><span style="color:var(--text3);font-size:13px">to</span><input type="time" class="appt-form-input appt-tw-to" value="17:00" style="flex:1"><button class="btn btn-ghost btn-sm" style="padding:6px 8px;color:var(--red);border-color:rgba(231,76,60,.3);flex-shrink:0" onclick="this.closest(\'.appt-tw-row\').remove()" title="Remove">&times;</button></div>';
 }
 
-document.querySelectorAll('.appt-weekday').forEach(function(el) {
-  el.addEventListener('click', function() { el.classList.toggle('selected'); });
-});
-document.querySelectorAll('.funnel-chip').forEach(function(el) {
-  el.addEventListener('click', function() { el.classList.toggle('selected'); });
+function editApptType(id) {
+  var a = ALL_APPT_TYPES.find(function(x) { return x.id === id; });
+  if (!a) return;
+  var drawer = document.getElementById('appt-drawer');
+  drawer.classList.add('open');
+  document.getElementById('appt-edit-id').value = a.id;
+  document.getElementById('appt-form-title').textContent = 'Edit: ' + a.name;
+  document.getElementById('appt-save-btn').textContent = 'Save & Regenerate Slots';
+  document.getElementById('appt-name').value = a.name;
+  document.getElementById('appt-duration').value = a.duration;
+  document.getElementById('appt-max').value = a.max_attendees;
+  // Locations
+  var locs = a.locations || [a.location || 'Ipswich'];
+  document.querySelectorAll('#appt-locations .funnel-chip').forEach(function(el) { el.classList.toggle('selected', locs.includes(el.dataset.loc)); });
+  // Time windows
+  var tw = a.time_windows || [{from: (a.open_time||'09:00').substring(0,5), to: (a.close_time||'17:00').substring(0,5)}];
+  var twHtml = tw.map(function(w) {
+    return '<div class="appt-tw-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><input type="time" class="appt-form-input appt-tw-from" value="' + w.from + '" style="flex:1"><span style="color:var(--text3);font-size:13px">to</span><input type="time" class="appt-form-input appt-tw-to" value="' + w.to + '" style="flex:1"><button class="btn btn-ghost btn-sm" style="padding:6px 8px;color:var(--red);border-color:rgba(231,76,60,.3);flex-shrink:0" onclick="this.closest(\'.appt-tw-row\').remove()" title="Remove">&times;</button></div>';
+  }).join('');
+  document.getElementById('appt-time-windows').innerHTML = twHtml;
+  // Weekdays
+  document.querySelectorAll('.appt-weekday').forEach(function(el) { el.classList.toggle('selected', (a.weekdays||[]).includes(parseInt(el.dataset.day))); });
+  // Funnels
+  var funnels = a.funnels || [];
+  document.querySelectorAll('#appt-funnels .funnel-chip').forEach(function(el) { el.classList.toggle('selected', funnels.includes(el.dataset.funnel)); });
+  // Availability
+  selectApptMode(a.availability_mode || 'rolling');
+  document.getElementById('appt-rolling-weeks').value = a.rolling_weeks || 4;
+  document.getElementById('appt-rolling-end').value = a.range_end && a.availability_mode === 'rolling' ? a.range_end : '';
+  document.getElementById('appt-range-start').value = a.range_start || '';
+  document.getElementById('appt-range-end').value = a.range_end && a.availability_mode === 'range' ? a.range_end : '';
+}
+
+function addTimeWindow() {
+  var container = document.getElementById('appt-time-windows');
+  var row = document.createElement('div');
+  row.className = 'appt-tw-row';
+  row.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:8px';
+  row.innerHTML = '<input type="time" class="appt-form-input appt-tw-from" value="13:00" style="flex:1"><span style="color:var(--text3);font-size:13px">to</span><input type="time" class="appt-form-input appt-tw-to" value="17:00" style="flex:1"><button class="btn btn-ghost btn-sm" style="padding:6px 8px;color:var(--red);border-color:rgba(231,76,60,.3);flex-shrink:0" onclick="this.closest(\'.appt-tw-row\').remove()" title="Remove">&times;</button>';
+  container.appendChild(row);
+}
+
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('appt-weekday')) e.target.classList.toggle('selected');
+  if (e.target.classList.contains('funnel-chip')) e.target.classList.toggle('selected');
 });
 
 function selectApptMode(mode) {
@@ -2801,18 +2853,28 @@ function selectApptMode(mode) {
 }
 
 async function saveApptType() {
+  var editId = document.getElementById('appt-edit-id').value;
   var name = document.getElementById('appt-name').value.trim();
   if (!name) { showToast('Please enter an appointment name'); return; }
   var duration = parseInt(document.getElementById('appt-duration').value);
-  var location = document.getElementById('appt-location').value;
-  var openTime = document.getElementById('appt-open').value;
-  var closeTime = document.getElementById('appt-close').value;
   var maxAtt = parseInt(document.getElementById('appt-max').value) || 10;
+  // Locations (multi)
+  var locations = [];
+  document.querySelectorAll('#appt-locations .funnel-chip.selected').forEach(function(el) { locations.push(el.dataset.loc); });
+  if (locations.length === 0) { showToast('Select at least one location'); return; }
+  // Time windows
+  var timeWindows = [];
+  document.querySelectorAll('.appt-tw-row').forEach(function(row) {
+    var from = row.querySelector('.appt-tw-from').value;
+    var to = row.querySelector('.appt-tw-to').value;
+    if (from && to) timeWindows.push({ from: from, to: to });
+  });
+  if (timeWindows.length === 0) { showToast('Add at least one time window'); return; }
   var weekdays = [];
   document.querySelectorAll('.appt-weekday.selected').forEach(function(el) { weekdays.push(parseInt(el.dataset.day)); });
   if (weekdays.length === 0) { showToast('Select at least one day'); return; }
   var funnels = [];
-  document.querySelectorAll('.funnel-chip.selected').forEach(function(el) { funnels.push(el.dataset.funnel); });
+  document.querySelectorAll('#appt-funnels .funnel-chip.selected').forEach(function(el) { funnels.push(el.dataset.funnel); });
   if (funnels.length === 0) { showToast('Select at least one funnel'); return; }
   var rollingWeeks = parseInt(document.getElementById('appt-rolling-weeks').value) || 4;
   var rollingEnd = document.getElementById('appt-rolling-end').value || null;
@@ -2820,10 +2882,11 @@ async function saveApptType() {
   var rangeEnd = document.getElementById('appt-range-end').value || null;
 
   var apptData = {
-    name: name, duration: duration, location: location,
-    weekdays: weekdays, open_time: openTime, close_time: closeTime,
-    max_attendees: maxAtt, availability_mode: __apptMode,
-    funnels: funnels,
+    name: name, duration: duration,
+    location: locations[0], locations: locations, time_windows: timeWindows,
+    open_time: timeWindows[0].from, close_time: timeWindows[timeWindows.length - 1].to,
+    weekdays: weekdays, max_attendees: maxAtt,
+    availability_mode: __apptMode, funnels: funnels,
     rolling_weeks: __apptMode === 'rolling' ? rollingWeeks : null,
     range_start: __apptMode === 'range' ? rangeStart : null,
     range_end: __apptMode === 'rolling' ? rollingEnd : (__apptMode === 'range' ? rangeEnd : null),
@@ -2831,15 +2894,24 @@ async function saveApptType() {
   };
 
   try {
-    var res = await sb.from('appointment_types').insert([apptData]).select();
-    if (res.error) { showToast('Error: ' + res.error.message); return; }
-    var newAppt = res.data[0];
-    // Generate slots
-    var slotCount = await generateSlotsForAppt(newAppt);
-    showToast('"' + name + '" created with ' + slotCount + ' slots');
-    toggleApptForm();
+    if (editId) {
+      // UPDATE existing
+      var res = await sb.from('appointment_types').update(apptData).eq('id', editId).select();
+      if (res.error) { showToast('Error: ' + res.error.message); return; }
+      // Delete old unbooked slots and regenerate
+      await sb.from('booking_slots').delete().eq('appointment_type_id', editId).eq('booked_count', 0);
+      var slotCount = await generateSlotsForAppt(res.data[0]);
+      showToast('"' + name + '" updated with ' + slotCount + ' slots');
+    } else {
+      // INSERT new
+      var res = await sb.from('appointment_types').insert([apptData]).select();
+      if (res.error) { showToast('Error: ' + res.error.message); return; }
+      var slotCount = await generateSlotsForAppt(res.data[0]);
+      showToast('"' + name + '" created with ' + slotCount + ' slots');
+    }
+    document.getElementById('appt-drawer').classList.remove('open');
     await initBookingsView();
-  } catch (e) { showToast('Error creating appointment type'); console.error(e); }
+  } catch (e) { showToast('Error saving appointment type'); console.error(e); }
 }
 
 async function generateSlotsForAppt(appt) {
@@ -2849,48 +2921,52 @@ async function generateSlotsForAppt(appt) {
   if (appt.availability_mode === 'rolling') {
     endDate = new Date(today);
     endDate.setDate(endDate.getDate() + (appt.rolling_weeks || 4) * 7);
-    if (appt.range_end) {
-      var re = new Date(appt.range_end + 'T00:00:00');
-      if (re < endDate) endDate = re;
-    }
+    if (appt.range_end) { var re = new Date(appt.range_end + 'T00:00:00'); if (re < endDate) endDate = re; }
   } else if (appt.availability_mode === 'range') {
     today = appt.range_start ? new Date(appt.range_start + 'T00:00:00') : today;
     endDate = appt.range_end ? new Date(appt.range_end + 'T00:00:00') : new Date(today.getTime() + 90 * 864e5);
   } else {
-    endDate = new Date(today.getTime() + 90 * 864e5); // 90 days for indefinite
+    endDate = new Date(today.getTime() + 90 * 864e5);
   }
   var now = new Date(); now.setHours(0,0,0,0);
   if (today < now) today = now;
 
+  // Get locations and time windows
+  var locs = appt.locations || [appt.location || 'Ipswich'];
+  var windows = appt.time_windows || [{from: (appt.open_time||'09:00').substring(0,5), to: (appt.close_time||'17:00').substring(0,5)}];
+  var dur = appt.duration || 30;
+
   var slots = [];
   var d = new Date(today);
   while (d <= endDate) {
-    var dayOfWeek = d.getDay();
-    if ((appt.weekdays || []).includes(dayOfWeek)) {
-      // Generate time slots for this day
-      var openMin = timeToMin(appt.open_time);
-      var closeMin = timeToMin(appt.close_time);
-      var dur = appt.duration || 30;
-      for (var t = openMin; t + dur <= closeMin; t += dur) {
-        slots.push({
-          appointment_type_id: appt.id,
-          date: d.toISOString().split('T')[0],
-          start_time: minToTime(t),
-          end_time: minToTime(t + dur),
-          location: appt.location,
-          max_attendees: appt.max_attendees,
-          booked_count: 0,
-          is_active: true
+    if ((appt.weekdays || []).includes(d.getDay())) {
+      var dateStr = d.toISOString().split('T')[0];
+      // For each location
+      locs.forEach(function(loc) {
+        // For each time window
+        windows.forEach(function(w) {
+          var openMin = timeToMin(w.from);
+          var closeMin = timeToMin(w.to);
+          for (var t = openMin; t + dur <= closeMin; t += dur) {
+            slots.push({
+              appointment_type_id: appt.id,
+              date: dateStr,
+              start_time: minToTime(t),
+              end_time: minToTime(t + dur),
+              location: loc,
+              max_attendees: appt.max_attendees,
+              booked_count: 0,
+              is_active: true
+            });
+          }
         });
-      }
+      });
     }
     d.setDate(d.getDate() + 1);
   }
   if (slots.length > 0) {
-    // Insert in batches of 500
     for (var i = 0; i < slots.length; i += 500) {
-      var batch = slots.slice(i, i + 500);
-      await sb.from('booking_slots').insert(batch);
+      await sb.from('booking_slots').insert(slots.slice(i, i + 500));
     }
   }
   return slots.length;
