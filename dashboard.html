@@ -3080,7 +3080,7 @@ async function generateSlotsForAppt(appt) {
     // Get windows for this specific day
     var dayWindows = ds ? ds[String(dayNum)] : ((appt.weekdays || []).includes(dayNum) ? fallbackWindows : null);
     if (dayWindows && dayWindows.length > 0) {
-      var dateStr = d.toISOString().split('T')[0];
+      var dateStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
       locs.forEach(function(loc) {
         dayWindows.forEach(function(w) {
           var openMin = timeToMin(w.from);
