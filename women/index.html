@@ -1611,18 +1611,21 @@ window.addEventListener('scroll',()=>{
     var step = steps[currentStep];
     var nextBtn = step.querySelector('.form-btn-next');
     if (!nextBtn) return;
-    var radioGroups = step.querySelectorAll('.form-options:not(.multi-select)');
-    var needsRadio = false;
-    radioGroups.forEach(function(group) {
-      var checked = group.querySelector('input[type="radio"]:checked');
-      if (!checked) needsRadio = true;
+    var incomplete = false;
+    step.querySelectorAll('.form-options:not(.multi-select)').forEach(function(group) {
+      if (!group.querySelector('input[type="radio"]:checked')) incomplete = true;
     });
+    step.querySelectorAll('.form-options.multi-select').forEach(function(group) {
+      if (!group.querySelector('input:checked')) incomplete = true;
+    });
+    var rating = step.querySelector('.form-rating');
+    if (rating && !rating.querySelector('input:checked')) incomplete = true;
     var stepNum = parseInt(step.dataset.step);
-    if (stepNum === 5 || stepNum === 6 || stepNum === 8) {
-      nextBtn.disabled = false;
+    if (stepNum === 5 || stepNum === 6) {
+      nextBtn.disabled = incomplete;
       return;
     }
-    nextBtn.disabled = needsRadio;
+    nextBtn.disabled = incomplete;
   }
 
   function validateStep(index) {
