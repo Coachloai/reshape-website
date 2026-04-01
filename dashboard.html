@@ -1996,7 +1996,7 @@ function renderTable() {
         <td><span class="tag tag-form">${l.formLabel}</span></td>
         <td><span class="tag tag-quality ${qClass}">${l.quality}</span></td>
         <td style="color:var(--text3);white-space:nowrap">${d}</td>
-        <td><button class="btn-view" onclick="event.stopPropagation();openLeadModal(${l.id})">View →</button></td>
+        <td><button class="btn-view" onclick="event.stopPropagation();openLeadModal('${l.id}')">View →</button></td>
       </tr>`;
   }).join('');
   renderPageNumbers(totalPages);
@@ -2407,7 +2407,7 @@ function renderLeadsView() {
         <td><span class="tag tag-form">${l.formLabel}</span></td>
         <td><span class="tag tag-quality ${qClass}">${l.quality}</span></td>
         <td style="color:var(--text3);white-space:nowrap">${d}</td>
-        <td><button class="btn-view" onclick="event.stopPropagation();openLeadModal(${l.id})">View →</button></td>
+        <td><button class="btn-view" onclick="event.stopPropagation();openLeadModal('${l.id}')">View →</button></td>
       </tr>`;
   }).join('');
 }
