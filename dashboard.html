@@ -799,7 +799,7 @@ select.appt-form-input option{background:var(--s3)}
 }
 /* ── LEAD MODAL ── */
 .modal-overlay {
-  position: fixed; inset: 0; z-index: 160;
+  position: fixed; inset: 0; z-index: 500;
   background: rgba(0,0,0,0.7);
   backdrop-filter: blur(6px);
   opacity: 0; pointer-events: none;
@@ -3751,8 +3751,8 @@ document.addEventListener('keydown', function(e) {
 <script>
 /* ══ LEAD MODAL ══════════════════════ */
 function openLeadModal(id) {
-  const l = ALL_LEADS.find(x => x.id === id);
-  if (!l) return;
+  var l = ALL_LEADS.find(function(x) { return String(x.id) === String(id); });
+  if (!l) { console.error('Lead not found:', id, 'Total leads:', ALL_LEADS.length); return; }
   const a = l.answers || {};
   document.getElementById('modal-name').textContent = l.name;
   document.getElementById('modal-id').textContent   =
