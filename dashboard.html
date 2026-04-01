@@ -451,6 +451,23 @@ select.appt-form-input option{background:var(--s3)}
 .appt-mode-btn:hover{border-color:rgba(255,255,255,.2)}
 .appt-mode-btn.selected{border-color:var(--orange);background:var(--odim);color:var(--orange)}
 .appt-form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+/* ── DAY SCHEDULE ROWS ── */
+.day-sched{border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;transition:border-color .2s}
+.day-sched.active{border-color:rgba(237,92,37,.25)}
+.day-sched-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;transition:background .2s}
+.day-sched-header:hover{background:rgba(255,255,255,.02)}
+.day-sched.active .day-sched-header{background:rgba(237,92,37,.04)}
+.day-sched-name{font-size:13px;font-weight:700;color:var(--text3)}
+.day-sched.active .day-sched-name{color:var(--orange)}
+.day-sched-toggle{width:36px;height:20px;border-radius:10px;background:var(--s4);border:1px solid var(--border);position:relative;transition:all .2s;flex-shrink:0}
+.day-sched.active .day-sched-toggle{background:var(--orange);border-color:var(--orange)}
+.day-sched-toggle::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.day-sched.active .day-sched-toggle::after{transform:translateX(16px)}
+.day-sched-body{display:none;padding:0 14px 12px;border-top:1px solid var(--border)}
+.day-sched.active .day-sched-body{display:block}
+.day-sched-tw{display:flex;gap:6px;align-items:center;margin-top:8px}
+.day-sched-tw input{flex:1}
+.day-sched-add{margin-top:8px;font-size:11px}
 /* ── DRAWER OVERLAY ── */
 .drawer-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s}
 .drawer-overlay.open{opacity:1;pointer-events:auto}
@@ -1625,31 +1642,11 @@ if(sessionStorage.getItem('rs_auth')==='1'){
                 <button class="funnel-chip" data-loc="Colchester">Colchester</button>
               </div>
             </div>
-            <!-- Time Windows -->
-            <div class="appt-form-group" style="margin-bottom:16px">
-              <label class="appt-form-label">Time Windows</label>
-              <div id="appt-time-windows">
-                <div class="appt-tw-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-                  <input type="time" class="appt-form-input appt-tw-from" value="09:00" style="flex:1">
-                  <span style="color:var(--text3);font-size:13px">to</span>
-                  <input type="time" class="appt-form-input appt-tw-to" value="17:00" style="flex:1">
-                  <button class="btn btn-ghost btn-sm" style="padding:6px 8px;color:var(--red);border-color:rgba(231,76,60,.3);flex-shrink:0" onclick="this.closest('.appt-tw-row').remove()" title="Remove">&times;</button>
-                </div>
-              </div>
-              <button class="btn btn-ghost btn-sm" style="margin-top:4px" onclick="addTimeWindow()">+ Add time window</button>
-            </div>
-            <!-- Weekdays -->
+            <!-- Day Schedules (per-day time windows) -->
             <div class="appt-form-group" style="margin-bottom:20px">
-              <label class="appt-form-label">Repeat On</label>
-              <div class="appt-weekdays" id="appt-weekdays">
-                <div class="appt-weekday selected" data-day="1">Mon</div>
-                <div class="appt-weekday selected" data-day="2">Tue</div>
-                <div class="appt-weekday selected" data-day="3">Wed</div>
-                <div class="appt-weekday selected" data-day="4">Thu</div>
-                <div class="appt-weekday selected" data-day="5">Fri</div>
-                <div class="appt-weekday" data-day="6">Sat</div>
-                <div class="appt-weekday" data-day="0">Sun</div>
-              </div>
+              <label class="appt-form-label">Day &amp; Time Schedule</label>
+              <p style="font-size:12px;color:var(--text3);margin-bottom:12px">Toggle days on/off and set different time windows per day</p>
+              <div id="appt-day-schedules"></div>
             </div>
             <!-- Funnels -->
             <div class="appt-form-group" style="margin-bottom:16px">
@@ -2813,15 +2810,26 @@ function renderApptCards() {
       a.availability_mode === 'range' ? (a.range_start ? new Date(a.range_start + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '') + ' \u2192 ' + (a.range_end ? new Date(a.range_end + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '') :
       'Open indefinitely';
     var locs = a.locations || [a.location || 'Ipswich'];
-    var tw = a.time_windows || [{from:(a.open_time||'09:00').substring(0,5), to:(a.close_time||'17:00').substring(0,5)}];
-    var twLabel = tw.map(function(w){return w.from+' \u2013 '+w.to}).join(' + ');
+    var ds = a.day_schedules || {};
+    // Build compact schedule label
+    var schedLabel = '';
+    if (Object.keys(ds).length > 0) {
+      var dayAbbr = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      schedLabel = Object.keys(ds).sort().map(function(k) {
+        var wins = ds[k].map(function(w){return w.from+'\u2013'+w.to}).join(', ');
+        return dayAbbr[k] + ': ' + wins;
+      }).join(' | ');
+    } else {
+      var tw = a.time_windows || [{from:(a.open_time||'09:00').substring(0,5),to:(a.close_time||'17:00').substring(0,5)}];
+      schedLabel = tw.map(function(w){return w.from+'\u2013'+w.to}).join(' + ');
+    }
     return '<div class="appt-card' + (a.is_active ? '' : ' paused') + '">' +
       '<div class="appt-card-header"><div><div class="appt-card-name">' + a.name + '</div><div class="appt-card-loc">\uD83D\uDCCD ' + locs.join(' + ') + '</div></div>' +
       '<span class="appt-card-badge ' + (a.is_active ? 'active' : 'paused') + '">' + (a.is_active ? 'Active' : 'Paused') + '</span></div>' +
       '<div class="appt-card-body">' +
-        '<div class="appt-card-row"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + a.duration + ' min \u00b7 ' + twLabel + '</div>' +
-        '<div class="appt-card-row"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Max ' + a.max_attendees + ' per slot</div>' +
-        '<div class="appt-card-row"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + modeLabel + '</div>' +
+        '<div class="appt-card-row"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + a.duration + ' min</div>' +
+        '<div class="appt-card-row" style="font-size:11px;line-height:1.5"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + schedLabel + '</div>' +
+        '<div class="appt-card-row"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Max ' + a.max_attendees + ' per slot \u00b7 ' + modeLabel + '</div>' +
         '<div class="appt-card-days">' + [1,2,3,4,5,6,0].map(function(d) { return '<div class="appt-day' + (days.includes(d) ? ' on' : '') + '">' + DAY_SHORT[d] + '</div>'; }).join('') + '</div>' +
         '<div class="appt-card-funnels">' + (a.funnels || []).map(function(f) { var lbl = ({'Main Landing Page':'reshape.fit','Men Landing Page':'/men','Women Landing Page':'/women','ReShape Club':'reshapeclub.com'})[f] || f; return '<span class="appt-funnel-tag">' + lbl + '</span>'; }).join('') + '</div>' +
       '</div>' +
@@ -2859,11 +2867,70 @@ function renderBookings() {
 }
 
 /* ── APPOINTMENT DRAWER ── */
+var DAY_FULL_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var DEFAULT_DAYS = [1,2,3,4,5]; // Mon-Fri
+
+function renderDaySchedules(daySchedules) {
+  var container = document.getElementById('appt-day-schedules');
+  var html = '';
+  [1,2,3,4,5,6,0].forEach(function(dayNum) {
+    var dayName = DAY_FULL_NAMES[dayNum];
+    var sched = daySchedules ? daySchedules[String(dayNum)] : null;
+    var isActive = sched ? true : DEFAULT_DAYS.includes(dayNum) && !daySchedules;
+    var windows = sched || [{from:'09:00',to:'17:00'}];
+    html += '<div class="day-sched' + (isActive ? ' active' : '') + '" data-day="' + dayNum + '">';
+    html += '<div class="day-sched-header" onclick="toggleDaySched(this.parentElement)">';
+    html += '<span class="day-sched-name">' + dayName + '</span>';
+    html += '<div class="day-sched-toggle"></div>';
+    html += '</div>';
+    html += '<div class="day-sched-body">';
+    html += '<div class="day-sched-windows" data-day="' + dayNum + '">';
+    windows.forEach(function(w) {
+      html += '<div class="day-sched-tw">';
+      html += '<input type="time" class="appt-form-input ds-from" value="' + w.from + '" style="flex:1">';
+      html += '<span style="color:var(--text3);font-size:12px">to</span>';
+      html += '<input type="time" class="appt-form-input ds-to" value="' + w.to + '" style="flex:1">';
+      html += '<button class="btn btn-ghost btn-sm" style="padding:4px 6px;color:var(--red);border-color:rgba(231,76,60,.3);font-size:14px" onclick="this.closest(\'.day-sched-tw\').remove()" title="Remove">&times;</button>';
+      html += '</div>';
+    });
+    html += '</div>';
+    html += '<button class="btn btn-ghost btn-sm day-sched-add" onclick="addDayWindow(' + dayNum + ')">+ Add window</button>';
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
+}
+
+function toggleDaySched(el) {
+  el.classList.toggle('active');
+}
+
+function addDayWindow(dayNum) {
+  var container = document.querySelector('.day-sched-windows[data-day="' + dayNum + '"]');
+  var row = document.createElement('div');
+  row.className = 'day-sched-tw';
+  row.innerHTML = '<input type="time" class="appt-form-input ds-from" value="13:00" style="flex:1"><span style="color:var(--text3);font-size:12px">to</span><input type="time" class="appt-form-input ds-to" value="17:00" style="flex:1"><button class="btn btn-ghost btn-sm" style="padding:4px 6px;color:var(--red);border-color:rgba(231,76,60,.3);font-size:14px" onclick="this.closest(\'.day-sched-tw\').remove()" title="Remove">&times;</button>';
+  container.appendChild(row);
+}
+
+function getDaySchedulesFromForm() {
+  var schedules = {};
+  document.querySelectorAll('.day-sched.active').forEach(function(el) {
+    var dayNum = el.dataset.day;
+    var windows = [];
+    el.querySelectorAll('.day-sched-tw').forEach(function(tw) {
+      var from = tw.querySelector('.ds-from').value;
+      var to = tw.querySelector('.ds-to').value;
+      if (from && to) windows.push({from:from, to:to});
+    });
+    if (windows.length > 0) schedules[dayNum] = windows;
+  });
+  return schedules;
+}
+
 function toggleApptForm() {
   var drawer = document.getElementById('appt-drawer');
   var isOpen = drawer.classList.contains('open');
   if (isOpen) { drawer.classList.remove('open'); return; }
-  // Reset form for new
   drawer.classList.add('open');
   document.getElementById('appt-edit-id').value = '';
   document.getElementById('appt-form-title').textContent = 'New Appointment Type';
@@ -2876,14 +2943,9 @@ function toggleApptForm() {
   document.getElementById('appt-range-start').value = '';
   document.getElementById('appt-range-end').value = '';
   selectApptMode('rolling');
-  // Reset locations
   document.querySelectorAll('#appt-locations .funnel-chip').forEach(function(el) { el.classList.toggle('selected', el.dataset.loc === 'Ipswich'); });
-  // Reset weekdays
-  document.querySelectorAll('.appt-weekday').forEach(function(el) { el.classList.toggle('selected', [1,2,3,4,5].includes(parseInt(el.dataset.day))); });
-  // Reset funnels
   document.querySelectorAll('#appt-funnels .funnel-chip').forEach(function(el) { el.classList.toggle('selected', el.dataset.funnel !== 'ReShape Club'); });
-  // Reset time windows to single default
-  document.getElementById('appt-time-windows').innerHTML = '<div class="appt-tw-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><input type="time" class="appt-form-input appt-tw-from" value="09:00" style="flex:1"><span style="color:var(--text3);font-size:13px">to</span><input type="time" class="appt-form-input appt-tw-to" value="17:00" style="flex:1"><button class="btn btn-ghost btn-sm" style="padding:6px 8px;color:var(--red);border-color:rgba(231,76,60,.3);flex-shrink:0" onclick="this.closest(\'.appt-tw-row\').remove()" title="Remove">&times;</button></div>';
+  renderDaySchedules(null); // Default Mon-Fri 09:00-17:00
 }
 
 function editApptType(id) {
@@ -2897,39 +2959,26 @@ function editApptType(id) {
   document.getElementById('appt-name').value = a.name;
   document.getElementById('appt-duration').value = a.duration;
   document.getElementById('appt-max').value = a.max_attendees;
-  // Locations
   var locs = a.locations || [a.location || 'Ipswich'];
   document.querySelectorAll('#appt-locations .funnel-chip').forEach(function(el) { el.classList.toggle('selected', locs.includes(el.dataset.loc)); });
-  // Time windows
-  var tw = a.time_windows || [{from: (a.open_time||'09:00').substring(0,5), to: (a.close_time||'17:00').substring(0,5)}];
-  var twHtml = tw.map(function(w) {
-    return '<div class="appt-tw-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><input type="time" class="appt-form-input appt-tw-from" value="' + w.from + '" style="flex:1"><span style="color:var(--text3);font-size:13px">to</span><input type="time" class="appt-form-input appt-tw-to" value="' + w.to + '" style="flex:1"><button class="btn btn-ghost btn-sm" style="padding:6px 8px;color:var(--red);border-color:rgba(231,76,60,.3);flex-shrink:0" onclick="this.closest(\'.appt-tw-row\').remove()" title="Remove">&times;</button></div>';
-  }).join('');
-  document.getElementById('appt-time-windows').innerHTML = twHtml;
-  // Weekdays
-  document.querySelectorAll('.appt-weekday').forEach(function(el) { el.classList.toggle('selected', (a.weekdays||[]).includes(parseInt(el.dataset.day))); });
-  // Funnels
   var funnels = a.funnels || [];
   document.querySelectorAll('#appt-funnels .funnel-chip').forEach(function(el) { el.classList.toggle('selected', funnels.includes(el.dataset.funnel)); });
-  // Availability
   selectApptMode(a.availability_mode || 'rolling');
   document.getElementById('appt-rolling-weeks').value = a.rolling_weeks || 4;
   document.getElementById('appt-rolling-end').value = a.range_end && a.availability_mode === 'rolling' ? a.range_end : '';
   document.getElementById('appt-range-start').value = a.range_start || '';
   document.getElementById('appt-range-end').value = a.range_end && a.availability_mode === 'range' ? a.range_end : '';
-}
-
-function addTimeWindow() {
-  var container = document.getElementById('appt-time-windows');
-  var row = document.createElement('div');
-  row.className = 'appt-tw-row';
-  row.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:8px';
-  row.innerHTML = '<input type="time" class="appt-form-input appt-tw-from" value="13:00" style="flex:1"><span style="color:var(--text3);font-size:13px">to</span><input type="time" class="appt-form-input appt-tw-to" value="17:00" style="flex:1"><button class="btn btn-ghost btn-sm" style="padding:6px 8px;color:var(--red);border-color:rgba(231,76,60,.3);flex-shrink:0" onclick="this.closest(\'.appt-tw-row\').remove()" title="Remove">&times;</button>';
-  container.appendChild(row);
+  // Load day schedules from saved data or build from old format
+  var ds = a.day_schedules;
+  if (!ds && a.weekdays) {
+    ds = {};
+    var tw = a.time_windows || [{from:(a.open_time||'09:00').substring(0,5),to:(a.close_time||'17:00').substring(0,5)}];
+    a.weekdays.forEach(function(d) { ds[String(d)] = JSON.parse(JSON.stringify(tw)); });
+  }
+  renderDaySchedules(ds);
 }
 
 document.addEventListener('click', function(e) {
-  if (e.target.classList.contains('appt-weekday')) e.target.classList.toggle('selected');
   if (e.target.classList.contains('funnel-chip')) e.target.classList.toggle('selected');
 });
 
@@ -2950,17 +2999,13 @@ async function saveApptType() {
   var locations = [];
   document.querySelectorAll('#appt-locations .funnel-chip.selected').forEach(function(el) { locations.push(el.dataset.loc); });
   if (locations.length === 0) { showToast('Select at least one location'); return; }
-  // Time windows
-  var timeWindows = [];
-  document.querySelectorAll('.appt-tw-row').forEach(function(row) {
-    var from = row.querySelector('.appt-tw-from').value;
-    var to = row.querySelector('.appt-tw-to').value;
-    if (from && to) timeWindows.push({ from: from, to: to });
-  });
-  if (timeWindows.length === 0) { showToast('Add at least one time window'); return; }
-  var weekdays = [];
-  document.querySelectorAll('.appt-weekday.selected').forEach(function(el) { weekdays.push(parseInt(el.dataset.day)); });
-  if (weekdays.length === 0) { showToast('Select at least one day'); return; }
+  // Day schedules (per-day time windows)
+  var daySchedules = getDaySchedulesFromForm();
+  var weekdays = Object.keys(daySchedules).map(Number);
+  if (weekdays.length === 0) { showToast('Enable at least one day'); return; }
+  // Flatten all time windows for backwards compat
+  var allWindows = [];
+  Object.values(daySchedules).forEach(function(ws) { ws.forEach(function(w) { allWindows.push(w); }); });
   var funnels = [];
   document.querySelectorAll('#appt-funnels .funnel-chip.selected').forEach(function(el) { funnels.push(el.dataset.funnel); });
   if (funnels.length === 0) { showToast('Select at least one funnel'); return; }
@@ -2971,8 +3016,11 @@ async function saveApptType() {
 
   var apptData = {
     name: name, duration: duration,
-    location: locations[0], locations: locations, time_windows: timeWindows,
-    open_time: timeWindows[0].from, close_time: timeWindows[timeWindows.length - 1].to,
+    location: locations[0], locations: locations,
+    day_schedules: daySchedules,
+    time_windows: allWindows.length > 0 ? allWindows : [{from:'09:00',to:'17:00'}],
+    open_time: allWindows.length > 0 ? allWindows[0].from : '09:00',
+    close_time: allWindows.length > 0 ? allWindows[allWindows.length-1].to : '17:00',
     weekdays: weekdays, max_attendees: maxAtt,
     availability_mode: __apptMode, funnels: funnels,
     rolling_weeks: __apptMode === 'rolling' ? rollingWeeks : null,
@@ -3019,20 +3067,22 @@ async function generateSlotsForAppt(appt) {
   var now = new Date(); now.setHours(0,0,0,0);
   if (today < now) today = now;
 
-  // Get locations and time windows
+  // Get locations and per-day schedules
   var locs = appt.locations || [appt.location || 'Ipswich'];
-  var windows = appt.time_windows || [{from: (appt.open_time||'09:00').substring(0,5), to: (appt.close_time||'17:00').substring(0,5)}];
+  var ds = appt.day_schedules || null;
+  var fallbackWindows = appt.time_windows || [{from:(appt.open_time||'09:00').substring(0,5),to:(appt.close_time||'17:00').substring(0,5)}];
   var dur = appt.duration || 30;
 
   var slots = [];
   var d = new Date(today);
   while (d <= endDate) {
-    if ((appt.weekdays || []).includes(d.getDay())) {
+    var dayNum = d.getDay();
+    // Get windows for this specific day
+    var dayWindows = ds ? ds[String(dayNum)] : ((appt.weekdays || []).includes(dayNum) ? fallbackWindows : null);
+    if (dayWindows && dayWindows.length > 0) {
       var dateStr = d.toISOString().split('T')[0];
-      // For each location
       locs.forEach(function(loc) {
-        // For each time window
-        windows.forEach(function(w) {
+        dayWindows.forEach(function(w) {
           var openMin = timeToMin(w.from);
           var closeMin = timeToMin(w.to);
           for (var t = openMin; t + dur <= closeMin; t += dur) {
