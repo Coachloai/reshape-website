@@ -204,15 +204,15 @@ async function queueSequence(sequenceName, lead, booking, supabaseClient) {
     });
   }
 
-  // Insert all messages into queue
+  // Insert all messages into queue and get IDs back
   if (supabaseClient && messages.length > 0) {
-    await supabaseClient.from('message_queue').insert(messages);
-  }
-
-  // Send immediate messages (delay === 0)
-  for (var j = 0; j < messages.length; j++) {
-    if (messages[j].status === 'sending') {
-      await processMessage(messages[j], supabaseClient);
+    var insertRes = await supabaseClient.from('message_queue').insert(messages).select();
+    var inserted = (insertRes.data || []);
+    // Send immediate messages (delay === 0)
+    for (var j = 0; j < inserted.length; j++) {
+      if (inserted[j].status === 'sending') {
+        await processMessage(inserted[j], supabaseClient);
+      }
     }
   }
 }

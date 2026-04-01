@@ -16,14 +16,14 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:       #0A0A0A;
-  --s1:       #111213;
-  --s2:       #161718;
-  --s3:       #1C1D1F;
-  --s4:       #232527;
+  --bg:       #161819;
+  --s1:       #1C1E20;
+  --s2:       #1E2022;
+  --s3:       #242628;
+  --s4:       #2C2F32;
   --border:   rgba(255,255,255,0.07);
   --border2:  rgba(255,255,255,0.04);
-  --text:     #F0EDE8;
+  --text:     #F2F0ED;
   --text2:    rgba(240,237,232,0.65);
   --text3:    rgba(240,237,232,0.38);
   --orange:   #ED5C25;
@@ -403,7 +403,7 @@ body{
 .fade-in-6{animation-delay:.3s}
 /* ── VIEWS ── */
 .view { display: none }
-.view.active-view { display: contents }
+.view.active-view { display: flex; flex-direction: column; gap: 20px }
 /* ── SETTINGS TOGGLE ── */
 .settings-row {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
@@ -925,7 +925,7 @@ if(sessionStorage.getItem('rs_auth')==='1'){
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
     </button>
     <button class="sb-btn" data-view="analytics" title="Analytics" onclick="switchView('analytics', this)">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
     </button>
     <button class="sb-btn" data-view="performance" title="Performance" onclick="switchView('performance', this)">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
@@ -2375,7 +2375,7 @@ function switchView(view, btn) {
   // Show target view
   const el = document.getElementById('view-' + view);
   if (el) {
-    el.style.display = 'contents';
+    el.style.display = 'flex';
     el.classList.add('active-view');
   }
   // Update nav title
