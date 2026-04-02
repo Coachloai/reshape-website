@@ -265,7 +265,24 @@ async function confirmBooking() {
   var lname = document.getElementById('bk-lname').value.trim();
   var email = document.getElementById('bk-email').value.trim();
   var phone = document.getElementById('bk-phone').value.trim();
-  if (!fname || !lname || !email) { alert('Please fill in your name and email.'); return; }
+  // Validate all fields
+  var errors = [];
+  if (!fname) errors.push('First name is required');
+  if (!lname) errors.push('Last name is required');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Valid email is required');
+  var phoneCleaned = phone.replace(/\s/g, '');
+  if (!phoneCleaned || !/^\+\d{10,15}$/.test(phoneCleaned)) errors.push('Phone with country code required (e.g. +44 7700 000000)');
+  if (errors.length > 0) {
+    // Highlight invalid fields
+    if (!fname) document.getElementById('bk-fname').style.borderColor = '#EF4444';
+    if (!lname) document.getElementById('bk-lname').style.borderColor = '#EF4444';
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) document.getElementById('bk-email').style.borderColor = '#EF4444';
+    if (!phoneCleaned || !/^\+\d{10,15}$/.test(phoneCleaned)) document.getElementById('bk-phone').style.borderColor = '#EF4444';
+    alert(errors.join('\n'));
+    return;
+  }
+  // Clear error highlights
+  ['bk-fname','bk-lname','bk-email','bk-phone'].forEach(function(id) { document.getElementById(id).style.borderColor = ''; });
 
   var btn = document.getElementById('bookingConfirmBtn');
   btn.disabled = true; btn.textContent = 'Booking...';

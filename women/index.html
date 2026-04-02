@@ -1644,8 +1644,15 @@ window.addEventListener('scroll',()=>{
           valid = false;
         } else if (field.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value)) {
           field.classList.add('error');
-          if (errorMsg) errorMsg.classList.add('visible');
+          if (errorMsg) { errorMsg.textContent = 'Please enter a valid email address'; errorMsg.classList.add('visible'); }
           valid = false;
+        } else if (field.type === 'tel') {
+          var phone = field.value.trim().replace(/\s/g, '');
+          if (!/^\+\d{10,15}$/.test(phone)) {
+            field.classList.add('error');
+            if (errorMsg) { errorMsg.textContent = 'Include country code (e.g. +44 7700 000000)'; errorMsg.classList.add('visible'); }
+            valid = false;
+          }
         }
       });
     }
