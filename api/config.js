@@ -11,6 +11,6 @@
     from_email: 'coach@reshape.fit',
     from_name: 'Coach Jaime | ReShape',
     fallback_email: 'onboarding@resend.dev',
-    booking_url: 'https://reshape.fit/#apply',
+    booking_url: 'https://reshape.fit/booking',
   };
 })();

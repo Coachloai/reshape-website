@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Your Visit — ReShape</title>
+<meta name="description" content="Book your in-person visit at ReShape. Choose your location, pick a date and time that works for you.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#161819;--s1:#1C1E20;--s2:#191B1D;--s3:#222527;--s4:#2A2D30;
+  --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.06);
+  --text:#F2F0ED;--text2:rgba(242,240,237,0.78);--text3:rgba(242,240,237,0.52);--text4:rgba(242,240,237,0.35);
+  --orange:#ED5C25;--orange2:#FF8A5F;--orange3:#FF6B35;
+  --odim:rgba(237,92,37,0.12);--odim2:rgba(237,92,37,0.06);
+  --head:'Inter',sans-serif;--body:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{text-decoration:none;color:inherit}
+/* Nav */
+.nav{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:rgba(22,24,25,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+@media(min-width:768px){.nav{padding:0 40px}}
+.nav-logo{font-family:var(--head);font-size:20px;font-weight:900;letter-spacing:-0.5px}
+.nav-logo span{color:var(--orange)}
+.nav-link{font-size:13px;font-weight:600;color:var(--text3);padding:8px 16px;border:1px solid var(--border);border-radius:8px;transition:all .2s}
+.nav-link:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
+/* Container */
+.page{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+.booking-card{background:var(--s1);border:1px solid var(--border);border-radius:24px;padding:32px;width:100%;max-width:520px;box-shadow:0 32px 80px rgba(0,0,0,0.3)}
+@media(min-width:768px){.booking-card{padding:40px}}
+/* Booking calendar styles */
+@keyframes formFadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.booking-wrap{animation:formFadeIn .5s ease}
+.booking-header{text-align:center;margin-bottom:28px}
+.booking-header h3{font-family:var(--head);font-size:24px;font-weight:800;margin-bottom:8px}
+.booking-header p{font-size:14px;color:var(--text3);line-height:1.6}
+/* Contact fields */
+.booking-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.booking-field{display:flex;flex-direction:column;gap:4px}
+.booking-field.full{grid-column:span 2}
+.booking-field label{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text3)}
+.booking-field input{width:100%;padding:12px 14px;background:rgba(255,255,255,0.04);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--body);font-size:14px;outline:none;transition:border-color .2s}
+.booking-field input:focus{border-color:var(--orange)}
+.booking-field input::placeholder{color:var(--text4)}
+@media(max-width:480px){.booking-fields{grid-template-columns:1fr}.booking-field.full{grid-column:span 1}}
+/* Location toggle */
+.booking-loc-toggle{display:flex;gap:6px;margin-bottom:16px}
+.booking-loc-btn{flex:1;padding:10px 6px;border:2px solid var(--border);border-radius:10px;background:rgba(255,255,255,0.02);color:var(--text2);font-family:var(--body);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center}
+.booking-loc-btn:hover{border-color:rgba(255,255,255,0.15)}
+.booking-loc-btn.active{border-color:var(--orange);background:var(--odim);color:var(--orange)}
+/* Week nav */
+.booking-week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.booking-week-label{font-size:14px;font-weight:700;color:var(--text);font-family:var(--head)}
+.booking-week-btn{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--text3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:16px;font-family:var(--body)}
+.booking-week-btn:hover{border-color:rgba(255,255,255,.2);color:var(--text)}
+.booking-week-btn:disabled{opacity:.25;cursor:default;pointer-events:none}
+/* Dates grid */
+.booking-dates{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:16px}
+.booking-date{padding:10px 4px;border:2px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.02);cursor:pointer;text-align:center;transition:all .2s}
+.booking-date:hover{border-color:rgba(255,255,255,0.15)}
+.booking-date.active{border-color:var(--orange);background:var(--odim)}
+.booking-date.empty{opacity:.25;cursor:default;pointer-events:none}
+.booking-date.today{border-color:rgba(255,255,255,.2)}
+.booking-date-day{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
+.booking-date-num{font-size:26px;font-weight:800;font-family:var(--head);color:var(--text);margin:6px 0 2px}
+.booking-date.active .booking-date-num{color:var(--orange)}
+.booking-date-month{font-size:10px;color:var(--text4)}
+.booking-date-slots{font-size:10px;color:var(--orange);font-weight:700;margin-top:3px;min-height:14px}
+/* Time slots */
+.booking-times{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.booking-time{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border:2px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.02);cursor:pointer;transition:all .2s}
+.booking-time:hover{border-color:rgba(255,255,255,0.15)}
+.booking-time.active{border-color:var(--orange);background:var(--odim)}
+.booking-time.full{opacity:.4;cursor:default;pointer-events:none}
+.booking-time-left{display:flex;flex-direction:column;gap:2px}
+.booking-time-range{font-size:15px;font-weight:600;color:var(--text)}
+.booking-time-spots{font-size:12px;color:var(--text3)}
+.booking-time.active .booking-time-range{color:var(--orange)}
+.booking-time-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.booking-time.active .booking-time-check{background:var(--orange);border-color:var(--orange)}
+.booking-time-check svg{width:12px;height:12px;opacity:0;color:#fff;transition:opacity .2s}
+.booking-time.active .booking-time-check svg{opacity:1}
+.booking-empty{text-align:center;padding:24px;color:var(--text3);font-size:14px}
+.booking-confirm-btn{width:100%;padding:16px;background:var(--orange);color:#fff;border:none;border-radius:14px;font-family:var(--body);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 8px 28px rgba(237,92,37,0.28)}
+.booking-confirm-btn:hover{background:var(--orange3);transform:translateY(-1px)}
+.booking-confirm-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+/* Done */
+.booking-done{text-align:center;animation:formFadeIn .5s ease}
+.booking-done-icon{width:72px;height:72px;border-radius:50%;background:var(--odim);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px}
+.booking-done h3{font-family:var(--head);font-size:22px;font-weight:800;margin-bottom:8px}
+.booking-done p{font-size:15px;color:var(--text2);line-height:1.6;max-width:380px;margin:0 auto}
+.booking-done-detail{background:var(--odim);border:1px solid rgba(237,92,37,0.2);border-radius:14px;padding:16px 20px;margin:20px auto 0;max-width:320px;text-align:left}
+.booking-done-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}
+.booking-done-row span:first-child{color:var(--text3)}
+.booking-done-row span:last-child{font-weight:600;color:var(--text)}
+/* Footer */
+footer{padding:20px;text-align:center;font-size:12px;color:var(--text4);border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="https://reshape.fit" class="nav-logo">Re<span>Shape</span></a>
+  <a href="https://reshape.fit/#apply" class="nav-link">Apply Now</a>
+</nav>
+
+<div class="page">
+  <div class="booking-card">
+    <!-- BOOKING FORM -->
+    <div class="booking-wrap" id="bookingWrap">
+      <div class="booking-header">
+        <h3>Book Your Visit</h3>
+        <p>Choose your location, pick a date and time, and we'll see you there.</p>
+      </div>
+      <!-- Contact details -->
+      <div class="booking-fields">
+        <div class="booking-field"><label>First Name</label><input type="text" id="bk-fname" placeholder="John" required></div>
+        <div class="booking-field"><label>Last Name</label><input type="text" id="bk-lname" placeholder="Smith" required></div>
+        <div class="booking-field"><label>Email</label><input type="email" id="bk-email" placeholder="john@example.com" required></div>
+        <div class="booking-field"><label>Phone</label><input type="tel" id="bk-phone" placeholder="+44 7700 000000" required></div>
+      </div>
+      <!-- Location toggle -->
+      <div class="booking-loc-toggle" id="bookingLocToggle">
+        <button class="booking-loc-btn active" data-loc="Ipswich" onclick="selectBookingLoc('Ipswich')">&#128205; Ipswich</button>
+        <button class="booking-loc-btn" data-loc="Colchester" onclick="selectBookingLoc('Colchester')">&#128205; Colchester</button>
+      </div>
+      <!-- Week nav -->
+      <div class="booking-week-nav">
+        <button class="booking-week-btn" id="bookingWeekPrev" onclick="changeBookingWeek(-1)">&larr;</button>
+        <span class="booking-week-label" id="bookingWeekLabel"></span>
+        <button class="booking-week-btn" id="bookingWeekNext" onclick="changeBookingWeek(1)">&rarr;</button>
+      </div>
+      <div class="booking-dates" id="bookingDates"></div>
+      <div class="booking-times" id="bookingTimes"><div class="booking-empty">Select a date to see available times</div></div>
+      <button class="booking-confirm-btn" id="bookingConfirmBtn" disabled onclick="confirmBooking()">Book My Visit</button>
+    </div>
+    <!-- DONE -->
+    <div class="booking-done" id="bookingDone" style="display:none">
+      <div class="booking-done-icon">&#127881;</div>
+      <h3>You're Booked!</h3>
+      <p>We look forward to seeing you. You'll receive a confirmation shortly.</p>
+      <div class="booking-done-detail" id="bookingDoneDetail"></div>
+    </div>
+  </div>
+</div>
+
+<footer>ReShape Body Transformation &middot; Ipswich &amp; Colchester</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../api/config.js"></script>
+<script src="../api/automations.js"></script>
+<script>
+/* ── Supabase ── */
+(function(){
+  var U='https://lvizldmdficsfpgegehp.supabase.co';
+  var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXpsZG1kZmljc2ZwZ2VnZWhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2OTk4NDQsImV4cCI6MjA4OTI3NTg0NH0.72wHbZaTvqNzW6DTb6Ae1vi9QpOg_-KiEO-Jjm9mn0k';
+  window.__supabaseClient = supabase.createClient(U, K);
+})();
+
+/* ── Booking Calendar ── */
+var __bookingSlots = [];
+var __selectedSlotId = null;
+var __selectedLoc = null;
+var __selectedDate = null;
+var __bookingWeekOffset = 0;
+function __localDate(dt) { return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0'); }
+
+// Auto-select Ipswich on load
+selectBookingLoc('Ipswich');
+
+async function selectBookingLoc(loc) {
+  __selectedLoc = loc;
+  __selectedSlotId = null;
+  __selectedDate = null;
+  document.getElementById('bookingConfirmBtn').disabled = true;
+  document.querySelectorAll('.booking-loc-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.loc === loc); });
+  await loadBookingSlots(loc);
+}
+
+async function loadBookingSlots(loc) {
+  var today = __localDate(new Date());
+  try {
+    var res = await window.__supabaseClient.from('booking_slots').select('*').eq('location', loc).eq('is_active', true).gte('date', today).order('date', { ascending: true }).order('start_time', { ascending: true });
+    __bookingSlots = (res.data || []).filter(function(s) { return s.booked_count < s.max_attendees; });
+  } catch (e) { __bookingSlots = []; }
+  renderBookingDates();
+}
+
+function renderBookingDates() {
+  var container = document.getElementById('bookingDates');
+  var timesEl = document.getElementById('bookingTimes');
+  var labelEl = document.getElementById('bookingWeekLabel');
+  var prevBtn = document.getElementById('bookingWeekPrev');
+  var nextBtn = document.getElementById('bookingWeekNext');
+  var dateMap = {};
+  __bookingSlots.forEach(function(s) { if (!dateMap[s.date]) dateMap[s.date] = []; dateMap[s.date].push(s); });
+  var now = new Date(); now.setHours(0,0,0,0);
+  var weekStart = new Date(now);
+  weekStart.setDate(weekStart.getDate() - ((weekStart.getDay() + 6) % 7) + (__bookingWeekOffset * 7));
+  var todayStr = __localDate(now);
+  var weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate() + 6);
+  labelEl.textContent = weekStart.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ' \u2013 ' + weekEnd.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  prevBtn.disabled = __bookingWeekOffset <= 0;
+  var nextWeekStart = new Date(weekStart); nextWeekStart.setDate(nextWeekStart.getDate() + 7);
+  var hasNextSlots = __bookingSlots.some(function(s) { return s.date >= __localDate(nextWeekStart); });
+  nextBtn.disabled = !hasNextSlots && __bookingWeekOffset >= 8;
+  var html = '';
+  for (var i = 0; i < 7; i++) {
+    var d = new Date(weekStart); d.setDate(d.getDate() + i);
+    var key = __localDate(d);
+    var isPast = key < todayStr;
+    var slotsForDay = dateMap[key] || [];
+    var hasSlots = slotsForDay.length > 0 && !isPast;
+    html += '<div class="booking-date' + (!hasSlots ? ' empty' : '') + (key === __selectedDate ? ' active' : '') + (key === todayStr ? ' today' : '') + '" data-date="' + key + '" onclick="' + (hasSlots ? "selectBookingDate('" + key + "')" : '') + '">';
+    html += '<div class="booking-date-day">' + d.toLocaleDateString('en-GB', { weekday: 'short' }) + '</div>';
+    html += '<div class="booking-date-num">' + d.getDate() + '</div>';
+    html += '<div class="booking-date-month">' + d.toLocaleDateString('en-GB', { month: 'short' }) + '</div>';
+    html += '<div class="booking-date-slots">' + (hasSlots ? slotsForDay.length + ' slot' + (slotsForDay.length > 1 ? 's' : '') : '') + '</div>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
+  if (!__selectedDate) timesEl.innerHTML = '<div class="booking-empty">Select a date to see available times</div>';
+}
+
+function changeBookingWeek(dir) {
+  __bookingWeekOffset += dir;
+  if (__bookingWeekOffset < 0) __bookingWeekOffset = 0;
+  __selectedDate = null; __selectedSlotId = null;
+  document.getElementById('bookingConfirmBtn').disabled = true;
+  renderBookingDates();
+  document.getElementById('bookingTimes').innerHTML = '<div class="booking-empty">Select a date to see available times</div>';
+}
+
+function selectBookingDate(dateStr) {
+  __selectedDate = dateStr; __selectedSlotId = null;
+  document.getElementById('bookingConfirmBtn').disabled = true;
+  document.querySelectorAll('.booking-date').forEach(function(el) { el.classList.toggle('active', el.dataset.date === dateStr); });
+  renderBookingTimes();
+}
+
+function renderBookingTimes() {
+  var container = document.getElementById('bookingTimes');
+  var slots = __bookingSlots.filter(function(s) { return s.date === __selectedDate; });
+  if (slots.length === 0) { container.innerHTML = '<div class="booking-empty">No available slots for this date</div>'; return; }
+  container.innerHTML = slots.map(function(s) {
+    var remaining = s.max_attendees - s.booked_count;
+    var isFull = remaining <= 0;
+    return '<div class="booking-time' + (isFull ? ' full' : '') + (__selectedSlotId === s.id ? ' active' : '') + '" data-id="' + s.id + '" onclick="selectBookingTime(\'' + s.id + '\')">' +
+      '<div class="booking-time-left"><div class="booking-time-range">' + s.start_time.substring(0, 5) + ' - ' + s.end_time.substring(0, 5) + '</div><div class="booking-time-spots">' + (isFull ? 'Full' : remaining + ' spot' + (remaining > 1 ? 's' : '') + ' remaining') + '</div></div>' +
+      '<div class="booking-time-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div></div>';
+  }).join('');
+}
+
+function selectBookingTime(slotId) {
+  __selectedSlotId = slotId;
+  document.querySelectorAll('.booking-time').forEach(function(el) { el.classList.toggle('active', el.dataset.id === slotId); });
+  document.getElementById('bookingConfirmBtn').disabled = false;
+}
+
+async function confirmBooking() {
+  // Validate contact fields
+  var fname = document.getElementById('bk-fname').value.trim();
+  var lname = document.getElementById('bk-lname').value.trim();
+  var email = document.getElementById('bk-email').value.trim();
+  var phone = document.getElementById('bk-phone').value.trim();
+  if (!fname || !lname || !email) { alert('Please fill in your name and email.'); return; }
+
+  var btn = document.getElementById('bookingConfirmBtn');
+  btn.disabled = true; btn.textContent = 'Booking...';
+  var lead = { first_name: fname, last_name: lname, email: email, phone: phone };
+
+  try {
+    // Insert booking
+    await window.__supabaseClient.from('bookings').insert([{
+      slot_id: __selectedSlotId, first_name: fname, last_name: lname,
+      email: email, phone: phone, location: __selectedLoc
+    }]);
+    // Increment booked_count
+    var slot = __bookingSlots.find(function(s) { return s.id === __selectedSlotId; });
+    if (slot) {
+      await window.__supabaseClient.from('booking_slots').update({ booked_count: slot.booked_count + 1 }).eq('id', __selectedSlotId);
+    }
+    // Show confirmation
+    var dateObj = new Date(__selectedDate + 'T12:00:00');
+    var dateStr = dateObj.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+    var timeStr = slot ? slot.start_time.substring(0, 5) + ' - ' + slot.end_time.substring(0, 5) : '';
+    document.getElementById('bookingWrap').style.display = 'none';
+    document.getElementById('bookingDone').style.display = 'block';
+    document.getElementById('bookingDoneDetail').innerHTML =
+      '<div class="booking-done-row"><span>Date</span><span>' + dateStr + '</span></div>' +
+      '<div class="booking-done-row"><span>Time</span><span>' + timeStr + '</span></div>' +
+      '<div class="booking-done-row"><span>Location</span><span>' + __selectedLoc + '</span></div>';
+    // Queue booking confirmation sequence
+    if (typeof queueSequence === 'function') {
+      queueSequence('booking_confirmed', lead, {
+        date: dateStr, time: timeStr, location: __selectedLoc,
+        datetime: __selectedDate + 'T' + (slot ? slot.start_time.substring(0,5) : '09:00') + ':00'
+      }, window.__supabaseClient);
+    }
+  } catch (e) {
+    console.error('Booking error:', e);
+    btn.disabled = false; btn.textContent = 'Book My Visit';
+  }
+}
+</script>
+</body>
+</html>
