@@ -47,13 +47,17 @@ async function sendEmail(to, subject, htmlBody) {
   } catch (e) { return { success: false, error: e.message }; }
 }
 
-/* ── SEND SMS via Twilio ── */
+/* ── SEND SMS via Twilio Messaging Service ── */
 async function sendSMS(to, body) {
   try {
     var url = 'https://api.twilio.com/2010-04-01/Accounts/' + AUTOMATION_CONFIG.twilio_sid + '/Messages.json';
     var auth = btoa(AUTOMATION_CONFIG.twilio_sid + ':' + AUTOMATION_CONFIG.twilio_auth);
     var params = new URLSearchParams();
-    params.append('From', AUTOMATION_CONFIG.twilio_phone);
+    if (AUTOMATION_CONFIG.messaging_service_sid) {
+      params.append('MessagingServiceSid', AUTOMATION_CONFIG.messaging_service_sid);
+    } else {
+      params.append('From', AUTOMATION_CONFIG.twilio_phone);
+    }
     params.append('To', to);
     params.append('Body', body);
     var res = await fetch(url, {
@@ -66,13 +70,14 @@ async function sendSMS(to, body) {
   } catch (e) { return { success: false, error: e.message }; }
 }
 
-/* ── SEND WHATSAPP via Twilio ── */
+/* ── SEND WHATSAPP via Twilio Sandbox ── */
 async function sendWhatsApp(to, body) {
   try {
     var url = 'https://api.twilio.com/2010-04-01/Accounts/' + AUTOMATION_CONFIG.twilio_sid + '/Messages.json';
     var auth = btoa(AUTOMATION_CONFIG.twilio_sid + ':' + AUTOMATION_CONFIG.twilio_auth);
+    var whatsappFrom = AUTOMATION_CONFIG.twilio_whatsapp || AUTOMATION_CONFIG.twilio_phone;
     var params = new URLSearchParams();
-    params.append('From', 'whatsapp:' + AUTOMATION_CONFIG.twilio_phone);
+    params.append('From', 'whatsapp:' + whatsappFrom);
     params.append('To', 'whatsapp:' + to);
     params.append('Body', body);
     var res = await fetch(url, {
