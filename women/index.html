@@ -1882,6 +1882,16 @@ async function confirmBooking() {
         '<div class="booking-done-row"><span>Date</span><span>' + dateObj.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) + '</span></div>' +
         '<div class="booking-done-row"><span>Time</span><span>' + (slot ? slot.start_time.substring(0, 5) + ' - ' + slot.end_time.substring(0, 5) : '') + '</span></div>' +
         '<div class="booking-done-row"><span>Location</span><span>' + __selectedLoc + '</span></div>';
+      /* ── Cancel pending form_submitted reminders (they already booked) ── */
+      if (window.__supabaseClient && lead.email) {
+        window.__supabaseClient.from('message_queue').update({ status: 'cancelled' }).eq('lead_email', lead.email).eq('sequence', 'form_submitted').eq('status', 'queued');
+      }
+      /* ── Queue booking confirmation sequence ── */
+      if (typeof queueSequence === 'function' && window.__supabaseClient) {
+        var dateStr2 = dateObj.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+        var timeStr2 = slot ? slot.start_time.substring(0,5) + ' - ' + slot.end_time.substring(0,5) : '';
+        queueSequence('booking_confirmed', lead, { date: dateStr2, time: timeStr2, location: __selectedLoc, datetime: __selectedDate + 'T' + (slot ? slot.start_time.substring(0,5) : '09:00') + ':00' }, window.__supabaseClient);
+      }
     }
   } catch (e) { console.error('Booking error:', e); btn.disabled = false; btn.textContent = 'Book My Visit'; }
 }

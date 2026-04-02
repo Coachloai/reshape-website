@@ -1996,6 +1996,14 @@ async function confirmBooking() {
         '<div class="booking-done-row"><span>Date</span><span>' + dateStr + '</span></div>' +
         '<div class="booking-done-row"><span>Time</span><span>' + timeStr + '</span></div>' +
         '<div class="booking-done-row"><span>Location</span><span>' + __selectedLoc + '</span></div>';
+      /* ── Cancel pending form_submitted reminders (they already booked) ── */
+      if (window.__supabaseClient && lead.email) {
+        window.__supabaseClient.from('message_queue')
+          .update({ status: 'cancelled' })
+          .eq('lead_email', lead.email)
+          .eq('sequence', 'form_submitted')
+          .eq('status', 'queued');
+      }
       /* ── Queue booking confirmation sequence ── */
       if (typeof queueSequence === 'function' && window.__supabaseClient) {
         queueSequence('booking_confirmed', lead, {
