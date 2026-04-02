@@ -15,6 +15,37 @@ var AUTOMATION_CONFIG = window.__AUTOMATION_CONFIG || {
   booking_url: 'https://reshape.fit/#apply',
 };
 
+/* ── VERIFY PHONE via Twilio Lookup ── */
+async function verifyPhone(phone) {
+  try {
+    var cleaned = phone.replace(/\s/g, '');
+    var url = 'https://lookups.twilio.com/v2/PhoneNumbers/' + encodeURIComponent(cleaned);
+    var auth = btoa(AUTOMATION_CONFIG.twilio_sid + ':' + AUTOMATION_CONFIG.twilio_auth);
+    var res = await fetch(url, {
+      headers: { 'Authorization': 'Basic ' + auth }
+    });
+    var data = await res.json();
+    if (data.valid === true) return { valid: true };
+    if (data.valid === false) return { valid: false, error: 'This phone number is not valid' };
+    if (data.status === 404 || data.code) return { valid: false, error: 'Phone number not recognised' };
+    return { valid: true }; // If API doesn't return valid field, assume ok
+  } catch (e) { return { valid: true }; } // On error, don't block the user
+}
+
+/* ── VERIFY EMAIL DOMAIN (MX record check) ── */
+async function verifyEmail(email) {
+  try {
+    var domain = email.split('@')[1];
+    if (!domain) return { valid: false, error: 'Invalid email format' };
+    // Use a free DNS lookup API to check MX records
+    var res = await fetch('https://dns.google/resolve?name=' + domain + '&type=MX');
+    var data = await res.json();
+    if (data.Answer && data.Answer.length > 0) return { valid: true };
+    if (data.Status === 3 || !data.Answer) return { valid: false, error: 'Email domain does not exist' };
+    return { valid: true };
+  } catch (e) { return { valid: true }; } // On error, don't block
+}
+
 /* ── SEND EMAIL via Resend ── */
 async function sendEmail(to, subject, htmlBody) {
   try {

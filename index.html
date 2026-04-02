@@ -1621,9 +1621,12 @@ window.addEventListener('scroll',()=>{
   });
 
   form.querySelectorAll('.form-btn-next').forEach(function(btn) {
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', async function() {
       if (btn.disabled) return;
-      if (!validateStep(currentStep)) return;
+      btn.disabled = true; btn.textContent = 'Checking...';
+      var ok = await validateStep(currentStep);
+      btn.textContent = 'Next \u2192'; btn.disabled = false;
+      if (!ok) { updateNextButton(); return; }
       goToStep(currentStep + 1);
     });
   });
@@ -1686,13 +1689,15 @@ window.addEventListener('scroll',()=>{
     nextBtn.disabled = incomplete;
   }
 
-  function validateStep(index) {
+  async function validateStep(index) {
     var step = steps[index];
     var stepNum = parseInt(step.dataset.step);
     var valid = true;
     if (stepNum === 5) {
       var fields = step.querySelectorAll('.form-input[required]');
-      fields.forEach(function(field) {
+      // Basic validation first
+      for (var fi = 0; fi < fields.length; fi++) {
+        var field = fields[fi];
         var errorMsg = field.parentElement.querySelector('.form-error-msg');
         field.classList.remove('error');
         if (errorMsg) errorMsg.classList.remove('visible');
@@ -1712,7 +1717,32 @@ window.addEventListener('scroll',()=>{
             valid = false;
           }
         }
-      });
+      }
+      // If basic validation passed, do real verification
+      if (valid && typeof verifyPhone === 'function') {
+        var phoneField = step.querySelector('input[type="tel"]');
+        var emailField = step.querySelector('input[type="email"]');
+        // Verify phone
+        if (phoneField && phoneField.value) {
+          var phoneResult = await verifyPhone(phoneField.value);
+          if (!phoneResult.valid) {
+            phoneField.classList.add('error');
+            var em = phoneField.parentElement.querySelector('.form-error-msg');
+            if (em) { em.textContent = phoneResult.error || 'Invalid phone number'; em.classList.add('visible'); }
+            valid = false;
+          }
+        }
+        // Verify email domain
+        if (emailField && emailField.value) {
+          var emailResult = await verifyEmail(emailField.value);
+          if (!emailResult.valid) {
+            emailField.classList.add('error');
+            var em2 = emailField.parentElement.querySelector('.form-error-msg');
+            if (em2) { em2.textContent = emailResult.error || 'Invalid email'; em2.classList.add('visible'); }
+            valid = false;
+          }
+        }
+      }
     }
     if (stepNum === 6) {
       var textarea = step.querySelector('textarea[required]');

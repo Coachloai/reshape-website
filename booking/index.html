@@ -273,7 +273,6 @@ async function confirmBooking() {
   var phoneCleaned = phone.replace(/\s/g, '');
   if (!phoneCleaned || !/^\+\d{10,15}$/.test(phoneCleaned)) errors.push('Phone with country code required (e.g. +44 7700 000000)');
   if (errors.length > 0) {
-    // Highlight invalid fields
     if (!fname) document.getElementById('bk-fname').style.borderColor = '#EF4444';
     if (!lname) document.getElementById('bk-lname').style.borderColor = '#EF4444';
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) document.getElementById('bk-email').style.borderColor = '#EF4444';
@@ -281,10 +280,27 @@ async function confirmBooking() {
     alert(errors.join('\n'));
     return;
   }
+  // Real verification of phone + email
+  var btn = document.getElementById('bookingConfirmBtn');
+  btn.disabled = true; btn.textContent = 'Verifying...';
+  if (typeof verifyPhone === 'function') {
+    var phoneCheck = await verifyPhone(phoneCleaned);
+    if (!phoneCheck.valid) {
+      document.getElementById('bk-phone').style.borderColor = '#EF4444';
+      alert(phoneCheck.error || 'Phone number is not valid');
+      btn.disabled = false; btn.textContent = 'Book My Visit'; return;
+    }
+  }
+  if (typeof verifyEmail === 'function') {
+    var emailCheck = await verifyEmail(email);
+    if (!emailCheck.valid) {
+      document.getElementById('bk-email').style.borderColor = '#EF4444';
+      alert(emailCheck.error || 'Email address is not valid');
+      btn.disabled = false; btn.textContent = 'Book My Visit'; return;
+    }
+  }
   // Clear error highlights
   ['bk-fname','bk-lname','bk-email','bk-phone'].forEach(function(id) { document.getElementById(id).style.borderColor = ''; });
-
-  var btn = document.getElementById('bookingConfirmBtn');
   btn.disabled = true; btn.textContent = 'Booking...';
   var lead = { first_name: fname, last_name: lname, email: email, phone: phone };
 
