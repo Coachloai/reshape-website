@@ -3051,23 +3051,29 @@ async function saveApptType() {
 }
 
 async function generateSlotsForAppt(appt) {
-  var today = new Date();
-  today.setHours(0,0,0,0);
-  var endDate;
-  if (appt.availability_mode === 'rolling') {
-    endDate = new Date(today);
-    endDate.setDate(endDate.getDate() + (appt.rolling_weeks || 4) * 7);
-    if (appt.range_end) { var re = new Date(appt.range_end + 'T00:00:00'); if (re < endDate) endDate = re; }
-  } else if (appt.availability_mode === 'range') {
-    today = appt.range_start ? new Date(appt.range_start + 'T00:00:00') : today;
-    endDate = appt.range_end ? new Date(appt.range_end + 'T00:00:00') : new Date(today.getTime() + 90 * 864e5);
-  } else {
-    endDate = new Date(today.getTime() + 90 * 864e5);
-  }
-  var now = new Date(); now.setHours(0,0,0,0);
-  if (today < now) today = now;
+  // Use pure date math (no timezone issues) — work with YYYY-MM-DD strings
+  function localDateStr(dt) { return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0'); }
+  function parseLocal(s) { var p = s.split('-'); return new Date(parseInt(p[0]), parseInt(p[1])-1, parseInt(p[2]), 12, 0, 0); } // noon to avoid DST issues
+  function addDays(dt, n) { var r = new Date(dt); r.setDate(r.getDate() + n); return r; }
 
-  // Get locations and per-day schedules
+  var nowDate = new Date();
+  var todayStr = localDateStr(nowDate);
+  var today = parseLocal(todayStr);
+  var endDate;
+
+  if (appt.availability_mode === 'rolling') {
+    endDate = addDays(today, (appt.rolling_weeks || 4) * 7);
+    if (appt.range_end && appt.range_end < localDateStr(endDate)) endDate = parseLocal(appt.range_end);
+  } else if (appt.availability_mode === 'range') {
+    if (appt.range_start) today = parseLocal(appt.range_start);
+    endDate = appt.range_end ? parseLocal(appt.range_end) : addDays(today, 90);
+  } else {
+    endDate = addDays(today, 90);
+  }
+  // Don't generate past slots
+  var nowParsed = parseLocal(todayStr);
+  if (today < nowParsed) today = nowParsed;
+
   var locs = appt.locations || [appt.location || 'Ipswich'];
   var ds = appt.day_schedules || null;
   var fallbackWindows = appt.time_windows || [{from:(appt.open_time||'09:00').substring(0,5),to:(appt.close_time||'17:00').substring(0,5)}];
@@ -3075,12 +3081,13 @@ async function generateSlotsForAppt(appt) {
 
   var slots = [];
   var d = new Date(today);
-  while (d <= endDate) {
-    var dayNum = d.getDay();
-    // Get windows for this specific day
+  var safety = 0;
+  while (d <= endDate && safety < 400) {
+    safety++;
+    var dayNum = d.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
     var dayWindows = ds ? ds[String(dayNum)] : ((appt.weekdays || []).includes(dayNum) ? fallbackWindows : null);
     if (dayWindows && dayWindows.length > 0) {
-      var dateStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+      var dateStr = localDateStr(d);
       locs.forEach(function(loc) {
         dayWindows.forEach(function(w) {
           var openMin = timeToMin(w.from);
@@ -3100,7 +3107,7 @@ async function generateSlotsForAppt(appt) {
         });
       });
     }
-    d.setDate(d.getDate() + 1);
+    d = addDays(d, 1);
   }
   if (slots.length > 0) {
     for (var i = 0; i < slots.length; i += 500) {
