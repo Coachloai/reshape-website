@@ -451,6 +451,53 @@ select.appt-form-input option{background:var(--s3)}
 .appt-mode-btn:hover{border-color:rgba(255,255,255,.2)}
 .appt-mode-btn.selected{border-color:var(--orange);background:var(--odim);color:var(--orange)}
 .appt-form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+/* ── SEQUENCE CARDS ── */
+.seq-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;transition:border-color .2s}
+.seq-card:hover{border-color:rgba(255,255,255,.12)}
+.seq-card-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;cursor:pointer}
+.seq-card-header:hover{background:rgba(255,255,255,.02)}
+.seq-card-left{display:flex;align-items:center;gap:12px}
+.seq-card-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.seq-card-icon.form{background:rgba(237,92,37,.1);color:var(--orange)}
+.seq-card-icon.booking{background:rgba(46,204,113,.1);color:var(--green)}
+.seq-card-icon.manual{background:rgba(155,89,182,.1);color:#9b59b6}
+.seq-card-name{font-size:14px;font-weight:700;color:var(--text)}
+.seq-card-meta{font-size:12px;color:var(--text3);margin-top:2px}
+.seq-card-right{display:flex;align-items:center;gap:8px}
+.seq-card-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:.05em}
+.seq-card-badge.on{background:rgba(46,204,113,.1);color:var(--green);border:1px solid rgba(46,204,113,.25)}
+.seq-card-badge.off{background:rgba(231,76,60,.1);color:var(--red);border:1px solid rgba(231,76,60,.25)}
+.seq-card-steps{display:none;padding:0 20px 16px;border-top:1px solid var(--border)}
+.seq-card.open .seq-card-steps{display:block}
+.seq-step{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.seq-step:last-child{border-bottom:none}
+.seq-step-line{display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:2px}
+.seq-step-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.seq-step-dot.email{background:var(--orange)}
+.seq-step-dot.sms{background:#3498db}
+.seq-step-dot.whatsapp{background:#25D366}
+.seq-step-connector{width:2px;flex:1;min-height:20px;background:var(--border)}
+.seq-step-body{flex:1;min-width:0}
+.seq-step-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.seq-step-channel{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.seq-step-channel.email{color:var(--orange)}
+.seq-step-channel.sms{color:#3498db}
+.seq-step-channel.whatsapp{color:#25D366}
+.seq-step-delay{font-size:11px;color:var(--text3);font-weight:600}
+.seq-step-subject{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.seq-step-preview{font-size:12px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+/* ── STEP EDITOR (in drawer) ── */
+.step-editor{background:var(--s3);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;position:relative}
+.step-editor-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.step-editor-num{font-size:11px;font-weight:700;color:var(--orange);letter-spacing:.1em;text-transform:uppercase}
+.step-editor-del{background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;padding:4px;opacity:.6;transition:opacity .2s}
+.step-editor-del:hover{opacity:1}
+.step-editor-row{display:grid;gap:10px;margin-bottom:10px}
+.step-editor-row.c2{grid-template-columns:1fr 1fr}
+.step-editor-row.c3{grid-template-columns:1fr 1fr 1fr}
+.step-editor textarea{min-height:80px;resize:vertical;font-size:13px;line-height:1.6}
+.step-vars{font-size:11px;color:var(--text4);margin-top:4px}
+.step-vars code{background:var(--s4);padding:1px 5px;border-radius:3px;color:var(--orange);font-size:10px}
 /* ── DAY SCHEDULE ROWS ── */
 .day-sched{border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;transition:border-color .2s}
 .day-sched.active{border-color:rgba(237,92,37,.25)}
@@ -1333,18 +1380,19 @@ if(sessionStorage.getItem('rs_auth')==='1'){
       <div class="page-header fade-in" style="margin-bottom:20px">
         <div>
           <div class="page-title">Automations</div>
-          <div class="page-sub">Nurture sequences &amp; message queue</div>
+          <div class="page-sub">Manage nurture sequences, templates &amp; message queue</div>
         </div>
         <div class="header-actions">
-          <button class="btn btn-primary" onclick="processQueueNow()">Process Queue Now</button>
+          <button class="btn btn-primary" onclick="openSeqDrawer()">+ New Sequence</button>
+          <button class="btn btn-ghost" onclick="processQueueNow()">Process Queue</button>
           <button class="btn btn-ghost" onclick="refreshAutomations()">Refresh</button>
         </div>
       </div>
       <!-- STATS -->
       <div class="stats-row fade-in" style="grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px">
         <div class="stat-card primary">
-          <div class="stat-label">Total Messages</div>
-          <div class="stat-value" id="auto-stat-total">0</div>
+          <div class="stat-label">Sequences</div>
+          <div class="stat-value" id="auto-stat-seqs">0</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Sent</div>
@@ -1360,20 +1408,12 @@ if(sessionStorage.getItem('rs_auth')==='1'){
         </div>
         <div class="stat-card">
           <div class="stat-label">Next Due</div>
-          <div class="stat-value" id="auto-stat-next" style="font-size:14px">—</div>
+          <div class="stat-value" id="auto-stat-next" style="font-size:14px">&mdash;</div>
         </div>
       </div>
-      <!-- SEQUENCE OVERVIEW -->
-      <div class="charts-row fade-in" style="margin-bottom:20px">
-        <div class="chart-card">
-          <div class="chart-header"><div class="chart-title">Active Sequences</div></div>
-          <div id="auto-sequences" style="margin-top:12px"></div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-header"><div class="chart-title">Channel Breakdown</div></div>
-          <div id="auto-channels" style="margin-top:12px"></div>
-        </div>
-      </div>
+      <!-- SEQUENCES LIST -->
+      <div id="auto-seq-list" class="fade-in" style="margin-bottom:20px"></div>
+      <div id="auto-seq-empty" style="display:none;text-align:center;padding:40px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);margin-bottom:20px;color:var(--text3);font-size:14px">No sequences yet. Click "+ New Sequence" to create your first automation.</div>
       <!-- MESSAGE QUEUE TABLE -->
       <div class="chart-card fade-in">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
@@ -1396,18 +1436,59 @@ if(sessionStorage.getItem('rs_auth')==='1'){
         <div style="overflow-x:auto;max-height:400px;overflow-y:auto">
           <table class="leads-table" style="width:100%">
             <thead><tr>
-              <th>To</th>
-              <th>Channel</th>
-              <th>Sequence</th>
-              <th>Subject / Preview</th>
-              <th>Scheduled</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th>To</th><th>Channel</th><th>Sequence</th><th>Subject / Preview</th><th>Scheduled</th><th>Status</th><th>Actions</th>
             </tr></thead>
             <tbody id="auto-queue-tbody"></tbody>
           </table>
         </div>
-        <div id="auto-queue-empty" style="display:none;text-align:center;padding:32px;color:var(--text3);font-size:14px">No messages in queue yet. Messages will appear here after someone submits the form or books a visit.</div>
+        <div id="auto-queue-empty" style="display:none;text-align:center;padding:32px;color:var(--text3);font-size:14px">No messages in queue yet.</div>
+      </div>
+    </div>
+    <!-- SEQUENCE EDITOR DRAWER -->
+    <div class="drawer-overlay" id="seq-drawer" onclick="if(event.target===this)closeSeqDrawer()">
+      <div class="drawer-panel" style="width:560px">
+        <div class="drawer-header">
+          <div class="drawer-title" id="seq-drawer-title">New Sequence</div>
+          <button class="drawer-close" onclick="closeSeqDrawer()">&times;</button>
+        </div>
+        <div class="drawer-body">
+          <input type="hidden" id="seq-edit-id">
+          <div class="appt-form-group" style="margin-bottom:16px">
+            <label class="appt-form-label">Sequence Name</label>
+            <input type="text" class="appt-form-input" id="seq-name" placeholder="e.g. Form Nurture, Booking Confirmation">
+          </div>
+          <div class="appt-form-row cols-2" style="margin-bottom:16px">
+            <div class="appt-form-group">
+              <label class="appt-form-label">Trigger</label>
+              <select class="appt-form-input" id="seq-trigger">
+                <option value="form_submitted">Form Submitted</option>
+                <option value="booking_confirmed">Booking Confirmed</option>
+                <option value="manual">Manual</option>
+              </select>
+            </div>
+            <div class="appt-form-group">
+              <label class="appt-form-label">Status</label>
+              <select class="appt-form-input" id="seq-active">
+                <option value="true">Active</option>
+                <option value="false">Paused</option>
+              </select>
+            </div>
+          </div>
+          <div class="appt-form-group" style="margin-bottom:20px">
+            <label class="appt-form-label">Description (optional)</label>
+            <input type="text" class="appt-form-input" id="seq-desc" placeholder="What this sequence does...">
+          </div>
+          <!-- STEPS -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <label class="appt-form-label" style="margin:0">Steps</label>
+            <button class="btn btn-ghost btn-sm" onclick="addSeqStep()">+ Add Step</button>
+          </div>
+          <div id="seq-steps-list"></div>
+        </div>
+        <div class="drawer-footer">
+          <button class="btn btn-ghost" onclick="closeSeqDrawer()">Cancel</button>
+          <button class="btn btn-primary" id="seq-save-btn" onclick="saveSequence()">Save Sequence</button>
+        </div>
       </div>
     </div>
     <!-- ── VIEW: CONTENT ── -->
@@ -3277,82 +3358,100 @@ async function deleteSlot(id) {
    AUTOMATIONS VIEW
 ══════════════════════════════════════ */
 var ALL_MESSAGES = [];
+var ALL_SEQUENCES = [];
+var ALL_SEQ_STEPS = [];
 
 async function initAutomationsView() {
-  await fetchMessages();
+  await Promise.all([fetchMessages(), fetchSequences()]);
   updateAutoStats();
-  renderAutoSequences();
-  renderAutoChannels();
+  renderSeqList();
   renderAutoQueue();
 }
 
 async function refreshAutomations() { await initAutomationsView(); showToast('Automations refreshed'); }
 
 async function fetchMessages() {
+  try { var r = await sb.from('message_queue').select('*').order('send_at', { ascending: false }).limit(200); ALL_MESSAGES = r.data || []; }
+  catch (e) { ALL_MESSAGES = []; }
+}
+
+async function fetchSequences() {
   try {
-    var r = await sb.from('message_queue').select('*').order('send_at', { ascending: false }).limit(200);
-    ALL_MESSAGES = r.data || [];
-  } catch (e) { ALL_MESSAGES = []; }
+    var r = await sb.from('automation_sequences').select('*').order('created_at', { ascending: true });
+    ALL_SEQUENCES = r.data || [];
+    var r2 = await sb.from('automation_steps').select('*').order('step_order', { ascending: true });
+    ALL_SEQ_STEPS = r2.data || [];
+  } catch (e) { ALL_SEQUENCES = []; ALL_SEQ_STEPS = []; }
 }
 
 function updateAutoStats() {
   var sent = ALL_MESSAGES.filter(function(m) { return m.status === 'sent'; }).length;
   var queued = ALL_MESSAGES.filter(function(m) { return m.status === 'queued'; }).length;
   var failed = ALL_MESSAGES.filter(function(m) { return m.status === 'failed'; }).length;
-  document.getElementById('auto-stat-total').textContent = ALL_MESSAGES.length;
+  document.getElementById('auto-stat-seqs').textContent = ALL_SEQUENCES.filter(function(s) { return s.is_active; }).length;
   document.getElementById('auto-stat-sent').textContent = sent;
   document.getElementById('auto-stat-queued').textContent = queued;
   document.getElementById('auto-stat-failed').textContent = failed;
-  // Next due
-  var nextQueued = ALL_MESSAGES.filter(function(m) { return m.status === 'queued'; }).sort(function(a, b) { return new Date(a.send_at) - new Date(b.send_at); })[0];
+  var nextQueued = ALL_MESSAGES.filter(function(m) { return m.status === 'queued'; }).sort(function(a,b) { return new Date(a.send_at) - new Date(b.send_at); })[0];
   if (nextQueued) {
-    var dt = new Date(nextQueued.send_at);
-    var diff = (dt - new Date()) / 60000;
-    var label = diff < 1 ? 'Now' : diff < 60 ? Math.round(diff) + ' min' : diff < 1440 ? Math.round(diff / 60) + ' hrs' : Math.round(diff / 1440) + ' days';
-    document.getElementById('auto-stat-next').textContent = label;
-  } else {
-    document.getElementById('auto-stat-next').textContent = '\u2014';
-  }
+    var diff = (new Date(nextQueued.send_at) - new Date()) / 60000;
+    document.getElementById('auto-stat-next').textContent = diff < 1 ? 'Now' : diff < 60 ? Math.round(diff) + ' min' : diff < 1440 ? Math.round(diff / 60) + ' hrs' : Math.round(diff / 1440) + ' days';
+  } else { document.getElementById('auto-stat-next').textContent = '\u2014'; }
 }
 
-function renderAutoSequences() {
-  var el = document.getElementById('auto-sequences');
-  var seqs = {};
-  ALL_MESSAGES.forEach(function(m) {
-    if (!seqs[m.sequence]) seqs[m.sequence] = { total: 0, sent: 0, queued: 0, failed: 0 };
-    seqs[m.sequence].total++;
-    seqs[m.sequence][m.status] = (seqs[m.sequence][m.status] || 0) + 1;
-  });
-  var entries = Object.entries(seqs);
-  if (entries.length === 0) { el.innerHTML = '<div style="color:var(--text3);font-size:13px">No sequences active yet</div>'; return; }
-  var labels = { form_submitted: 'Form Nurture', booking_confirmed: 'Booking Confirmation' };
-  el.innerHTML = entries.map(function(e) {
-    var name = labels[e[0]] || e[0];
-    var s = e[1];
-    var pct = s.total ? Math.round(s.sent / s.total * 100) : 0;
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">' +
-      '<div><div style="font-size:14px;font-weight:600;color:var(--text)">' + name + '</div>' +
-      '<div style="font-size:12px;color:var(--text3)">' + s.total + ' messages \u00b7 ' + s.sent + ' sent</div></div>' +
-      '<div style="display:flex;align-items:center;gap:8px">' +
-      '<div style="width:60px;height:6px;border-radius:3px;background:var(--s4);overflow:hidden"><div style="height:100%;width:' + pct + '%;background:var(--orange);border-radius:3px"></div></div>' +
-      '<span style="font-size:12px;font-weight:700;color:var(--orange)">' + pct + '%</span></div></div>';
+var TRIGGER_ICONS = { form_submitted: '\uD83D\uDCDD', booking_confirmed: '\uD83D\uDCC5', manual: '\u270B' };
+var TRIGGER_LABELS = { form_submitted: 'On Form Submit', booking_confirmed: 'On Booking', manual: 'Manual Trigger' };
+var CHANNEL_ICONS = { email: '\u2709\uFE0F', sms: '\uD83D\uDCF1', whatsapp: '\uD83D\uDFE2' };
+
+function delayLabel(sec) {
+  if (sec === 0) return 'Instant';
+  if (sec < 0) return Math.abs(sec / 3600) + 'h before';
+  if (sec < 3600) return Math.round(sec / 60) + ' min after';
+  if (sec < 86400) return Math.round(sec / 3600) + 'h after';
+  return Math.round(sec / 86400) + ' day' + (sec >= 172800 ? 's' : '') + ' after';
+}
+
+function renderSeqList() {
+  var el = document.getElementById('auto-seq-list');
+  var empty = document.getElementById('auto-seq-empty');
+  if (ALL_SEQUENCES.length === 0) { el.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  el.innerHTML = ALL_SEQUENCES.map(function(seq) {
+    var steps = ALL_SEQ_STEPS.filter(function(s) { return s.sequence_id === seq.id; });
+    var triggerClass = seq.trigger_type === 'booking_confirmed' ? 'booking' : seq.trigger_type === 'manual' ? 'manual' : 'form';
+    return '<div class="seq-card" id="seq-' + seq.id + '">' +
+      '<div class="seq-card-header" onclick="toggleSeqCard(\'' + seq.id + '\')">' +
+        '<div class="seq-card-left">' +
+          '<div class="seq-card-icon ' + triggerClass + '">' + (TRIGGER_ICONS[seq.trigger_type] || '\uD83D\uDCDD') + '</div>' +
+          '<div><div class="seq-card-name">' + seq.name + '</div>' +
+            '<div class="seq-card-meta">' + (TRIGGER_LABELS[seq.trigger_type] || seq.trigger_type) + ' \u00b7 ' + steps.length + ' step' + (steps.length !== 1 ? 's' : '') + (seq.description ? ' \u00b7 ' + seq.description : '') + '</div></div>' +
+        '</div>' +
+        '<div class="seq-card-right">' +
+          '<span class="seq-card-badge ' + (seq.is_active ? 'on' : 'off') + '">' + (seq.is_active ? 'Active' : 'Paused') + '</span>' +
+          '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--text3);transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>' +
+        '</div>' +
+      '</div>' +
+      '<div class="seq-card-steps">' +
+        (steps.length > 0 ? steps.map(function(step, i) {
+          var preview = step.channel === 'email' ? (step.subject || '') : (step.body || '').replace(/<[^>]*>/g, '').substring(0, 60);
+          return '<div class="seq-step">' +
+            '<div class="seq-step-line"><div class="seq-step-dot ' + step.channel + '"></div>' + (i < steps.length - 1 ? '<div class="seq-step-connector"></div>' : '') + '</div>' +
+            '<div class="seq-step-body">' +
+              '<div class="seq-step-top"><span class="seq-step-channel ' + step.channel + '">' + (CHANNEL_ICONS[step.channel] || '') + ' ' + step.channel + '</span><span class="seq-step-delay">' + delayLabel(step.delay_seconds) + '</span></div>' +
+              (step.subject ? '<div class="seq-step-subject">' + step.subject + '</div>' : '') +
+              '<div class="seq-step-preview">' + preview + '</div>' +
+            '</div></div>';
+        }).join('') : '<div style="padding:12px 0;color:var(--text3);font-size:13px">No steps yet \u2014 click Edit to add steps</div>') +
+        '<div style="display:flex;gap:8px;padding-top:12px;border-top:1px solid var(--border)">' +
+          '<button class="btn btn-ghost btn-sm" style="border-color:rgba(237,92,37,.3);color:var(--orange)" onclick="editSequence(\'' + seq.id + '\')">Edit</button>' +
+          '<button class="btn btn-ghost btn-sm" onclick="toggleSequence(\'' + seq.id + '\',' + !seq.is_active + ')">' + (seq.is_active ? 'Pause' : 'Resume') + '</button>' +
+          '<button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:rgba(231,76,60,.3)" onclick="deleteSequence(\'' + seq.id + '\')">Delete</button>' +
+        '</div>' +
+      '</div></div>';
   }).join('');
 }
 
-function renderAutoChannels() {
-  var el = document.getElementById('auto-channels');
-  var channels = { email: 0, sms: 0, whatsapp: 0 };
-  ALL_MESSAGES.forEach(function(m) { channels[m.channel] = (channels[m.channel] || 0) + 1; });
-  var icons = { email: '\u2709\uFE0F', sms: '\uD83D\uDCF1', whatsapp: '\uD83D\uDFE2' };
-  var total = ALL_MESSAGES.length || 1;
-  el.innerHTML = Object.entries(channels).map(function(e) {
-    var pct = Math.round(e[1] / total * 100);
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">' +
-      '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">' + (icons[e[0]] || '') + '</span>' +
-      '<span style="font-size:14px;font-weight:600;color:var(--text);text-transform:capitalize">' + e[0] + '</span></div>' +
-      '<span style="font-size:14px;font-weight:700;color:var(--text2)">' + e[1] + ' <span style="color:var(--text3);font-weight:400">(' + pct + '%)</span></span></div>';
-  }).join('');
-}
+function toggleSeqCard(id) { document.getElementById('seq-' + id).classList.toggle('open'); }
 
 function renderAutoQueue() {
   var statusFilter = (document.getElementById('auto-filter-status') || {}).value || '';
@@ -3402,6 +3501,129 @@ async function cancelMessage(id) {
 async function retryMessage(id) {
   await sb.from('message_queue').update({ status: 'queued' }).eq('id', id);
   showToast('Message re-queued');
+  await initAutomationsView();
+}
+
+/* ── SEQUENCE DRAWER ── */
+function openSeqDrawer() {
+  document.getElementById('seq-drawer').classList.add('open');
+  document.getElementById('seq-edit-id').value = '';
+  document.getElementById('seq-drawer-title').textContent = 'New Sequence';
+  document.getElementById('seq-save-btn').textContent = 'Save Sequence';
+  document.getElementById('seq-name').value = '';
+  document.getElementById('seq-trigger').value = 'form_submitted';
+  document.getElementById('seq-active').value = 'true';
+  document.getElementById('seq-desc').value = '';
+  document.getElementById('seq-steps-list').innerHTML = '';
+  addSeqStep(); // Start with one empty step
+}
+
+function closeSeqDrawer() { document.getElementById('seq-drawer').classList.remove('open'); }
+
+function editSequence(id) {
+  var seq = ALL_SEQUENCES.find(function(s) { return s.id === id; });
+  if (!seq) return;
+  document.getElementById('seq-drawer').classList.add('open');
+  document.getElementById('seq-edit-id').value = seq.id;
+  document.getElementById('seq-drawer-title').textContent = 'Edit: ' + seq.name;
+  document.getElementById('seq-save-btn').textContent = 'Update Sequence';
+  document.getElementById('seq-name').value = seq.name;
+  document.getElementById('seq-trigger').value = seq.trigger_type;
+  document.getElementById('seq-active').value = String(seq.is_active);
+  document.getElementById('seq-desc').value = seq.description || '';
+  var steps = ALL_SEQ_STEPS.filter(function(s) { return s.sequence_id === seq.id; });
+  var container = document.getElementById('seq-steps-list');
+  container.innerHTML = '';
+  steps.forEach(function(step) { addSeqStep(step); });
+  if (steps.length === 0) addSeqStep();
+}
+
+var __stepCounter = 0;
+function addSeqStep(data) {
+  __stepCounter++;
+  var d = data || {};
+  var delayVal = d.delay_seconds || 0;
+  var delayUnit = 'seconds';
+  var delayNum = delayVal;
+  if (Math.abs(delayVal) >= 86400) { delayUnit = 'days'; delayNum = Math.round(delayVal / 86400); }
+  else if (Math.abs(delayVal) >= 3600) { delayUnit = 'hours'; delayNum = Math.round(delayVal / 3600); }
+  else if (Math.abs(delayVal) >= 60) { delayUnit = 'minutes'; delayNum = Math.round(delayVal / 60); }
+  var n = __stepCounter;
+  var html = '<div class="step-editor" data-step-id="' + (d.id || '') + '">' +
+    '<div class="step-editor-header"><span class="step-editor-num">Step ' + n + '</span><button class="step-editor-del" onclick="this.closest(\'.step-editor\').remove()" title="Delete step">&times;</button></div>' +
+    '<div class="step-editor-row c3">' +
+      '<div class="appt-form-group"><label class="appt-form-label">Channel</label><select class="appt-form-input se-channel"><option value="email"' + (d.channel === 'email' ? ' selected' : '') + '>Email</option><option value="sms"' + (d.channel === 'sms' ? ' selected' : '') + '>SMS</option><option value="whatsapp"' + (d.channel === 'whatsapp' ? ' selected' : '') + '>WhatsApp</option></select></div>' +
+      '<div class="appt-form-group"><label class="appt-form-label">Delay</label><input type="number" class="appt-form-input se-delay-num" value="' + delayNum + '" style="width:100%"></div>' +
+      '<div class="appt-form-group"><label class="appt-form-label">Unit</label><select class="appt-form-input se-delay-unit"><option value="seconds"' + (delayUnit === 'seconds' ? ' selected' : '') + '>Seconds</option><option value="minutes"' + (delayUnit === 'minutes' ? ' selected' : '') + '>Minutes</option><option value="hours"' + (delayUnit === 'hours' ? ' selected' : '') + '>Hours</option><option value="days"' + (delayUnit === 'days' ? ' selected' : '') + '>Days</option></select></div>' +
+    '</div>' +
+    '<div class="appt-form-group" style="margin-bottom:10px"><label class="appt-form-label">Subject (email only)</label><input type="text" class="appt-form-input se-subject" value="' + (d.subject || '').replace(/"/g, '&quot;') + '" placeholder="Email subject line"></div>' +
+    '<div class="appt-form-group"><label class="appt-form-label">Message Body</label><textarea class="appt-form-input se-body" placeholder="Type your message...">' + (d.body || '').replace(/<[^>]*>/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</textarea>' +
+    '<div class="step-vars">Variables: <code>{first_name}</code> <code>{last_name}</code> <code>{email}</code> <code>{location}</code> <code>{booking_date}</code> <code>{booking_time}</code> <code>{booking_url}</code></div></div>' +
+  '</div>';
+  document.getElementById('seq-steps-list').insertAdjacentHTML('beforeend', html);
+}
+
+function getStepsFromDrawer() {
+  var steps = [];
+  document.querySelectorAll('#seq-steps-list .step-editor').forEach(function(el, i) {
+    var channel = el.querySelector('.se-channel').value;
+    var delayNum = parseInt(el.querySelector('.se-delay-num').value) || 0;
+    var delayUnit = el.querySelector('.se-delay-unit').value;
+    var multiplier = { seconds: 1, minutes: 60, hours: 3600, days: 86400 }[delayUnit] || 1;
+    steps.push({
+      id: el.dataset.stepId || null,
+      step_order: i,
+      channel: channel,
+      delay_seconds: delayNum * multiplier,
+      subject: el.querySelector('.se-subject').value || null,
+      body: el.querySelector('.se-body').value || '',
+      is_active: true
+    });
+  });
+  return steps;
+}
+
+async function saveSequence() {
+  var editId = document.getElementById('seq-edit-id').value;
+  var name = document.getElementById('seq-name').value.trim();
+  if (!name) { showToast('Enter a sequence name'); return; }
+  var trigger = document.getElementById('seq-trigger').value;
+  var isActive = document.getElementById('seq-active').value === 'true';
+  var desc = document.getElementById('seq-desc').value.trim() || null;
+  var steps = getStepsFromDrawer();
+  if (steps.length === 0) { showToast('Add at least one step'); return; }
+
+  try {
+    var seqId;
+    if (editId) {
+      await sb.from('automation_sequences').update({ name: name, trigger_type: trigger, is_active: isActive, description: desc }).eq('id', editId);
+      seqId = editId;
+      // Delete old steps and re-insert
+      await sb.from('automation_steps').delete().eq('sequence_id', seqId);
+    } else {
+      var res = await sb.from('automation_sequences').insert([{ name: name, trigger_type: trigger, is_active: isActive, description: desc }]).select();
+      if (res.error) { showToast('Error: ' + res.error.message); return; }
+      seqId = res.data[0].id;
+    }
+    // Insert steps
+    var stepsData = steps.map(function(s) { return { sequence_id: seqId, step_order: s.step_order, channel: s.channel, delay_seconds: s.delay_seconds, subject: s.subject, body: s.body, is_active: true }; });
+    await sb.from('automation_steps').insert(stepsData);
+    showToast(editId ? 'Sequence updated' : 'Sequence created with ' + steps.length + ' steps');
+    closeSeqDrawer();
+    await initAutomationsView();
+  } catch (e) { showToast('Error saving sequence'); console.error(e); }
+}
+
+async function toggleSequence(id, active) {
+  await sb.from('automation_sequences').update({ is_active: active }).eq('id', id);
+  showToast('Sequence ' + (active ? 'resumed' : 'paused'));
+  await initAutomationsView();
+}
+
+async function deleteSequence(id) {
+  if (!confirm('Delete this sequence and all its steps? This cannot be undone.')) return;
+  await sb.from('automation_sequences').delete().eq('id', id);
+  showToast('Sequence deleted');
   await initAutomationsView();
 }
 
