@@ -1599,7 +1599,8 @@ window.addEventListener('scroll',()=>{
         var stepEl = option.closest('.form-step');
         var stepNum = stepEl ? parseInt(stepEl.dataset.step) : 0;
         if (stepNum >= 1 && stepNum <= 4) {
-          setTimeout(function() { goToStep(currentStep + 1); }, 350);
+          var nextStep = stepNum; // capture the target (stepNum is 1-based, currentStep is 0-based, so stepNum = next index)
+          setTimeout(function() { goToStep(nextStep); }, 350);
         }
       }
       updateNextButton();
