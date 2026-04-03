@@ -15,21 +15,30 @@ var AUTOMATION_CONFIG = window.__AUTOMATION_CONFIG || {
   booking_url: 'https://reshape.fit/#apply',
 };
 
-/* ── VERIFY PHONE via Twilio Lookup ── */
+/* ── VERIFY PHONE (format + length per country) ── */
 async function verifyPhone(phone) {
-  try {
-    var cleaned = phone.replace(/\s/g, '');
-    var url = 'https://lookups.twilio.com/v2/PhoneNumbers/' + encodeURIComponent(cleaned);
-    var auth = btoa(AUTOMATION_CONFIG.twilio_sid + ':' + AUTOMATION_CONFIG.twilio_auth);
-    var res = await fetch(url, {
-      headers: { 'Authorization': 'Basic ' + auth }
-    });
-    var data = await res.json();
-    if (data.valid === true) return { valid: true };
-    if (data.valid === false) return { valid: false, error: 'This phone number is not valid' };
-    if (data.status === 404 || data.code) return { valid: false, error: 'Phone number not recognised' };
-    return { valid: true }; // If API doesn't return valid field, assume ok
-  } catch (e) { return { valid: true }; } // On error, don't block the user
+  var cleaned = phone.replace(/[\s\-\(\)]/g, '');
+  if (!/^\+\d{10,15}$/.test(cleaned)) return { valid: false, error: 'Include country code (e.g. +44 7700 000000)' };
+  // Country-specific length validation
+  var rules = {
+    '+44': { min: 12, max: 13, label: 'UK' },       // +44 7xxxxxxxxx
+    '+1': { min: 11, max: 11, label: 'US/CA' },      // +1 xxxxxxxxxx
+    '+353': { min: 12, max: 13, label: 'Ireland' },
+    '+61': { min: 11, max: 12, label: 'Australia' },
+    '+91': { min: 12, max: 13, label: 'India' },
+  };
+  for (var prefix in rules) {
+    if (cleaned.startsWith(prefix)) {
+      var r = rules[prefix];
+      if (cleaned.length < r.min || cleaned.length > r.max) {
+        return { valid: false, error: r.label + ' numbers should be ' + r.min + '-' + r.max + ' digits (including +' + prefix.substring(1) + ')' };
+      }
+      return { valid: true };
+    }
+  }
+  // For other countries, just check reasonable length
+  if (cleaned.length < 10 || cleaned.length > 15) return { valid: false, error: 'Phone number length doesn\'t look right' };
+  return { valid: true };
 }
 
 /* ── VERIFY EMAIL DOMAIN (MX record check) ── */
