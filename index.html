@@ -36,17 +36,17 @@ img,svg{display:block}
 button,input,select,textarea{font-family:inherit}
 /* ─── TOKENS ─────────────────────────────── */
 :root{
-  --bg:       #161819;
-  --s1:       #1C1E20;
-  --s2:       #191B1D;
-  --s3:       #222527;
-  --s4:       #2A2D30;
-  --border:   rgba(255,255,255,0.10);
-  --border2:  rgba(255,255,255,0.06);
-  --text:     #F2F0ED;
-  --text2:    rgba(242,240,237,0.78);
-  --text3:    rgba(242,240,237,0.52);
-  --text4:    rgba(242,240,237,0.35);
+  --bg:       #1E2023;
+  --s1:       #262A2D;
+  --s2:       #222528;
+  --s3:       #2E3235;
+  --s4:       #363A3E;
+  --border:   rgba(255,255,255,0.12);
+  --border2:  rgba(255,255,255,0.08);
+  --text:     #F8F7F5;
+  --text2:    rgba(248,247,245,0.82);
+  --text3:    rgba(248,247,245,0.58);
+  --text4:    rgba(248,247,245,0.42);
   --orange:   #ED5C25;
   --orange2:  #FF8A5F;
   --orange3:  #FF6B35;
@@ -62,8 +62,8 @@ body{
   background:var(--bg);
   color:var(--text);
   font-family:var(--body);
-  font-size:16px;
-  line-height:1.6;
+  font-size:17px;
+  line-height:1.7;
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
 }
@@ -75,12 +75,12 @@ body{
 .orange{color:var(--orange)}
 .eyebrow{font-size:11px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--orange)}
 /* ─── BUTTONS ─────────────────────────────── */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--body);font-weight:700;font-size:15px;border:none;cursor:pointer;transition:all .2s;text-decoration:none;border-radius:var(--r-btn);padding:14px 28px;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--body);font-weight:700;font-size:16px;border:none;cursor:pointer;transition:all .2s;text-decoration:none;border-radius:var(--r-btn);padding:14px 28px;white-space:nowrap}
 .btn-primary{background:var(--orange);color:#fff;box-shadow:0 8px 28px rgba(237,92,37,0.28)}
 .btn-primary:hover{background:var(--orange3);transform:scale(1.02);box-shadow:0 12px 36px rgba(237,92,37,0.38)}
 .btn-outline{background:transparent;color:#fff;border:1.5px solid var(--border)}
 .btn-outline:hover{border-color:rgba(255,255,255,0.28);background:rgba(255,255,255,0.04)}
-.btn-lg{padding:16px 36px;font-size:16px;border-radius:16px}
+.btn-lg{padding:16px 36px;font-size:17px;border-radius:16px}
 .btn-full{width:100%;border-radius:16px;padding:16px}
 /* ─── LAYOUT ─────────────────────────────── */
 .container{max-width:1280px;margin:0 auto;padding:0 32px}
@@ -173,7 +173,7 @@ body{
   height:64px;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 32px;
-  background:rgba(22,24,25,0.92);
+  background:rgba(30,32,35,0.92);
   backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);
   transition:box-shadow .3s;
@@ -187,7 +187,7 @@ body{
 .hero{
   padding:120px 0 96px;
   border-bottom:1px solid var(--border);
-  background:linear-gradient(180deg,#161819 0%,#1C1E20 60%,#161819 100%);
+  background:linear-gradient(180deg,#1E2023 0%,#1C1E20 60%,#161819 100%);
   position:relative;
   overflow:hidden;
 }
@@ -224,7 +224,7 @@ body{
 }
 .hero-badge-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);animation:pulse 2s ease infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
-.hero-badge span{font-size:13px;font-weight:600;color:var(--orange2)}
+.hero-badge span{font-size:14px;font-weight:600;color:var(--orange2)}
 .hero-h1{margin-bottom:20px}
 .hero-h1 .block-orange{display:block;color:var(--orange)}
 .hero-sub{font-size:17px;font-weight:300;color:var(--text2);line-height:1.75;max-width:500px;margin-bottom:36px}
@@ -236,7 +236,7 @@ body{
   background:rgba(255,255,255,0.04);
   border-radius:100px;
   padding:8px 16px;
-  font-size:13px;color:var(--text3);
+  font-size:14px;color:var(--text3);
 }
 .hero-pill svg{color:var(--orange);flex-shrink:0}
 /* Video card */
@@ -273,7 +273,7 @@ body{
   transition:all .2s;
 }
 .play-ring:hover{transform:scale(1.1);box-shadow:0 12px 48px rgba(237,92,37,0.55)}
-.video-hint{font-size:13px;color:var(--text4);max-width:240px;line-height:1.55}
+.video-hint{font-size:14px;color:var(--text4);max-width:240px;line-height:1.55}
 /* ═══════════════════════════════════════
    WHY MOST FAIL
 ═══════════════════════════════════════ */
@@ -296,7 +296,7 @@ body{
   flex-shrink:0;
   color:var(--orange);
 }
-.fail-card p{font-size:15px;font-weight:600;line-height:1.5;color:rgba(255,255,255,.88)}
+.fail-card p{font-size:16px;font-weight:600;line-height:1.7;color:rgba(248,247,245,.92)}
 .fail-cta{
   margin-top:40px;text-align:center;
   font-size:17px;color:var(--text3);line-height:1.7;
@@ -346,8 +346,8 @@ body{
 }
 .proof-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1}
 .proof-name{font-family:var(--head);font-size:22px;font-weight:800;letter-spacing:-0.02em}
-.proof-result{font-size:13px;font-weight:600;color:var(--orange);margin-top:3px;margin-bottom:12px}
-.proof-quote{font-size:15px;line-height:1.7;color:var(--text2)}
+.proof-result{font-size:14px;font-weight:600;color:var(--orange);margin-top:3px;margin-bottom:12px}
+.proof-quote{font-size:16px;line-height:1.7;color:var(--text2)}
 /* ═══════════════════════════════════════
    HOW IT WORKS
 ═══════════════════════════════════════ */
@@ -380,7 +380,7 @@ body{
   display:flex;align-items:center;gap:12px;margin-bottom:28px;
 }
 .step-card h3{font-family:var(--head);font-size:26px;font-weight:800;letter-spacing:-0.02em;margin-bottom:14px}
-.step-card p{font-size:15px;line-height:1.75;color:var(--text2)}
+.step-card p{font-size:16px;line-height:1.75;color:var(--text2)}
 /* ═══════════════════════════════════════
    OFFER STACK
 ═══════════════════════════════════════ */
@@ -412,7 +412,7 @@ body{
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;margin-top:1px;
 }
-.offer-item-text{font-size:15px;line-height:1.6;color:rgba(255,255,255,.85)}
+.offer-item-text{font-size:16px;line-height:1.7;color:rgba(248,247,245,.9)}
 .guarantee-card{
   background:var(--s1);
   border:1px solid var(--border);
@@ -430,7 +430,7 @@ body{
 .guarantee-box .box-label{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--orange2);margin-bottom:14px}
 .guarantee-box ul{list-style:none;display:flex;flex-direction:column;gap:10px}
 .guarantee-box li{
-  font-size:15px;color:rgba(255,255,255,.82);
+  font-size:16px;color:rgba(248,247,245,.88);
   display:flex;align-items:center;gap:10px;
 }
 .guarantee-box li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--orange);flex-shrink:0}
@@ -452,7 +452,7 @@ body{
   color:var(--orange);line-height:1;
   margin-bottom:8px;
 }
-.review-text{font-size:15px;line-height:1.8;color:var(--text2);margin-bottom:24px}
+.review-text{font-size:16px;line-height:1.8;color:var(--text2);margin-bottom:24px}
 .review-author{
   display:flex;align-items:center;gap:12px;
   padding-top:20px;
@@ -466,7 +466,7 @@ body{
   flex-shrink:0;
   border:1px solid rgba(237,92,37,0.2);
 }
-.review-meta-name{font-size:13px;font-weight:600;color:var(--text)}
+.review-meta-name{font-size:14px;font-weight:600;color:var(--text)}
 .review-meta-stars{color:#FFA726;font-size:12px;letter-spacing:2px}
 /* ═══════════════════════════════════════
    APPLY
@@ -488,7 +488,7 @@ body{
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;color:var(--orange);
 }
-.apply-step-text{font-size:15px;color:var(--text2);padding-top:8px}
+.apply-step-text{font-size:16px;color:var(--text2);padding-top:8px}
 .form-card{
   background:var(--s1);
   border:1px solid rgba(237,92,37,0.18);
@@ -508,7 +508,7 @@ body{
   border:1px solid var(--border);
   border-radius:14px;
   padding:12px 16px;
-  font-size:13px;color:var(--text4);
+  font-size:14px;color:var(--text4);
   margin-bottom:4px;
 }
 .field input,.field select,.field textarea{
@@ -544,7 +544,7 @@ body{
   display:flex;align-items:center;justify-content:space-between;gap:16px;
   padding:22px 24px;
   cursor:pointer;
-  font-size:16px;font-weight:600;color:var(--text);
+  font-size:17px;font-weight:600;color:var(--text);
   user-select:none;transition:color .2s;
 }
 .faq-q:hover{color:var(--orange)}
@@ -560,7 +560,7 @@ body{
 .faq-a{
   max-height:0;overflow:hidden;
   transition:max-height .4s ease,padding .3s;
-  font-size:15px;font-weight:300;color:var(--text2);line-height:1.75;
+  font-size:16px;font-weight:300;color:var(--text2);line-height:1.75;
   padding:0 24px;
 }
 .faq-item.open .faq-a{max-height:180px;padding:0 24px 22px}
@@ -574,7 +574,7 @@ footer{
 }
 .footer-inner{
   display:flex;flex-direction:column;gap:8px;
-  font-size:13px;color:var(--text4);
+  font-size:14px;color:var(--text4);
 }
 @media(min-width:768px){
   .footer-inner{flex-direction:row;align-items:center;justify-content:space-between}
@@ -687,7 +687,7 @@ footer{
 .form-option.selected{border-color:var(--orange);background:var(--odim)}
 .form-option input{position:absolute;opacity:0;pointer-events:none}
 .form-option-icon{font-size:32px;margin-bottom:12px;display:block}
-.form-option-label{font-size:15px;font-weight:600;line-height:1.4}
+.form-option-label{font-size:16px;font-weight:600;line-height:1.4}
 .form-option-check{position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
 .form-option.selected .form-option-check{background:var(--orange);border-color:var(--orange)}
 .form-option-check svg{width:12px;height:12px;opacity:0;transition:opacity .2s;color:#fff}
@@ -696,7 +696,7 @@ footer{
 .form-options.multi-select .form-option.selected .form-option-check{background:var(--orange);border-color:var(--orange)}
 .form-input-group{margin-bottom:20px}
 .form-label{display:block;font-size:14px;font-weight:600;color:var(--text3);margin-bottom:8px}
-.form-input{width:100%;padding:14px 18px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:14px;color:var(--text);font-family:var(--body);font-size:16px;transition:border-color .2s,box-shadow .2s;outline:none}
+.form-input{width:100%;padding:14px 18px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:14px;color:var(--text);font-family:var(--body);font-size:17px;transition:border-color .2s,box-shadow .2s;outline:none}
 .form-input:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(237,92,37,0.15)}
 .form-input::placeholder{color:var(--text4)}
 .form-input-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -710,9 +710,9 @@ textarea.form-input{min-height:100px;resize:vertical}
 .form-rating-label{font-size:11px;color:var(--text4)}
 .form-rating-item.selected .form-rating-number{color:var(--orange)}
 .form-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:8px}
-.form-btn-back{padding:12px 24px;background:transparent;color:var(--text3);border:1px solid var(--border);border-radius:12px;font-family:var(--body);font-weight:600;font-size:15px;cursor:pointer;transition:color .2s,border-color .2s}
+.form-btn-back{padding:12px 24px;background:transparent;color:var(--text3);border:1px solid var(--border);border-radius:12px;font-family:var(--body);font-weight:600;font-size:16px;cursor:pointer;transition:color .2s,border-color .2s}
 .form-btn-back:hover{color:var(--text);border-color:rgba(255,255,255,0.2)}
-.form-btn-next{padding:14px 32px;background:var(--orange);color:#fff;border:none;border-radius:12px;font-family:var(--body);font-weight:700;font-size:15px;cursor:pointer;transition:background .2s,box-shadow .2s,transform .2s,opacity .2s;box-shadow:0 0 20px rgba(237,92,37,0.3);margin-left:auto}
+.form-btn-next{padding:14px 32px;background:var(--orange);color:#fff;border:none;border-radius:12px;font-family:var(--body);font-weight:700;font-size:16px;cursor:pointer;transition:background .2s,box-shadow .2s,transform .2s,opacity .2s;box-shadow:0 0 20px rgba(237,92,37,0.3);margin-left:auto}
 .form-btn-next:hover{background:var(--orange3);box-shadow:0 0 35px rgba(237,92,37,0.3);transform:translateY(-1px)}
 .form-btn-next:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
 .form-success{display:none;text-align:center;padding:40px 20px;animation:formFadeIn .5s ease}
@@ -720,7 +720,7 @@ textarea.form-input{min-height:100px;resize:vertical}
 .form-success-icon{width:72px;height:72px;border-radius:50%;background:var(--odim);display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
 .form-success-icon svg{width:36px;height:36px;color:var(--orange)}
 .form-success h3{font-family:var(--head);font-size:24px;font-weight:800;margin-bottom:12px}
-.form-success p{font-size:16px;color:var(--text2);max-width:400px;margin:0 auto;line-height:1.6}
+.form-success p{font-size:17px;color:var(--text2);max-width:400px;margin:0 auto;line-height:1.6}
 .form-input.error{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,0.15)}
 .form-error-msg{font-size:12px;color:#EF4444;margin-top:6px;display:none}
 .form-error-msg.visible{display:block}
@@ -732,13 +732,13 @@ textarea.form-input{min-height:100px;resize:vertical}
 .booking-header h3{font-family:var(--head);font-size:22px;font-weight:800;margin-bottom:6px}
 .booking-header p{font-size:14px;color:var(--text3);line-height:1.6}
 .booking-loc-toggle{display:flex;gap:6px;margin-bottom:16px}
-.booking-loc-btn{flex:1;padding:10px 6px;border:2px solid var(--border);border-radius:10px;background:rgba(255,255,255,0.02);color:var(--text2);font-family:var(--body);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center}
+.booking-loc-btn{flex:1;padding:10px 6px;border:2px solid var(--border);border-radius:10px;background:rgba(255,255,255,0.02);color:var(--text2);font-family:var(--body);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center}
 .booking-loc-btn:hover{border-color:rgba(255,255,255,0.15)}
 .booking-loc-btn.active{border-color:var(--orange);background:var(--odim);color:var(--orange)}
 .booking-week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .booking-week-label{font-size:14px;font-weight:700;color:var(--text);font-family:var(--head)}
 .booking-week-arrows{display:flex;gap:6px}
-.booking-week-btn{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--text3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:16px;font-family:var(--body)}
+.booking-week-btn{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--text3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:17px;font-family:var(--body)}
 .booking-week-btn:hover{border-color:rgba(255,255,255,.2);color:var(--text)}
 .booking-week-btn:disabled{opacity:.25;cursor:default;pointer-events:none}
 .booking-dates{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:16px}
@@ -758,7 +758,7 @@ textarea.form-input{min-height:100px;resize:vertical}
 .booking-time.active{border-color:var(--orange);background:var(--odim)}
 .booking-time.full{opacity:.4;cursor:default;pointer-events:none}
 .booking-time-left{display:flex;flex-direction:column;gap:2px}
-.booking-time-range{font-size:15px;font-weight:600;color:var(--text)}
+.booking-time-range{font-size:16px;font-weight:600;color:var(--text)}
 .booking-time-spots{font-size:12px;color:var(--text3)}
 .booking-time.active .booking-time-range{color:var(--orange)}
 .booking-time-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .2s}
@@ -766,15 +766,15 @@ textarea.form-input{min-height:100px;resize:vertical}
 .booking-time-check svg{width:12px;height:12px;opacity:0;color:#fff;transition:opacity .2s}
 .booking-time.active .booking-time-check svg{opacity:1}
 .booking-empty{text-align:center;padding:24px;color:var(--text3);font-size:14px}
-.booking-confirm-btn{width:100%;padding:16px;background:var(--orange);color:#fff;border:none;border-radius:14px;font-family:var(--body);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 8px 28px rgba(237,92,37,0.28)}
+.booking-confirm-btn{width:100%;padding:16px;background:var(--orange);color:#fff;border:none;border-radius:14px;font-family:var(--body);font-size:16px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 8px 28px rgba(237,92,37,0.28)}
 .booking-confirm-btn:hover{background:var(--orange3);transform:translateY(-1px)}
 .booking-confirm-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
-.booking-skip{display:block;text-align:center;margin-top:16px;font-size:13px;color:var(--text4);cursor:pointer;transition:color .2s;background:none;border:none;font-family:var(--body)}
+.booking-skip{display:block;text-align:center;margin-top:16px;font-size:14px;color:var(--text4);cursor:pointer;transition:color .2s;background:none;border:none;font-family:var(--body)}
 .booking-skip:hover{color:var(--text2)}
 .booking-done{text-align:center;animation:formFadeIn .5s ease}
 .booking-done-icon{width:72px;height:72px;border-radius:50%;background:var(--odim);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px}
 .booking-done h3{font-family:var(--head);font-size:22px;font-weight:800;margin-bottom:8px}
-.booking-done p{font-size:15px;color:var(--text2);line-height:1.6;max-width:380px;margin:0 auto}
+.booking-done p{font-size:16px;color:var(--text2);line-height:1.7;max-width:380px;margin:0 auto}
 .booking-done-detail{background:var(--odim);border:1px solid rgba(237,92,37,0.2);border-radius:14px;padding:16px 20px;margin:20px auto 0;max-width:320px;text-align:left}
 .booking-done-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}
 .booking-done-row span:first-child{color:var(--text3)}
@@ -786,8 +786,8 @@ textarea.form-input{min-height:100px;resize:vertical}
 <nav class="nav" id="nav">
   <a href="#" class="nav-logo">Re<span>Shape</span></a>
   <div class="nav-right">
-    <button class="btn btn-outline" style="padding:10px 20px;font-size:13px;" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">Log in</button>
-    <button class="btn btn-primary" style="padding:10px 22px;font-size:13px;" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">Apply Now</button>
+    <button class="btn btn-outline" style="padding:10px 20px;font-size:14px;" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">Log in</button>
+    <button class="btn btn-primary" style="padding:10px 22px;font-size:14px;" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">Apply Now</button>
   </div>
 </nav>
 <!-- ══════════════════════════════════════
@@ -905,7 +905,7 @@ textarea.form-input{min-height:100px;resize:vertical}
     <div class="section-center" style="max-width:560px;margin:0 auto 40px">
       <p class="eyebrow" style="margin-bottom:14px">Meet Your Coaches</p>
       <h2 class="h2" style="margin-bottom:12px">Know your <em style="color:var(--orange)">future coaches</em></h2>
-      <p style="font-size:16px;color:var(--text2);font-weight:300">The coaches behind your transformation. See how they work, what they stand for, and why clients trust them.</p>
+      <p style="font-size:17px;color:var(--text2);font-weight:300">The coaches behind your transformation. See how they work, what they stand for, and why clients trust them.</p>
     </div>
     <div style="max-width:860px;margin:0 auto;border-radius:16px;overflow:hidden;border:1px solid var(--border)">
       <video controls playsinline preload="metadata" poster="https://lvizldmdficsfpgegehp.supabase.co/storage/v1/object/public/images/video/coach-poster.jpg" style="width:100%;display:block;background:#000">
@@ -1068,7 +1068,7 @@ textarea.form-input{min-height:100px;resize:vertical}
 <!-- ══════════════════════════════════════
    OFFER + GUARANTEE
 ══════════════════════════════════════ -->
-<section class="section" style="background:linear-gradient(180deg,#1C1E20 0%,#161819 100%)">
+<section class="section" style="background:linear-gradient(180deg,#262A2D 0%,#161819 100%)">
   <div class="container">
     <div class="offer-grid">
       <!-- OFFER CARD -->
@@ -1130,7 +1130,7 @@ textarea.form-input{min-height:100px;resize:vertical}
       <div class="guarantee-card rv" style="transition-delay:.12s">
         <p class="eyebrow" style="margin-bottom:14px">Guarantee</p>
         <h3 class="h3" style="margin-bottom:16px">Follow the plan.<br><em style="color:var(--orange)">Get the result.</em></h3>
-        <p style="font-size:15px;line-height:1.8;color:var(--text2)">
+        <p style="font-size:16px;line-height:1.8;color:var(--text2)">
           Drop 8–12kg in 12 weeks — <strong style="color:var(--text)">or we coach you for free until you do.</strong> Complete the programme, follow the system, and your result is guaranteed. No catches, no asterisks.ou do.
         </p>
         <div class="guarantee-box">
@@ -1248,7 +1248,7 @@ textarea.form-input{min-height:100px;resize:vertical}
       <div class="rv">
         <p class="eyebrow" style="margin-bottom:14px">Apply now</p>
         <h2 class="h2" style="margin-bottom:16px">Apply for the next ReShape intake</h2>
-        <p style="font-size:16px;line-height:1.75;color:var(--text2);max-width:420px">
+        <p style="font-size:17px;line-height:1.75;color:var(--text2);max-width:420px">
           We only take a limited number of applicants each round to protect coaching quality and results. Complete the short form and we will review whether you are a fit.
         </p>
         <div class="apply-steps">
@@ -1360,7 +1360,7 @@ textarea.form-input{min-height:100px;resize:vertical}
             <div class="form-step" data-step="7">
               <div class="form-step-number">Step 7 of 8</div>
               <div class="form-step-question">Please Read!</div>
-              <p style="color:var(--text2);margin-bottom:24px;font-size:15px;line-height:1.7;">This is a premium transformation programme with a dedicated coach who will be with you every step of the way. This is NOT a standard gym membership.</p>
+              <p style="color:var(--text2);margin-bottom:24px;font-size:16px;line-height:1.7;">This is a premium transformation programme with a dedicated coach who will be with you every step of the way. This is NOT a standard gym membership.</p>
               <div class="form-options" data-field="ready_for_coach">
                 <label class="form-option"><input type="radio" name="ready_for_coach" value="Yes I'm ready to work with a transformation coach"><span class="form-option-icon">&#128640;</span><span class="form-option-label">Yes, I'm ready to work with a transformation coach</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
                 <label class="form-option"><input type="radio" name="ready_for_coach" value="No I'm looking for a standard gym"><span class="form-option-icon">&#127947;</span><span class="form-option-label">No, I'm looking for a standard gym</span><span class="form-option-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></label>
