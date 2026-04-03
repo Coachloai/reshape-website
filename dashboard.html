@@ -2037,6 +2037,11 @@ let charts = {};
 window.addEventListener('DOMContentLoaded', () => {
   if (sessionStorage.getItem('rs_auth') === '1') {
     initDashboard();
+    // Restore last viewed tab from URL hash
+    var hash = window.location.hash.replace('#', '');
+    if (hash && document.getElementById('view-' + hash)) {
+      switchView(hash, null);
+    }
   }
 });
 /* ══════════════════════════════════════
@@ -2442,9 +2447,12 @@ function setLastUpdated() {
 }
 /* ── VIEW SWITCHING ── */
 function switchView(view, btn) {
+  // Save current view to URL hash so refresh stays on same page
+  window.location.hash = view;
   // Update sidebar active state
   document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  if (btn) btn.classList.add('active');
+  else { var sb = document.querySelector('.sb-btn[data-view="' + view + '"]'); if (sb) sb.classList.add('active'); }
   // Hide all views
   document.querySelectorAll('.view').forEach(v => {
     v.style.display = 'none';
