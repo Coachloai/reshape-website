@@ -119,7 +119,7 @@ footer{padding:20px;text-align:center;font-size:12px;color:var(--text4);border-t
         <div class="booking-field"><label>First Name</label><input type="text" id="bk-fname" placeholder="John" required></div>
         <div class="booking-field"><label>Last Name</label><input type="text" id="bk-lname" placeholder="Smith" required></div>
         <div class="booking-field"><label>Email</label><input type="email" id="bk-email" placeholder="john@example.com" required></div>
-        <div class="booking-field"><label>Phone</label><input type="tel" id="bk-phone" placeholder="+44 7700 000000" required></div>
+        <div class="booking-field"><label>Phone</label><input type="tel" id="bk-phone" placeholder="07700 000000" required></div>
       </div>
       <!-- Location toggle -->
       <div class="booking-loc-toggle" id="bookingLocToggle">
@@ -270,8 +270,8 @@ async function confirmBooking() {
   if (!fname) errors.push('First name is required');
   if (!lname) errors.push('Last name is required');
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Valid email is required');
-  var phoneCleaned = phone.replace(/\s/g, '');
-  if (!phoneCleaned || !/^\+\d{10,15}$/.test(phoneCleaned)) errors.push('Phone with country code required (e.g. +44 7700 000000)');
+  var phoneCleaned = phone.replace(/[\s\-\(\)]/g, '');
+  if (!phoneCleaned || !/^(\+\d{10,15}|0[1-9]\d{8,10}|44\d{10,11})$/.test(phoneCleaned)) errors.push('Enter a valid phone number (e.g. 07700 000000)');
   if (errors.length > 0) {
     if (!fname) document.getElementById('bk-fname').style.borderColor = '#EF4444';
     if (!lname) document.getElementById('bk-lname').style.borderColor = '#EF4444';
@@ -284,7 +284,7 @@ async function confirmBooking() {
   var btn = document.getElementById('bookingConfirmBtn');
   btn.disabled = true; btn.textContent = 'Verifying...';
   if (typeof verifyPhone === 'function') {
-    var phoneCheck = await verifyPhone(phoneCleaned);
+    var phoneCheck = await verifyPhone(phoneCleaned, document.getElementById('bk-phone'));
     if (!phoneCheck.valid) {
       document.getElementById('bk-phone').style.borderColor = '#EF4444';
       alert(phoneCheck.error || 'Phone number is not valid');

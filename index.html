@@ -1336,7 +1336,7 @@ textarea.form-input{min-height:100px;resize:vertical}
               </div>
               <div class="form-input-row">
                 <div class="form-input-group"><label class="form-label" for="age">Age</label><input type="number" id="age" name="age" class="form-input" placeholder="28" min="16" max="99" required><div class="form-error-msg">Please enter your age</div></div>
-                <div class="form-input-group"><label class="form-label" for="phone">Phone Number</label><input type="tel" id="phone" name="phone" class="form-input" placeholder="+44 7700 000000" required><div class="form-error-msg">Please enter your phone number</div></div>
+                <div class="form-input-group"><label class="form-label" for="phone">Phone Number</label><input type="tel" id="phone" name="phone" class="form-input" placeholder="07700 000000" required><div class="form-error-msg">Please enter your phone number</div></div>
               </div>
               <div class="form-input-group"><label class="form-label" for="email">Email</label><input type="email" id="email" name="email" class="form-input" placeholder="john@example.com" required><div class="form-error-msg">Please enter a valid email</div></div>
               <div class="form-nav"><button type="button" class="form-btn-back">&larr; Back</button><button type="button" class="form-btn-next">Next &rarr;</button></div>
@@ -1711,10 +1711,11 @@ window.addEventListener('scroll',()=>{
           if (errorMsg) { errorMsg.textContent = 'Please enter a valid email address'; errorMsg.classList.add('visible'); }
           valid = false;
         } else if (field.type === 'tel') {
-          var phone = field.value.trim().replace(/\s/g, '');
-          if (!/^\+\d{10,15}$/.test(phone)) {
+          var phone = field.value.trim().replace(/[\s\-\(\)]/g, '');
+          // Allow UK local (07...), international (+44...), or bare (44...)
+          if (!/^(\+\d{10,15}|0[1-9]\d{8,10}|44\d{10,11})$/.test(phone)) {
             field.classList.add('error');
-            if (errorMsg) { errorMsg.textContent = 'Include country code (e.g. +44 7700 000000)'; errorMsg.classList.add('visible'); }
+            if (errorMsg) { errorMsg.textContent = 'Enter a valid phone number (e.g. 07700 000000)'; errorMsg.classList.add('visible'); }
             valid = false;
           }
         }
@@ -1725,7 +1726,7 @@ window.addEventListener('scroll',()=>{
         var emailField = step.querySelector('input[type="email"]');
         // Verify phone
         if (phoneField && phoneField.value) {
-          var phoneResult = await verifyPhone(phoneField.value);
+          var phoneResult = await verifyPhone(phoneField.value, phoneField);
           if (!phoneResult.valid) {
             phoneField.classList.add('error');
             var em = phoneField.parentElement.querySelector('.form-error-msg');

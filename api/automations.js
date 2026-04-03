@@ -15,14 +15,25 @@ var AUTOMATION_CONFIG = window.__AUTOMATION_CONFIG || {
   booking_url: 'https://reshape.fit/#apply',
 };
 
-/* ── VERIFY PHONE (format + length per country) ── */
-async function verifyPhone(phone) {
+/* ── VERIFY PHONE (format + auto-convert UK numbers) ── */
+async function verifyPhone(phone, inputEl) {
   var cleaned = phone.replace(/[\s\-\(\)]/g, '');
-  if (!/^\+\d{10,15}$/.test(cleaned)) return { valid: false, error: 'Include country code (e.g. +44 7700 000000)' };
+  // Auto-convert UK local numbers to international format
+  if (/^0[1-9]\d{8,10}$/.test(cleaned)) {
+    cleaned = '+44' + cleaned.substring(1);
+    // Update the input field with the converted number
+    if (inputEl) inputEl.value = cleaned;
+  }
+  // Also handle 44 without the +
+  if (/^44\d{10,11}$/.test(cleaned)) {
+    cleaned = '+' + cleaned;
+    if (inputEl) inputEl.value = cleaned;
+  }
+  if (!/^\+\d{10,15}$/.test(cleaned)) return { valid: false, error: 'Enter a valid phone number (e.g. 07700 000000 or +44 7700 000000)' };
   // Country-specific length validation
   var rules = {
-    '+44': { min: 12, max: 13, label: 'UK' },       // +44 7xxxxxxxxx
-    '+1': { min: 11, max: 11, label: 'US/CA' },      // +1 xxxxxxxxxx
+    '+44': { min: 12, max: 13, label: 'UK' },
+    '+1': { min: 11, max: 11, label: 'US/CA' },
     '+353': { min: 12, max: 13, label: 'Ireland' },
     '+61': { min: 11, max: 12, label: 'Australia' },
     '+91': { min: 12, max: 13, label: 'India' },
@@ -31,14 +42,13 @@ async function verifyPhone(phone) {
     if (cleaned.startsWith(prefix)) {
       var r = rules[prefix];
       if (cleaned.length < r.min || cleaned.length > r.max) {
-        return { valid: false, error: r.label + ' numbers should be ' + r.min + '-' + r.max + ' digits (including +' + prefix.substring(1) + ')' };
+        return { valid: false, error: r.label + ' numbers should be ' + r.min + '-' + r.max + ' digits' };
       }
-      return { valid: true };
+      return { valid: true, cleaned: cleaned };
     }
   }
-  // For other countries, just check reasonable length
   if (cleaned.length < 10 || cleaned.length > 15) return { valid: false, error: 'Phone number length doesn\'t look right' };
-  return { valid: true };
+  return { valid: true, cleaned: cleaned };
 }
 
 /* ── VERIFY EMAIL DOMAIN (MX record check) ── */
