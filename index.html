@@ -583,9 +583,12 @@ footer{
 /* ═══════════════════════════════════════
    TICKER
 ═══════════════════════════════════════ */
-.ticker{overflow:hidden;border-bottom:1px solid var(--border);padding:12px 0;background:var(--s2)}
-.ticker-track{display:flex;gap:10px;width:max-content;animation:tickRoll 60s linear infinite}
-@keyframes tickRoll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker{overflow:hidden;border-bottom:1px solid var(--border);padding:12px 0;background:var(--s2);position:relative}
+.ticker::before,.ticker::after{content:'';position:absolute;top:0;bottom:0;width:40px;z-index:2;pointer-events:none}
+.ticker::before{left:0;background:linear-gradient(to right,var(--s2),transparent)}
+.ticker::after{right:0;background:linear-gradient(to left,var(--s2),transparent)}
+.ticker-track{display:flex;gap:10px;width:max-content;animation:tickRoll 80s linear infinite;will-change:transform;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+@keyframes tickRoll{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
 .tick{
   display:flex;align-items:center;gap:10px;
   background:var(--s1);border:1px solid var(--border);
@@ -597,9 +600,9 @@ footer{
   background:var(--odim);font-size:9px;font-weight:700;
   color:var(--orange);display:grid;place-items:center;
 }
-.tick-n{font-size:12px;font-weight:600;color:var(--text)}
+.tick-n{font-size:14px;font-weight:600;color:var(--text)}
 .tick-w{font-size:11px;color:var(--text4)}
-.tick-k{font-size:12px;font-weight:700;color:var(--orange)}
+.tick-k{font-size:14px;font-weight:700;color:var(--orange)}
 /* ═══════════════════════════════════════
    RESPONSIVE
 ═══════════════════════════════════════ */
@@ -1546,10 +1549,12 @@ const TICKS=[
   {n:'Carolyn',k:'−51lbs'},{n:'Ben',k:'−38.5lbs'},
 ];
 const tt=document.getElementById('ticker');
-[...TICKS,...TICKS].forEach(r=>{
-  const i=r.n.split(' ').map(x=>x[0]).join('');
-  tt.innerHTML+=`<div class="tick"><div class="tick-av">${i}</div><div class="tick-n">${r.n}</div><div class="tick-k">${r.k}</div></div>`;
+var tickHtml='';
+[...TICKS,...TICKS,...TICKS].forEach(function(r){
+  var i=r.n.split(' ').map(function(x){return x[0]}).join('');
+  tickHtml+='<div class="tick"><div class="tick-av">'+i+'</div><div class="tick-n">'+r.n+'</div><div class="tick-k">'+r.k+'</div></div>';
 });
+tt.innerHTML=tickHtml;
 /* ── REVEALS ── */
 const ro=new IntersectionObserver(e=>{
   e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');ro.unobserve(x.target);}});

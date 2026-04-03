@@ -1499,10 +1499,12 @@ const TICKS=[
   {n:'Mauro',k:'−41lbs'},{n:'Ben',k:'−38.5lbs'},
 ];
 const tt=document.getElementById('ticker');
-[...TICKS,...TICKS].forEach(r=>{
-  const i=r.n.split(' ').map(x=>x[0]).join('');
-  tt.innerHTML+=`<div class="tick"><div class="tick-av">${i}</div><div class="tick-n">${r.n}</div><div class="tick-k">${r.k}</div></div>`;
+var tickHtml='';
+[...TICKS,...TICKS,...TICKS].forEach(function(r){
+  var i=r.n.split(' ').map(function(x){return x[0]}).join('');
+  tickHtml+='<div class="tick"><div class="tick-av">'+i+'</div><div class="tick-n">'+r.n+'</div><div class="tick-k">'+r.k+'</div></div>';
 });
+tt.innerHTML=tickHtml;
 /* ── REVEALS ── */
 const ro=new IntersectionObserver(e=>{
   e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');ro.unobserve(x.target);}});
