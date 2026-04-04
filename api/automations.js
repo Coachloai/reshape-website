@@ -9,6 +9,7 @@ var AUTOMATION_CONFIG = window.__AUTOMATION_CONFIG || {
   twilio_sid: '',
   twilio_auth: '',
   twilio_phone: '',
+  coach_email: 'coach@reshape.fit',
   from_email: 'coach@reshape.fit',
   from_name: 'Coach Jaime | ReShape',
   fallback_email: 'onboarding@resend.dev',
@@ -125,28 +126,62 @@ async function sendSMS(to, body) {
 }
 
 /* ── GENERATE .ICS CALENDAR FILE ── */
-function generateICS(booking, leadName) {
+function generateICS(booking, leadName, opts) {
+  var o = opts || {};
   var dt = new Date(booking.datetime);
   var endDt = new Date(dt.getTime() + 3600000); // 1 hour duration
   function icsDate(d) {
     return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   }
   var location = booking.location === 'Ipswich' ? 'ReShape, Ipswich' : booking.location === 'Colchester' ? 'ReShape, Colchester' : 'ReShape, ' + (booking.location || '');
+  var isCoach = o.forCoach;
+  var summary = isCoach ? 'Visit: ' + (leadName || 'New Lead') : 'ReShape Visit';
+  var description = isCoach
+    ? 'Booking visit with ' + (leadName || 'Lead') + (o.leadEmail ? ' (' + o.leadEmail + ')' : '') + (o.leadPhone ? ' | Phone: ' + o.leadPhone : '')
+    : 'Your in-person visit with Coach Jaime at ReShape. Wear something comfortable!';
   return 'BEGIN:VCALENDAR\r\n' +
     'VERSION:2.0\r\n' +
     'PRODID:-//ReShape//Booking//EN\r\n' +
     'CALSCALE:GREGORIAN\r\n' +
-    'METHOD:PUBLISH\r\n' +
+    'METHOD:' + (isCoach ? 'REQUEST' : 'PUBLISH') + '\r\n' +
     'BEGIN:VEVENT\r\n' +
     'DTSTART:' + icsDate(dt) + '\r\n' +
     'DTEND:' + icsDate(endDt) + '\r\n' +
-    'SUMMARY:ReShape Visit\r\n' +
-    'DESCRIPTION:Your in-person visit with Coach Jaime at ReShape. Wear something comfortable!\r\n' +
+    'SUMMARY:' + summary + '\r\n' +
+    'DESCRIPTION:' + description + '\r\n' +
     'LOCATION:' + location + '\r\n' +
     'STATUS:CONFIRMED\r\n' +
-    'UID:reshape-' + dt.getTime() + '@reshape.fit\r\n' +
+    'UID:reshape-' + dt.getTime() + '-' + (isCoach ? 'coach' : 'lead') + '@reshape.fit\r\n' +
+    (isCoach && AUTOMATION_CONFIG.from_email ? 'ORGANIZER:mailto:' + AUTOMATION_CONFIG.from_email + '\r\n' : '') +
     'END:VEVENT\r\n' +
     'END:VCALENDAR';
+}
+
+/* ── SEND COACH CALENDAR INVITE ── */
+async function sendCoachCalendarInvite(lead, booking) {
+  if (!booking || !booking.datetime) return;
+  var coachEmail = AUTOMATION_CONFIG.coach_email || AUTOMATION_CONFIG.from_email;
+  var leadName = (lead.first_name || '') + ' ' + (lead.last_name || '');
+  var icsContent = generateICS(booking, leadName.trim(), {
+    forCoach: true,
+    leadEmail: lead.email,
+    leadPhone: lead.phone
+  });
+  var htmlBody = emailTemplate(
+    'New Booking: ' + leadName.trim(),
+    '<p>A new visit has been booked:</p>' +
+    '<div style="background:rgba(237,92,37,0.08);border:1px solid rgba(237,92,37,0.2);border-radius:12px;padding:16px 20px;margin:16px 0">' +
+    '<p style="margin:4px 0"><strong>Name:</strong> ' + leadName.trim() + '</p>' +
+    '<p style="margin:4px 0"><strong>Email:</strong> ' + (lead.email || '') + '</p>' +
+    '<p style="margin:4px 0"><strong>Phone:</strong> ' + (lead.phone || '') + '</p>' +
+    '<p style="margin:4px 0"><strong>Date:</strong> ' + (booking.date || '') + '</p>' +
+    '<p style="margin:4px 0"><strong>Time:</strong> ' + (booking.time || '') + '</p>' +
+    '<p style="margin:4px 0"><strong>Location:</strong> ' + (booking.location || '') + '</p></div>' +
+    '<p style="font-size:14px;color:rgba(255,255,255,0.5)">This event has been added to your calendar automatically.</p>',
+    '', ''
+  );
+  var attachments = [{ filename: 'invite.ics', content: btoa(icsContent) }];
+  await sendEmail(coachEmail, 'New Booking: ' + leadName.trim() + ' — ' + (booking.date || ''), htmlBody, attachments);
 }
 
 /* ══════════════════════════════════════
@@ -288,6 +323,11 @@ async function queueSequence(sequenceName, lead, booking, supabaseClient) {
         await processMessage(inserted[j], supabaseClient, icsContent);
       }
     }
+  }
+
+  // Send coach calendar invite for new bookings
+  if (sequenceName === 'booking_confirmed' && booking && booking.datetime) {
+    sendCoachCalendarInvite(lead, booking);
   }
 }
 
