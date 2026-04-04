@@ -10,6 +10,10 @@ var AUTOMATION_CONFIG = window.__AUTOMATION_CONFIG || {
   twilio_auth: '',
   twilio_phone: '',
   coach_email: 'coach@reshape.fit',
+  google_calendar_id: '',
+  google_client_id: '',
+  google_client_secret: '',
+  google_refresh_token: '',
   from_email: 'coach@reshape.fit',
   from_name: 'Coach Jaime | ReShape',
   fallback_email: 'onboarding@resend.dev',
@@ -157,21 +161,85 @@ function generateICS(booking, leadName, opts) {
     'END:VCALENDAR';
 }
 
+/* ── GOOGLE CALENDAR — GET ACCESS TOKEN ── */
+async function getGoogleAccessToken() {
+  var res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: AUTOMATION_CONFIG.google_client_id,
+      client_secret: AUTOMATION_CONFIG.google_client_secret,
+      refresh_token: AUTOMATION_CONFIG.google_refresh_token,
+      grant_type: 'refresh_token'
+    }).toString()
+  });
+  var data = await res.json();
+  return data.access_token || null;
+}
+
+/* ── GOOGLE CALENDAR — CREATE EVENT ── */
+async function addToGoogleCalendar(lead, booking) {
+  var token = await getGoogleAccessToken();
+  if (!token) return { success: false, error: 'No access token' };
+  var calendarId = AUTOMATION_CONFIG.google_calendar_id || 'primary';
+  var leadName = ((lead.first_name || '') + ' ' + (lead.last_name || '')).trim();
+  var dt = new Date(booking.datetime);
+  var endDt = new Date(dt.getTime() + 3600000);
+  var location = booking.location === 'Ipswich' ? 'ReShape, Ipswich' : booking.location === 'Colchester' ? 'ReShape, Colchester' : 'ReShape, ' + (booking.location || '');
+  var event = {
+    summary: 'Visit: ' + (leadName || 'New Lead'),
+    description: 'Booking visit with ' + leadName +
+      '\nEmail: ' + (lead.email || '') +
+      '\nPhone: ' + (lead.phone || '') +
+      '\nLocation: ' + (booking.location || ''),
+    location: location,
+    start: { dateTime: dt.toISOString(), timeZone: 'Europe/London' },
+    end: { dateTime: endDt.toISOString(), timeZone: 'Europe/London' },
+    reminders: { useDefault: false, overrides: [
+      { method: 'popup', minutes: 60 },
+      { method: 'popup', minutes: 15 }
+    ]}
+  };
+  var res = await fetch('https://www.googleapis.com/calendar/v3/calendars/' + encodeURIComponent(calendarId) + '/events', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify(event)
+  });
+  var data = await res.json();
+  return data.id ? { success: true, id: data.id } : { success: false, error: data.error ? data.error.message : 'Unknown error' };
+}
+
 /* ── SEND COACH CALENDAR INVITE ── */
 async function sendCoachCalendarInvite(lead, booking) {
   if (!booking || !booking.datetime) return;
+
+  // Try Google Calendar API first
+  if (AUTOMATION_CONFIG.google_client_id && AUTOMATION_CONFIG.google_refresh_token) {
+    try {
+      var gcResult = await addToGoogleCalendar(lead, booking);
+      if (gcResult.success) {
+        console.log('Google Calendar event created:', gcResult.id);
+        return;
+      }
+      console.warn('Google Calendar failed, falling back to email:', gcResult.error);
+    } catch (e) {
+      console.warn('Google Calendar error, falling back to email:', e.message);
+    }
+  }
+
+  // Fallback: send .ics email invite
   var coachEmail = AUTOMATION_CONFIG.coach_email || AUTOMATION_CONFIG.from_email;
-  var leadName = (lead.first_name || '') + ' ' + (lead.last_name || '');
-  var icsContent = generateICS(booking, leadName.trim(), {
+  var leadName = ((lead.first_name || '') + ' ' + (lead.last_name || '')).trim();
+  var icsContent = generateICS(booking, leadName, {
     forCoach: true,
     leadEmail: lead.email,
     leadPhone: lead.phone
   });
   var htmlBody = emailTemplate(
-    'New Booking: ' + leadName.trim(),
+    'New Booking: ' + leadName,
     '<p>A new visit has been booked:</p>' +
     '<div style="background:rgba(237,92,37,0.08);border:1px solid rgba(237,92,37,0.2);border-radius:12px;padding:16px 20px;margin:16px 0">' +
-    '<p style="margin:4px 0"><strong>Name:</strong> ' + leadName.trim() + '</p>' +
+    '<p style="margin:4px 0"><strong>Name:</strong> ' + leadName + '</p>' +
     '<p style="margin:4px 0"><strong>Email:</strong> ' + (lead.email || '') + '</p>' +
     '<p style="margin:4px 0"><strong>Phone:</strong> ' + (lead.phone || '') + '</p>' +
     '<p style="margin:4px 0"><strong>Date:</strong> ' + (booking.date || '') + '</p>' +
@@ -181,7 +249,7 @@ async function sendCoachCalendarInvite(lead, booking) {
     '', ''
   );
   var attachments = [{ filename: 'invite.ics', content: btoa(icsContent) }];
-  await sendEmail(coachEmail, 'New Booking: ' + leadName.trim() + ' — ' + (booking.date || ''), htmlBody, attachments);
+  await sendEmail(coachEmail, 'New Booking: ' + leadName + ' \u2014 ' + (booking.date || ''), htmlBody, attachments);
 }
 
 /* ══════════════════════════════════════
