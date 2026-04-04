@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS message_queue (
   lead_name TEXT,
   sequence TEXT NOT NULL,
   step_index INTEGER NOT NULL DEFAULT 0,
-  channel TEXT NOT NULL CHECK (channel IN ('email', 'sms', 'whatsapp')),
+  channel TEXT NOT NULL CHECK (channel IN ('email', 'sms')),
   subject TEXT,
   body TEXT NOT NULL,
   send_at TIMESTAMPTZ NOT NULL,

@@ -1,6 +1,6 @@
 /* ══════════════════════════════════════
    ReShape — Nurture Automation Engine
-   Email (Resend) + SMS (Twilio) + WhatsApp (Twilio)
+   Email (Resend) + SMS (Twilio)
 ══════════════════════════════════════ */
 
 // Config loaded from api/config.js (not committed to git)
@@ -120,26 +120,6 @@ async function sendSMS(to, body) {
   } catch (e) { return { success: false, error: e.message }; }
 }
 
-/* ── SEND WHATSAPP via Twilio Sandbox ── */
-async function sendWhatsApp(to, body) {
-  try {
-    var url = 'https://api.twilio.com/2010-04-01/Accounts/' + AUTOMATION_CONFIG.twilio_sid + '/Messages.json';
-    var auth = btoa(AUTOMATION_CONFIG.twilio_sid + ':' + AUTOMATION_CONFIG.twilio_auth);
-    var whatsappFrom = AUTOMATION_CONFIG.twilio_whatsapp || AUTOMATION_CONFIG.twilio_phone;
-    var params = new URLSearchParams();
-    params.append('From', 'whatsapp:' + whatsappFrom);
-    params.append('To', 'whatsapp:' + to);
-    params.append('Body', body);
-    var res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Authorization': 'Basic ' + auth, 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: params.toString()
-    });
-    var data = await res.json();
-    return data.sid ? { success: true, sid: data.sid } : { success: false, error: data.message || 'Failed' };
-  } catch (e) { return { success: false, error: e.message }; }
-}
-
 /* ══════════════════════════════════════
    EMAIL TEMPLATES
 ══════════════════════════════════════ */
@@ -170,9 +150,6 @@ var SEQUENCES = {
         'Book Your Visit', AUTOMATION_CONFIG.booking_url
       ); }
     },
-    { delay: 0,        channel: 'whatsapp',
-      body: function(lead) { return 'Hey ' + lead.first_name + '! \uD83D\uDC4A This is Jaime from ReShape. We\'ve received your application \u2014 thanks for taking the first step!\n\nWe\'ll review your details and get back to you within 24 hours.\n\nIn the meantime, book your visit here: ' + AUTOMATION_CONFIG.booking_url; }
-    },
     { delay: 3600,     channel: 'sms',
       body: function(lead) { return 'Hey ' + lead.first_name + ', it\'s Jaime from ReShape. We got your application! Book your in-person visit before spots fill up: ' + AUTOMATION_CONFIG.booking_url; }
     },
@@ -183,8 +160,8 @@ var SEQUENCES = {
         'Book Your Visit', AUTOMATION_CONFIG.booking_url
       ); }
     },
-    { delay: 259200,   channel: 'whatsapp',
-      body: function(lead) { return 'Hi ' + lead.first_name + ' \uD83D\uDC4B Just checking in! Have you had a chance to book your visit yet?\n\nWe\'d love to show you around and discuss your goals in person.\n\nBook here: ' + AUTOMATION_CONFIG.booking_url; }
+    { delay: 259200,   channel: 'sms',
+      body: function(lead) { return 'Hi ' + lead.first_name + ', just checking in! Have you had a chance to book your ReShape visit yet? We\'d love to show you around: ' + AUTOMATION_CONFIG.booking_url; }
     },
     { delay: 604800,   channel: 'email',    subject: 'Last chance \u2014 your spot won\'t wait forever',
       body: function(lead) { return emailTemplate(
@@ -209,14 +186,18 @@ var SEQUENCES = {
         '', ''
       ); }
     },
-    { delay: 0,        channel: 'whatsapp',
-      body: function(lead, booking) { return 'You\'re booked! \uD83C\uDF89\n\n\uD83D\uDCC5 ' + (booking.date || '') + '\n\u23F0 ' + (booking.time || '') + '\n\uD83D\uDCCD ' + (booking.location || '') + '\n\nWear something comfortable \u2014 we\'ll handle the rest. See you there, ' + lead.first_name + '!'; }
+    { delay: 0,        channel: 'sms',
+      body: function(lead, booking) { return 'You\'re booked, ' + lead.first_name + '! ' + (booking.date || '') + ' at ' + (booking.time || '') + ', ' + (booking.location || '') + '. Wear something comfortable - see you there!'; }
     },
     { delay: -86400,   channel: 'sms',      is_reminder: true,
       body: function(lead, booking) { return 'Hey ' + lead.first_name + '! Quick reminder: your ReShape visit is TOMORROW at ' + (booking.time || '') + ' at ' + (booking.location || '') + '. See you there! \uD83D\uDCAA'; }
     },
-    { delay: -7200,    channel: 'whatsapp', is_reminder: true,
-      body: function(lead, booking) { return 'Hey ' + lead.first_name + '! \uD83D\uDC4B Your ReShape visit is in 2 hours at ' + (booking.location || '') + '. Can\'t wait to meet you! \uD83D\uDCAA'; }
+    { delay: -7200,    channel: 'email',    is_reminder: true, subject: 'Your ReShape visit is in 2 hours!',
+      body: function(lead, booking) { return emailTemplate(
+        'See you in 2 hours, ' + lead.first_name + '! \uD83D\uDCAA',
+        '<p>Your ReShape visit is coming up at <strong>' + (booking.time || '') + '</strong> at <strong>' + (booking.location || '') + '</strong>.</p><p>Wear something comfortable. We\'ll handle the rest. Can\'t wait to meet you!</p>',
+        '', ''
+      ); }
     },
   ],
 };
@@ -279,8 +260,6 @@ async function processMessage(msg, supabaseClient) {
     result = await sendEmail(msg.lead_email, msg.subject, msg.body);
   } else if (msg.channel === 'sms' && msg.lead_phone) {
     result = await sendSMS(msg.lead_phone, msg.body);
-  } else if (msg.channel === 'whatsapp' && msg.lead_phone) {
-    result = await sendWhatsApp(msg.lead_phone, msg.body);
   } else {
     result = { success: false, error: 'No phone number for ' + msg.channel };
   }
