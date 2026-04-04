@@ -781,6 +781,9 @@ textarea.form-input{min-height:100px;resize:vertical}
 .booking-done-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}
 .booking-done-row span:first-child{color:var(--text3)}
 .booking-done-row span:last-child{font-weight:600;color:var(--text)}
+.booking-cal-btn{display:inline-flex;align-items:center;gap:8px;margin-top:20px;padding:12px 24px;background:var(--orange);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;transition:opacity .2s}
+.booking-cal-btn:hover{opacity:.85}
+.booking-cal-btn svg{width:18px;height:18px}
 </style>
 </head>
 <body>
@@ -1382,6 +1385,7 @@ textarea.form-input{min-height:100px;resize:vertical}
               <h3>You're Booked!</h3>
               <p>We look forward to seeing you. You'll receive a confirmation shortly.</p>
               <div class="booking-done-detail" id="bookingDoneDetail"></div>
+              <a id="bookingCalBtn" class="booking-cal-btn" style="display:none" download="reshape-visit.ics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Add to Calendar</a>
             </div>
             <div id="bookingSkipped" style="display:none;text-align:center;padding:40px 20px;animation:formFadeIn .5s ease">
               <div class="form-success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg></div>
@@ -1912,19 +1916,27 @@ async function confirmBooking() {
       var dateObj = new Date(__selectedDate + 'T00:00:00');
       document.getElementById('bookingWrap').style.display = 'none';
       document.getElementById('bookingDone').style.display = 'block';
+      var dateStr2 = dateObj.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+      var timeStr2 = slot ? slot.start_time.substring(0,5) + ' - ' + slot.end_time.substring(0,5) : '';
       document.getElementById('bookingDoneDetail').innerHTML =
-        '<div class="booking-done-row"><span>Date</span><span>' + dateObj.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) + '</span></div>' +
-        '<div class="booking-done-row"><span>Time</span><span>' + (slot ? slot.start_time.substring(0, 5) + ' - ' + slot.end_time.substring(0, 5) : '') + '</span></div>' +
+        '<div class="booking-done-row"><span>Date</span><span>' + dateStr2 + '</span></div>' +
+        '<div class="booking-done-row"><span>Time</span><span>' + timeStr2 + '</span></div>' +
         '<div class="booking-done-row"><span>Location</span><span>' + __selectedLoc + '</span></div>';
+      var bookingData = { date: dateStr2, time: timeStr2, location: __selectedLoc, datetime: __selectedDate + 'T' + (slot ? slot.start_time.substring(0,5) : '09:00') + ':00' };
+      if (typeof generateICS === 'function') {
+        var icsContent = generateICS(bookingData, lead.first_name || '');
+        var icsBlob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        var calBtn = document.getElementById('bookingCalBtn');
+        calBtn.href = URL.createObjectURL(icsBlob);
+        calBtn.style.display = 'inline-flex';
+      }
       /* ── Cancel pending form_submitted reminders (they already booked) ── */
       if (window.__supabaseClient && lead.email) {
         window.__supabaseClient.from('message_queue').update({ status: 'cancelled' }).eq('lead_email', lead.email).eq('sequence', 'form_submitted').eq('status', 'queued');
       }
       /* ── Queue booking confirmation sequence ── */
       if (typeof queueSequence === 'function' && window.__supabaseClient) {
-        var dateStr2 = dateObj.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
-        var timeStr2 = slot ? slot.start_time.substring(0,5) + ' - ' + slot.end_time.substring(0,5) : '';
-        queueSequence('booking_confirmed', lead, { date: dateStr2, time: timeStr2, location: __selectedLoc, datetime: __selectedDate + 'T' + (slot ? slot.start_time.substring(0,5) : '09:00') + ':00' }, window.__supabaseClient);
+        queueSequence('booking_confirmed', lead, bookingData, window.__supabaseClient);
       }
     }
   } catch (e) { console.error('Booking error:', e); btn.disabled = false; btn.textContent = 'Book My Visit'; }

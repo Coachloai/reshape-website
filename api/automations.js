@@ -66,29 +66,33 @@ async function verifyEmail(email) {
 }
 
 /* ── SEND EMAIL via Resend ── */
-async function sendEmail(to, subject, htmlBody) {
+async function sendEmail(to, subject, htmlBody, attachments) {
   try {
+    var payload = {
+      from: AUTOMATION_CONFIG.from_name + ' <' + AUTOMATION_CONFIG.from_email + '>',
+      to: [to],
+      subject: subject,
+      html: htmlBody
+    };
+    if (attachments && attachments.length > 0) payload.attachments = attachments;
     var res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + AUTOMATION_CONFIG.resend_key, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: AUTOMATION_CONFIG.from_name + ' <' + AUTOMATION_CONFIG.from_email + '>',
-        to: [to],
-        subject: subject,
-        html: htmlBody
-      })
+      body: JSON.stringify(payload)
     });
     var data = await res.json();
     if (data.id) return { success: true, id: data.id };
     // Fallback to resend.dev domain if domain not verified
     if (data.statusCode === 403 || (data.message && data.message.includes('domain'))) {
+      var fallbackPayload = {
+        from: AUTOMATION_CONFIG.from_name + ' <' + AUTOMATION_CONFIG.fallback_email + '>',
+        to: [to], subject: subject, html: htmlBody
+      };
+      if (attachments && attachments.length > 0) fallbackPayload.attachments = attachments;
       var res2 = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + AUTOMATION_CONFIG.resend_key, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          from: AUTOMATION_CONFIG.from_name + ' <' + AUTOMATION_CONFIG.fallback_email + '>',
-          to: [to], subject: subject, html: htmlBody
-        })
+        body: JSON.stringify(fallbackPayload)
       });
       var data2 = await res2.json();
       return data2.id ? { success: true, id: data2.id } : { success: false, error: data2.message };
@@ -118,6 +122,31 @@ async function sendSMS(to, body) {
     var data = await res.json();
     return data.sid ? { success: true, sid: data.sid } : { success: false, error: data.message || 'Failed' };
   } catch (e) { return { success: false, error: e.message }; }
+}
+
+/* ── GENERATE .ICS CALENDAR FILE ── */
+function generateICS(booking, leadName) {
+  var dt = new Date(booking.datetime);
+  var endDt = new Date(dt.getTime() + 3600000); // 1 hour duration
+  function icsDate(d) {
+    return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  }
+  var location = booking.location === 'Ipswich' ? 'ReShape, Ipswich' : booking.location === 'Colchester' ? 'ReShape, Colchester' : 'ReShape, ' + (booking.location || '');
+  return 'BEGIN:VCALENDAR\r\n' +
+    'VERSION:2.0\r\n' +
+    'PRODID:-//ReShape//Booking//EN\r\n' +
+    'CALSCALE:GREGORIAN\r\n' +
+    'METHOD:PUBLISH\r\n' +
+    'BEGIN:VEVENT\r\n' +
+    'DTSTART:' + icsDate(dt) + '\r\n' +
+    'DTEND:' + icsDate(endDt) + '\r\n' +
+    'SUMMARY:ReShape Visit\r\n' +
+    'DESCRIPTION:Your in-person visit with Coach Jaime at ReShape. Wear something comfortable!\r\n' +
+    'LOCATION:' + location + '\r\n' +
+    'STATUS:CONFIRMED\r\n' +
+    'UID:reshape-' + dt.getTime() + '@reshape.fit\r\n' +
+    'END:VEVENT\r\n' +
+    'END:VCALENDAR';
 }
 
 /* ══════════════════════════════════════
@@ -175,6 +204,7 @@ var SEQUENCES = {
   // After booking confirmed
   booking_confirmed: [
     { delay: 0,        channel: 'email',    subject: 'You\'re booked! \uD83C\uDF89 See you soon',
+      attach_ics: true,
       body: function(lead, booking) { return emailTemplate(
         'You\'re booked, ' + lead.first_name + '! \uD83C\uDF89',
         '<p>We can\'t wait to meet you. Here are your visit details:</p>' +
@@ -182,7 +212,8 @@ var SEQUENCES = {
         '<p style="margin:4px 0"><strong>Date:</strong> ' + (booking.date || '') + '</p>' +
         '<p style="margin:4px 0"><strong>Time:</strong> ' + (booking.time || '') + '</p>' +
         '<p style="margin:4px 0"><strong>Location:</strong> ' + (booking.location || '') + '</p></div>' +
-        '<p>Wear something comfortable. We\'ll handle the rest.</p>',
+        '<p>Wear something comfortable. We\'ll handle the rest.</p>' +
+        '<p style="margin-top:16px;font-size:14px;color:rgba(255,255,255,0.5)">A calendar invite (.ics) is attached to this email.</p>',
         '', ''
       ); }
     },
@@ -212,6 +243,7 @@ async function queueSequence(sequenceName, lead, booking, supabaseClient) {
   if (!seq) return;
   var now = Date.now();
   var messages = [];
+  var icsMap = {}; // Track which steps need .ics attachment
 
   for (var i = 0; i < seq.length; i++) {
     var step = seq[i];
@@ -225,6 +257,11 @@ async function queueSequence(sequenceName, lead, booking, supabaseClient) {
 
     var msgBody = typeof step.body === 'function' ? step.body(lead, booking || {}) : step.body;
     var subject = typeof step.subject === 'function' ? step.subject(lead) : (step.subject || '');
+
+    // Generate .ics for booking confirmation emails
+    if (step.attach_ics && booking && booking.datetime) {
+      icsMap[i] = generateICS(booking, lead.first_name);
+    }
 
     messages.push({
       lead_email: lead.email,
@@ -247,17 +284,22 @@ async function queueSequence(sequenceName, lead, booking, supabaseClient) {
     // Send immediate messages (delay === 0)
     for (var j = 0; j < inserted.length; j++) {
       if (inserted[j].status === 'sending') {
-        await processMessage(inserted[j], supabaseClient);
+        var icsContent = icsMap[inserted[j].step_index] || null;
+        await processMessage(inserted[j], supabaseClient, icsContent);
       }
     }
   }
 }
 
 // Process a single message from the queue
-async function processMessage(msg, supabaseClient) {
+async function processMessage(msg, supabaseClient, icsContent) {
   var result;
   if (msg.channel === 'email') {
-    result = await sendEmail(msg.lead_email, msg.subject, msg.body);
+    var attachments = null;
+    if (icsContent) {
+      attachments = [{ filename: 'reshape-visit.ics', content: btoa(icsContent) }];
+    }
+    result = await sendEmail(msg.lead_email, msg.subject, msg.body, attachments);
   } else if (msg.channel === 'sms' && msg.lead_phone) {
     result = await sendSMS(msg.lead_phone, msg.body);
   } else {
