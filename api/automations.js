@@ -241,94 +241,100 @@ function emailTemplate(title, body, ctaText, ctaUrl) {
 }
 
 /* ══════════════════════════════════════
-   NURTURE SEQUENCES
+   NURTURE SEQUENCES — managed via dashboard
+   Sequences and steps are stored in automation_sequences / automation_steps tables
 ══════════════════════════════════════ */
-var SEQUENCES = {
-  // After form submission (no booking) — delayed to give them time to book
-  form_submitted: [
-    { delay: 900,      channel: 'email',    subject: 'Application received \u2014 here\'s what happens next',
-      body: function(lead) { return emailTemplate(
-        'Hey ' + lead.first_name + ', we got your application! \uD83D\uDC4A',
-        '<p>Thanks for applying to ReShape. We\'re reviewing your details now.</p><p>We noticed you haven\'t booked your in-person visit yet. Spots fill up fast \u2014 don\'t miss out!</p>',
-        'Book Your Visit', AUTOMATION_CONFIG.booking_url
-      ); }
-    },
-    { delay: 3600,     channel: 'sms',
-      body: function(lead) { return 'Hey ' + lead.first_name + ', it\'s Jaime from ReShape. We got your application! Book your in-person visit before spots fill up: ' + AUTOMATION_CONFIG.booking_url; }
-    },
-    { delay: 86400,    channel: 'email',    subject: 'People like you are getting results',
-      body: function(lead) { return emailTemplate(
-        lead.first_name + ', people just like you are transforming',
-        '<p>Since you applied, 3 more people have started their journey with us.</p><p>Our members lose an average of 8\u201312kg in 12 weeks. And if they don\'t? We coach them for free until they do.</p><p>Don\'t let this opportunity pass \u2014 book your visit now.</p>',
-        'Book Your Visit', AUTOMATION_CONFIG.booking_url
-      ); }
-    },
-    { delay: 259200,   channel: 'sms',
-      body: function(lead) { return 'Hi ' + lead.first_name + ', just checking in! Have you had a chance to book your ReShape visit yet? We\'d love to show you around: ' + AUTOMATION_CONFIG.booking_url; }
-    },
-    { delay: 604800,   channel: 'email',    subject: 'Last chance \u2014 your spot won\'t wait forever',
-      body: function(lead) { return emailTemplate(
-        lead.first_name + ', your spot is still open \u2014 but not for long',
-        '<p>It\'s been a week since you applied. We\'d love to help you start your transformation, but we can only hold spots for so long.</p><p>This is your final reminder \u2014 book your visit and let\'s make it happen.</p>',
-        'Book Now', AUTOMATION_CONFIG.booking_url
-      ); }
-    },
-  ],
-
-  // After booking confirmed
-  booking_confirmed: [
-    { delay: 0,        channel: 'email',    subject: 'You\'re booked! \uD83C\uDF89 See you soon',
-      attach_ics: true,
-      body: function(lead, booking) { return emailTemplate(
-        'You\'re booked, ' + lead.first_name + '! \uD83C\uDF89',
-        '<p>We can\'t wait to meet you. Here are your visit details:</p>' +
-        '<div style="background:rgba(237,92,37,0.08);border:1px solid rgba(237,92,37,0.2);border-radius:12px;padding:16px 20px;margin:16px 0">' +
-        '<p style="margin:4px 0"><strong>Date:</strong> ' + (booking.date || '') + '</p>' +
-        '<p style="margin:4px 0"><strong>Time:</strong> ' + (booking.time || '') + '</p>' +
-        '<p style="margin:4px 0"><strong>Location:</strong> ' + (booking.location || '') + '</p></div>' +
-        '<p>Wear something comfortable. We\'ll handle the rest.</p>' +
-        '<p style="margin-top:16px;font-size:14px;color:rgba(255,255,255,0.5)">A calendar invite (.ics) is attached to this email.</p>',
-        '', ''
-      ); }
-    },
-    { delay: 0,        channel: 'sms',
-      body: function(lead, booking) { return 'You\'re booked, ' + lead.first_name + '! ' + (booking.date || '') + ' at ' + (booking.time || '') + ', ' + (booking.location || '') + '. Wear something comfortable - see you there!'; }
-    },
-    { delay: -86400,   channel: 'sms',      is_reminder: true,
-      body: function(lead, booking) { return 'Hey ' + lead.first_name + '! Quick reminder: your ReShape visit is TOMORROW at ' + (booking.time || '') + ' at ' + (booking.location || '') + '. See you there! \uD83D\uDCAA'; }
-    },
-    { delay: -7200,    channel: 'email',    is_reminder: true, subject: 'Your ReShape visit is in 2 hours!',
-      body: function(lead, booking) { return emailTemplate(
-        'See you in 2 hours, ' + lead.first_name + '! \uD83D\uDCAA',
-        '<p>Your ReShape visit is coming up at <strong>' + (booking.time || '') + '</strong> at <strong>' + (booking.location || '') + '</strong>.</p><p>Wear something comfortable. We\'ll handle the rest. Can\'t wait to meet you!</p>',
-        '', ''
-      ); }
-    },
-  ],
-};
 
 /* ══════════════════════════════════════
-   QUEUE MANAGER — insert via Supabase, send via Edge Function cron
+   QUEUE MANAGER — reads sequences from DB, insert via Supabase, send via Edge Function cron
 ══════════════════════════════════════ */
 
-// Queue a full nurture sequence — inserts into DB, Edge Function cron picks them up
+// Replace template variables in message body/subject
+function replaceVars(text, lead, booking) {
+  if (!text) return '';
+  var b = booking || {};
+  return text
+    .replace(/\{first_name\}/g, lead.first_name || '')
+    .replace(/\{last_name\}/g, lead.last_name || '')
+    .replace(/\{email\}/g, lead.email || '')
+    .replace(/\{phone\}/g, lead.phone || '')
+    .replace(/\{location\}/g, lead.location || b.location || '')
+    .replace(/\{booking_date\}/g, b.date || '')
+    .replace(/\{booking_time\}/g, b.time || '')
+    .replace(/\{booking_url\}/g, AUTOMATION_CONFIG.booking_url || '');
+}
+
+// Wrap plain text body in email template for email channel
+function wrapEmailBody(subject, body, lead, booking) {
+  var processedBody = replaceVars(body, lead, booking);
+  var processedSubject = replaceVars(subject, lead, booking);
+  // If body already contains HTML tags, wrap it in the template
+  if (processedBody.indexOf('<') === -1) {
+    // Plain text — convert line breaks to paragraphs
+    processedBody = '<p>' + processedBody.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
+  }
+  return emailTemplate(
+    processedSubject || 'ReShape',
+    processedBody,
+    'Book Your Visit',
+    AUTOMATION_CONFIG.booking_url
+  );
+}
+
+// Queue a full nurture sequence from database
 async function queueSequence(sequenceName, lead, booking, supabaseClient) {
-  var seq = SEQUENCES[sequenceName];
-  if (!seq) return;
+  if (!supabaseClient) return;
+
+  // Fetch active sequence from database
+  var seqRes = await supabaseClient
+    .from('automation_sequences')
+    .select('*')
+    .eq('trigger_type', sequenceName)
+    .eq('is_active', true)
+    .limit(1);
+
+  var seq = (seqRes.data || [])[0];
+  if (!seq) {
+    console.warn('No active sequence found for trigger: ' + sequenceName);
+    return;
+  }
+
+  // Fetch steps for this sequence
+  var stepsRes = await supabaseClient
+    .from('automation_steps')
+    .select('*')
+    .eq('sequence_id', seq.id)
+    .eq('is_active', true)
+    .order('step_order', { ascending: true });
+
+  var steps = stepsRes.data || [];
+  if (steps.length === 0) {
+    console.warn('No steps found for sequence: ' + seq.name);
+    return;
+  }
+
   var now = Date.now();
   var messages = [];
 
-  for (var i = 0; i < seq.length; i++) {
-    var step = seq[i];
+  for (var i = 0; i < steps.length; i++) {
+    var step = steps[i];
+    var delaySec = step.delay_seconds || 0;
     var sendAt;
-    if (step.is_reminder && booking && booking.datetime) {
-      sendAt = new Date(new Date(booking.datetime).getTime() + (step.delay * 1000)).toISOString();
+
+    if (delaySec < 0 && booking && booking.datetime) {
+      // Negative delay = before booking time (reminders)
+      sendAt = new Date(new Date(booking.datetime).getTime() + (delaySec * 1000)).toISOString();
     } else {
-      sendAt = new Date(now + (step.delay * 1000)).toISOString();
+      sendAt = new Date(now + (delaySec * 1000)).toISOString();
     }
 
-    var msgBody = typeof step.body === 'function' ? step.body(lead, booking || {}) : step.body;
-    var subject = typeof step.subject === 'function' ? step.subject(lead) : (step.subject || '');
+    var subject = replaceVars(step.subject || '', lead, booking);
+    var body;
+    if (step.channel === 'email') {
+      body = wrapEmailBody(step.subject, step.body, lead, booking);
+    } else {
+      body = replaceVars(step.body || '', lead, booking);
+    }
 
     messages.push({
       lead_email: lead.email,
@@ -338,19 +344,19 @@ async function queueSequence(sequenceName, lead, booking, supabaseClient) {
       step_index: i,
       channel: step.channel,
       subject: subject,
-      body: msgBody,
+      body: body,
       send_at: sendAt,
       status: 'queued',
     });
   }
 
-  // Insert all messages directly via Supabase client (no CORS issues)
-  if (supabaseClient && messages.length > 0) {
+  // Insert all messages directly via Supabase client
+  if (messages.length > 0) {
     var insertRes = await supabaseClient.from('message_queue').insert(messages).select();
     if (insertRes.error) {
       console.error('Queue insert error:', insertRes.error.message);
     } else {
-      console.log('Queued ' + (insertRes.data || []).length + ' messages for sequence: ' + sequenceName);
+      console.log('Queued ' + (insertRes.data || []).length + ' messages for sequence: ' + seq.name);
     }
   }
 
