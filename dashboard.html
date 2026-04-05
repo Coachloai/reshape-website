@@ -4432,7 +4432,7 @@ function startGCalAuth() {
   var clientId = document.getElementById('gcal-client-id').value.trim();
   if (!clientId) { showToast('Enter a Client ID first'); return; }
   var redirect = window.location.origin + '/dashboard.html';
-  var scope = 'https://www.googleapis.com/auth/calendar.events';
+  var scope = 'https://www.googleapis.com/auth/calendar';
   var url = 'https://accounts.google.com/o/oauth2/v2/auth?' + new URLSearchParams({
     client_id: clientId,
     redirect_uri: redirect,
