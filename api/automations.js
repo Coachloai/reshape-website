@@ -1,14 +1,10 @@
 /* ══════════════════════════════════════
    ReShape — Nurture Automation Engine
-   Email (Resend) + SMS (Twilio)
+   Email (Resend) + SMS (Twilio) via Edge Function
 ══════════════════════════════════════ */
 
-// Config loaded from api/config.js (not committed to git)
+// Config loaded from api/config.js
 var AUTOMATION_CONFIG = window.__AUTOMATION_CONFIG || {
-  resend_key: '',
-  twilio_sid: '',
-  twilio_auth: '',
-  twilio_phone: '',
   coach_email: 'coach@reshape.fit',
   google_calendar_id: '',
   google_client_id: '',
@@ -16,26 +12,43 @@ var AUTOMATION_CONFIG = window.__AUTOMATION_CONFIG || {
   google_refresh_token: '',
   from_email: 'coach@reshape.fit',
   from_name: 'Coach Jaime | ReShape',
-  fallback_email: 'onboarding@resend.dev',
   booking_url: 'https://reshape.fit/#apply',
 };
+
+// Edge Function URL (Supabase)
+var EDGE_FUNCTION_URL = 'https://lvizldmdficsfpgegehp.supabase.co/functions/v1/process-queue';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXpsZG1kZmljc2ZwZ2VnZWhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2OTk4NDQsImV4cCI6MjA4OTI3NTg0NH0.72wHbZaTvqNzW6DTb6Ae1vi9QpOg_-KiEO-Jjm9mn0k';
+
+/* ── Call Edge Function ── */
+async function callEdgeFunction(body) {
+  try {
+    var res = await fetch(EDGE_FUNCTION_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify(body)
+    });
+    return await res.json();
+  } catch (e) {
+    console.error('Edge function error:', e.message);
+    return { success: false, error: e.message };
+  }
+}
 
 /* ── VERIFY PHONE (format + auto-convert UK numbers) ── */
 async function verifyPhone(phone, inputEl) {
   var cleaned = phone.replace(/[\s\-\(\)]/g, '');
-  // Auto-convert UK local numbers to international format
   if (/^0[1-9]\d{8,10}$/.test(cleaned)) {
     cleaned = '+44' + cleaned.substring(1);
-    // Update the input field with the converted number
     if (inputEl) inputEl.value = cleaned;
   }
-  // Also handle 44 without the +
   if (/^44\d{10,11}$/.test(cleaned)) {
     cleaned = '+' + cleaned;
     if (inputEl) inputEl.value = cleaned;
   }
   if (!/^\+\d{10,15}$/.test(cleaned)) return { valid: false, error: 'Enter a valid phone number (e.g. 07700 000000 or +44 7700 000000)' };
-  // Country-specific length validation
   var rules = {
     '+44': { min: 12, max: 13, label: 'UK' },
     '+1': { min: 11, max: 11, label: 'US/CA' },
@@ -61,72 +74,12 @@ async function verifyEmail(email) {
   try {
     var domain = email.split('@')[1];
     if (!domain) return { valid: false, error: 'Invalid email format' };
-    // Use a free DNS lookup API to check MX records
     var res = await fetch('https://dns.google/resolve?name=' + domain + '&type=MX');
     var data = await res.json();
     if (data.Answer && data.Answer.length > 0) return { valid: true };
     if (data.Status === 3 || !data.Answer) return { valid: false, error: 'Email domain does not exist' };
     return { valid: true };
-  } catch (e) { return { valid: true }; } // On error, don't block
-}
-
-/* ── SEND EMAIL via Resend ── */
-async function sendEmail(to, subject, htmlBody, attachments) {
-  try {
-    var payload = {
-      from: AUTOMATION_CONFIG.from_name + ' <' + AUTOMATION_CONFIG.from_email + '>',
-      to: [to],
-      subject: subject,
-      html: htmlBody
-    };
-    if (attachments && attachments.length > 0) payload.attachments = attachments;
-    var res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + AUTOMATION_CONFIG.resend_key, 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    var data = await res.json();
-    if (data.id) return { success: true, id: data.id };
-    // Fallback to resend.dev domain if domain not verified
-    if (data.statusCode === 403 || (data.message && data.message.includes('domain'))) {
-      var fallbackPayload = {
-        from: AUTOMATION_CONFIG.from_name + ' <' + AUTOMATION_CONFIG.fallback_email + '>',
-        to: [to], subject: subject, html: htmlBody
-      };
-      if (attachments && attachments.length > 0) fallbackPayload.attachments = attachments;
-      var res2 = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: { 'Authorization': 'Bearer ' + AUTOMATION_CONFIG.resend_key, 'Content-Type': 'application/json' },
-        body: JSON.stringify(fallbackPayload)
-      });
-      var data2 = await res2.json();
-      return data2.id ? { success: true, id: data2.id } : { success: false, error: data2.message };
-    }
-    return { success: false, error: data.message || 'Unknown error' };
-  } catch (e) { return { success: false, error: e.message }; }
-}
-
-/* ── SEND SMS via Twilio Messaging Service ── */
-async function sendSMS(to, body) {
-  try {
-    var url = 'https://api.twilio.com/2010-04-01/Accounts/' + AUTOMATION_CONFIG.twilio_sid + '/Messages.json';
-    var auth = btoa(AUTOMATION_CONFIG.twilio_sid + ':' + AUTOMATION_CONFIG.twilio_auth);
-    var params = new URLSearchParams();
-    if (AUTOMATION_CONFIG.messaging_service_sid) {
-      params.append('MessagingServiceSid', AUTOMATION_CONFIG.messaging_service_sid);
-    } else {
-      params.append('From', AUTOMATION_CONFIG.twilio_phone);
-    }
-    params.append('To', to);
-    params.append('Body', body);
-    var res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Authorization': 'Basic ' + auth, 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: params.toString()
-    });
-    var data = await res.json();
-    return data.sid ? { success: true, sid: data.sid } : { success: false, error: data.message || 'Failed' };
-  } catch (e) { return { success: false, error: e.message }; }
+  } catch (e) { return { valid: true }; }
 }
 
 /* ── GENERATE .ICS CALENDAR FILE ── */
@@ -215,8 +168,16 @@ async function addToGoogleCalendar(lead, booking, durationMins) {
 async function sendCoachCalendarInvite(lead, booking) {
   if (!booking || !booking.datetime) return;
 
-  // Try Google Calendar API first
-  if (AUTOMATION_CONFIG.google_client_id && AUTOMATION_CONFIG.google_refresh_token) {
+  // Try Google Calendar API first (from dashboard localStorage)
+  var gcalSettings = JSON.parse(localStorage.getItem('gcal_settings') || '{}');
+  var clientId = AUTOMATION_CONFIG.google_client_id || gcalSettings.client_id;
+  var refreshToken = AUTOMATION_CONFIG.google_refresh_token || gcalSettings.refresh_token;
+
+  if (clientId && refreshToken) {
+    AUTOMATION_CONFIG.google_client_id = clientId;
+    AUTOMATION_CONFIG.google_client_secret = AUTOMATION_CONFIG.google_client_secret || gcalSettings.client_secret;
+    AUTOMATION_CONFIG.google_refresh_token = refreshToken;
+    AUTOMATION_CONFIG.google_calendar_id = AUTOMATION_CONFIG.google_calendar_id || gcalSettings.calendar_id || 'primary';
     try {
       var gcResult = await addToGoogleCalendar(lead, booking);
       if (gcResult.success) {
@@ -229,7 +190,7 @@ async function sendCoachCalendarInvite(lead, booking) {
     }
   }
 
-  // Fallback: send .ics email invite
+  // Fallback: send .ics email invite via Edge Function
   var coachEmail = AUTOMATION_CONFIG.coach_email || AUTOMATION_CONFIG.from_email;
   var leadName = ((lead.first_name || '') + ' ' + (lead.last_name || '')).trim();
   var icsContent = generateICS(booking, leadName, {
@@ -250,8 +211,16 @@ async function sendCoachCalendarInvite(lead, booking) {
     '<p style="font-size:14px;color:rgba(255,255,255,0.5)">This event has been added to your calendar automatically.</p>',
     '', ''
   );
-  var attachments = [{ filename: 'invite.ics', content: btoa(icsContent) }];
-  await sendEmail(coachEmail, 'New Booking: ' + leadName + ' \u2014 ' + (booking.date || ''), htmlBody, attachments);
+  await callEdgeFunction({
+    action: 'send_message',
+    channel: 'email',
+    to_email: coachEmail,
+    subject: 'New Booking: ' + leadName + ' \u2014 ' + (booking.date || ''),
+    html_body: htmlBody,
+    lead_name: 'Coach Notification',
+    sequence: 'coach_notify',
+    attachments: [{ filename: 'invite.ics', content: btoa(icsContent) }]
+  });
 }
 
 /* ══════════════════════════════════════
@@ -339,22 +308,20 @@ var SEQUENCES = {
 };
 
 /* ══════════════════════════════════════
-   QUEUE MANAGER
+   QUEUE MANAGER — via Edge Function
 ══════════════════════════════════════ */
 
-// Queue a full nurture sequence for a lead
+// Queue a full nurture sequence — sends all messages to Edge Function for processing
 async function queueSequence(sequenceName, lead, booking, supabaseClient) {
   var seq = SEQUENCES[sequenceName];
   if (!seq) return;
   var now = Date.now();
   var messages = [];
-  var icsMap = {}; // Track which steps need .ics attachment
 
   for (var i = 0; i < seq.length; i++) {
     var step = seq[i];
     var sendAt;
     if (step.is_reminder && booking && booking.datetime) {
-      // Reminders: schedule relative to booking time (negative delay = before)
       sendAt = new Date(new Date(booking.datetime).getTime() + (step.delay * 1000)).toISOString();
     } else {
       sendAt = new Date(now + (step.delay * 1000)).toISOString();
@@ -362,11 +329,6 @@ async function queueSequence(sequenceName, lead, booking, supabaseClient) {
 
     var msgBody = typeof step.body === 'function' ? step.body(lead, booking || {}) : step.body;
     var subject = typeof step.subject === 'function' ? step.subject(lead) : (step.subject || '');
-
-    // Generate .ics for booking confirmation emails
-    if (step.attach_ics && booking && booking.datetime) {
-      icsMap[i] = generateICS(booking, lead.first_name);
-    }
 
     messages.push({
       lead_email: lead.email,
@@ -382,17 +344,10 @@ async function queueSequence(sequenceName, lead, booking, supabaseClient) {
     });
   }
 
-  // Insert all messages into queue and get IDs back
-  if (supabaseClient && messages.length > 0) {
-    var insertRes = await supabaseClient.from('message_queue').insert(messages).select();
-    var inserted = (insertRes.data || []);
-    // Send immediate messages (delay === 0)
-    for (var j = 0; j < inserted.length; j++) {
-      if (inserted[j].status === 'sending') {
-        var icsContent = icsMap[inserted[j].step_index] || null;
-        await processMessage(inserted[j], supabaseClient, icsContent);
-      }
-    }
+  // Send all messages to Edge Function — it handles DB insert + immediate sending
+  if (messages.length > 0) {
+    var result = await callEdgeFunction({ action: 'queue_messages', messages: messages });
+    console.log('Queue result:', result);
   }
 
   // Send coach calendar invite for new bookings
@@ -401,53 +356,8 @@ async function queueSequence(sequenceName, lead, booking, supabaseClient) {
   }
 }
 
-// Process a single message from the queue
-async function processMessage(msg, supabaseClient, icsContent) {
-  var result;
-  if (msg.channel === 'email') {
-    var attachments = null;
-    if (icsContent) {
-      attachments = [{ filename: 'reshape-visit.ics', content: btoa(icsContent) }];
-    }
-    result = await sendEmail(msg.lead_email, msg.subject, msg.body, attachments);
-  } else if (msg.channel === 'sms' && msg.lead_phone) {
-    result = await sendSMS(msg.lead_phone, msg.body);
-  } else {
-    result = { success: false, error: 'No phone number for ' + msg.channel };
-  }
-
-  // Update status in database
-  if (supabaseClient && msg.id) {
-    await supabaseClient.from('message_queue').update({
-      status: result.success ? 'sent' : 'failed',
-      sent_at: result.success ? new Date().toISOString() : null,
-      error: result.error || null,
-      external_id: result.id || result.sid || null
-    }).eq('id', msg.id);
-  }
-
-  return result;
-}
-
-// Process all pending messages that are due
-async function processQueue(supabaseClient) {
-  var now = new Date().toISOString();
-  var res = await supabaseClient.from('message_queue')
-    .select('*')
-    .eq('status', 'queued')
-    .lte('send_at', now)
-    .order('send_at', { ascending: true })
-    .limit(20);
-
-  var messages = res.data || [];
-  var processed = 0;
-
-  for (var i = 0; i < messages.length; i++) {
-    await processMessage(messages[i], supabaseClient);
-    processed++;
-    // Small delay between messages to avoid rate limits
-    await new Promise(function(r) { setTimeout(r, 500); });
-  }
-
-  return processed;
+// Process pending messages via Edge Function (called from dashboard)
+async function processQueue() {
+  var result = await callEdgeFunction({ action: 'process_queue' });
+  return result.processed || 0;
 }

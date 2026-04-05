@@ -3550,7 +3550,7 @@ function renderAutoQueue() {
 
 async function processQueueNow() {
   showToast('Processing queue...');
-  var count = await processQueue(sb);
+  var count = await processQueue();
   showToast(count + ' message' + (count !== 1 ? 's' : '') + ' processed');
   await initAutomationsView();
 }
@@ -3693,7 +3693,7 @@ async function deleteSequence(id) {
 // Auto-process queue every 60 seconds when dashboard is open
 setInterval(async function() {
   if (document.querySelector('#view-automations.active-view')) {
-    var count = await processQueue(sb);
+    var count = await processQueue();
     if (count > 0) { await initAutomationsView(); }
   }
 }, 60000);
