@@ -308,10 +308,10 @@ var SEQUENCES = {
 };
 
 /* ══════════════════════════════════════
-   QUEUE MANAGER — via Edge Function
+   QUEUE MANAGER — insert via Supabase, send via Edge Function cron
 ══════════════════════════════════════ */
 
-// Queue a full nurture sequence — sends all messages to Edge Function for processing
+// Queue a full nurture sequence — inserts into DB, Edge Function cron picks them up
 async function queueSequence(sequenceName, lead, booking, supabaseClient) {
   var seq = SEQUENCES[sequenceName];
   if (!seq) return;
@@ -340,14 +340,18 @@ async function queueSequence(sequenceName, lead, booking, supabaseClient) {
       subject: subject,
       body: msgBody,
       send_at: sendAt,
-      status: step.delay === 0 ? 'sending' : 'queued',
+      status: 'queued',
     });
   }
 
-  // Send all messages to Edge Function — it handles DB insert + immediate sending
-  if (messages.length > 0) {
-    var result = await callEdgeFunction({ action: 'queue_messages', messages: messages });
-    console.log('Queue result:', result);
+  // Insert all messages directly via Supabase client (no CORS issues)
+  if (supabaseClient && messages.length > 0) {
+    var insertRes = await supabaseClient.from('message_queue').insert(messages).select();
+    if (insertRes.error) {
+      console.error('Queue insert error:', insertRes.error.message);
+    } else {
+      console.log('Queued ' + (insertRes.data || []).length + ' messages for sequence: ' + sequenceName);
+    }
   }
 
   // Send coach calendar invite for new bookings
@@ -358,6 +362,19 @@ async function queueSequence(sequenceName, lead, booking, supabaseClient) {
 
 // Process pending messages via Edge Function (called from dashboard)
 async function processQueue() {
-  var result = await callEdgeFunction({ action: 'process_queue' });
-  return result.processed || 0;
+  try {
+    var res = await fetch(EDGE_FUNCTION_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({ action: 'process_queue' })
+    });
+    var data = await res.json();
+    return data.processed || 0;
+  } catch (e) {
+    console.error('Process queue error:', e.message);
+    return 0;
+  }
 }
