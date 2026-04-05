@@ -4086,6 +4086,7 @@ document.addEventListener('keydown', function(e) {
     <div class="modal-body" id="modal-body"></div>
     <div class="modal-foot">
       <button class="btn btn-ghost btn-sm" onclick="closeModal()">Close</button>
+      <button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:rgba(231,76,60,.3)" onclick="deleteLead(document.getElementById('modal-name').dataset.leadId)">Delete Lead</button>
       <button class="btn btn-primary btn-sm" onclick="closeModal()">Mark as Contacted</button>
     </div>
   </div>
@@ -4097,6 +4098,7 @@ function openLeadModal(id) {
   if (!l) { console.error('Lead not found:', id, 'Total leads:', ALL_LEADS.length); return; }
   const a = l.answers || {};
   document.getElementById('modal-name').textContent = l.name;
+  document.getElementById('modal-name').dataset.leadId = l.id;
   document.getElementById('modal-id').textContent   =
     'Lead #' + l.id + ' \u00b7 ' + l.formLabel + ' \u00b7 ' +
     new Date(l.date).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
@@ -4189,6 +4191,21 @@ function openLeadModal(id) {
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
   document.body.style.overflow = '';
+}
+async function deleteLead(id) {
+  if (!id) return;
+  if (!confirm('Delete this lead permanently? This cannot be undone.')) return;
+  try {
+    var res = await sb.from('leads').delete().eq('id', id);
+    if (res.error) { showToast('Error: ' + res.error.message); return; }
+    ALL_LEADS = ALL_LEADS.filter(function(l) { return String(l.id) !== String(id); });
+    filtered = filtered.filter(function(l) { return String(l.id) !== String(id); });
+    closeModal();
+    renderTable();
+    renderLeadsView();
+    updateStats();
+    showToast('Lead deleted');
+  } catch (e) { showToast('Error deleting lead'); }
 }
 /* ══ DRAWERS ═════════════════════════ */
 let drawerCharts = {};
