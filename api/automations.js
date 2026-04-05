@@ -133,7 +133,8 @@ async function sendSMS(to, body) {
 function generateICS(booking, leadName, opts) {
   var o = opts || {};
   var dt = new Date(booking.datetime);
-  var endDt = new Date(dt.getTime() + 3600000); // 1 hour duration
+  var dur = (parseInt((JSON.parse(localStorage.getItem('gcal_settings') || '{}').duration) || '60')) * 60000;
+  var endDt = new Date(dt.getTime() + dur);
   function icsDate(d) {
     return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   }
@@ -178,13 +179,14 @@ async function getGoogleAccessToken() {
 }
 
 /* ── GOOGLE CALENDAR — CREATE EVENT ── */
-async function addToGoogleCalendar(lead, booking) {
+async function addToGoogleCalendar(lead, booking, durationMins) {
   var token = await getGoogleAccessToken();
   if (!token) return { success: false, error: 'No access token' };
   var calendarId = AUTOMATION_CONFIG.google_calendar_id || 'primary';
   var leadName = ((lead.first_name || '') + ' ' + (lead.last_name || '')).trim();
   var dt = new Date(booking.datetime);
-  var endDt = new Date(dt.getTime() + 3600000);
+  var dur = (durationMins || parseInt((JSON.parse(localStorage.getItem('gcal_settings') || '{}').duration) || '60')) * 60000;
+  var endDt = new Date(dt.getTime() + dur);
   var location = booking.location === 'Ipswich' ? 'ReShape, Ipswich' : booking.location === 'Colchester' ? 'ReShape, Colchester' : 'ReShape, ' + (booking.location || '');
   var event = {
     summary: 'Visit: ' + (leadName || 'New Lead'),

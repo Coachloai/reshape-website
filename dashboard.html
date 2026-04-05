@@ -1958,6 +1958,16 @@ if(sessionStorage.getItem('rs_auth')==='1'){
             <label class="appt-form-label">Calendar ID <span style="color:var(--text3);font-weight:400">(leave blank for primary)</span></label>
             <input type="text" class="appt-form-input" id="gcal-calendar-id" placeholder="primary" style="font-size:12px">
           </div>
+          <div class="appt-form-group">
+            <label class="appt-form-label">Appointment Duration</label>
+            <select class="appt-form-input" id="gcal-duration" style="font-size:12px">
+              <option value="30">30 minutes</option>
+              <option value="45">45 minutes</option>
+              <option value="60" selected>1 hour</option>
+              <option value="90">1.5 hours</option>
+              <option value="120">2 hours</option>
+            </select>
+          </div>
           <div id="gcal-auth-section" style="display:none">
             <div class="appt-form-group">
               <label class="appt-form-label">Authorization Code</label>
@@ -1974,6 +1984,7 @@ if(sessionStorage.getItem('rs_auth')==='1'){
           <div style="display:flex;gap:8px;margin-top:4px">
             <button class="btn btn-primary btn-sm" onclick="startGCalAuth()">Connect Google Calendar</button>
             <button class="btn btn-ghost btn-sm" onclick="testGCalConnection()">Test Connection</button>
+            <button class="btn btn-ghost btn-sm" onclick="sendTestCalEvent()">Send Test Event</button>
             <button class="btn btn-ghost btn-sm" onclick="saveGCalSettings()">Save</button>
           </div>
         </div>
@@ -4393,6 +4404,7 @@ document.addEventListener('keydown', e=>{
   if (saved.client_id) document.getElementById('gcal-client-id').value = saved.client_id;
   if (saved.client_secret) document.getElementById('gcal-client-secret').value = saved.client_secret;
   if (saved.calendar_id) document.getElementById('gcal-calendar-id').value = saved.calendar_id;
+  if (saved.duration) document.getElementById('gcal-duration').value = saved.duration;
   if (saved.refresh_token) {
     document.getElementById('gcal-refresh-token').value = saved.refresh_token;
     document.getElementById('gcal-token-display').style.display = 'block';
@@ -4519,7 +4531,8 @@ function saveGCalSettings() {
     client_id: document.getElementById('gcal-client-id').value.trim(),
     client_secret: document.getElementById('gcal-client-secret').value.trim(),
     calendar_id: document.getElementById('gcal-calendar-id').value.trim(),
-    refresh_token: document.getElementById('gcal-refresh-token').value.trim()
+    refresh_token: document.getElementById('gcal-refresh-token').value.trim(),
+    duration: document.getElementById('gcal-duration').value
   };
   localStorage.setItem('gcal_settings', JSON.stringify(settings));
   // Apply to config
@@ -4531,6 +4544,34 @@ function saveGCalSettings() {
   }
   updateGCalStatus();
   showToast('Google Calendar settings saved');
+}
+
+async function sendTestCalEvent() {
+  var saved = JSON.parse(localStorage.getItem('gcal_settings') || '{}');
+  if (!saved.refresh_token) { showToast('Connect Google Calendar first'); return; }
+  AUTOMATION_CONFIG.google_client_id = saved.client_id;
+  AUTOMATION_CONFIG.google_client_secret = saved.client_secret;
+  AUTOMATION_CONFIG.google_refresh_token = saved.refresh_token;
+  AUTOMATION_CONFIG.google_calendar_id = saved.calendar_id || 'primary';
+  var durationMins = parseInt(saved.duration || '60');
+  var testLead = { first_name: 'Test', last_name: 'Booking', email: 'test@example.com', phone: '+44 7700 000000' };
+  var now = new Date();
+  var tomorrow = new Date(now.getTime() + 86400000);
+  tomorrow.setHours(10, 0, 0, 0);
+  var testBooking = {
+    date: tomorrow.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }),
+    time: '10:00',
+    location: 'Ipswich',
+    datetime: tomorrow.toISOString().substring(0, 11) + '10:00:00'
+  };
+  try {
+    var result = await addToGoogleCalendar(testLead, testBooking, durationMins);
+    if (result.success) {
+      showToast('Test event added to your calendar for tomorrow at 10am!');
+    } else {
+      showToast('Error: ' + result.error);
+    }
+  } catch (e) { showToast('Error: ' + e.message); }
 }
 </script>
 </body>
