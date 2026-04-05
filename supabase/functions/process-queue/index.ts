@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -7,14 +6,15 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
+function jsonResponse(data: any, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
 // ── SEND EMAIL via Resend ──
-async function sendEmail(
-  to: string,
-  subject: string,
-  htmlBody: string,
-  config: any,
-  attachments?: any[]
-) {
+async function sendEmail(to: string, subject: string, htmlBody: string, config: any, attachments?: any[]) {
   const payload: any = {
     from: `${config.from_name} <${config.from_email}>`,
     to: [to],
@@ -23,38 +23,24 @@ async function sendEmail(
   };
   if (attachments && attachments.length > 0) payload.attachments = attachments;
 
-  const res = await fetch("https://api.resend.com/emails", {
+  let res = await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${config.resend_key}`,
-      "Content-Type": "application/json",
-    },
+    headers: { Authorization: `Bearer ${config.resend_key}`, "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  const data = await res.json();
+  let data = await res.json();
   if (data.id) return { success: true, id: data.id };
 
-  // Fallback to resend.dev domain if custom domain not verified
+  // Fallback to resend.dev domain
   if (data.statusCode === 403 || (data.message && data.message.includes("domain"))) {
-    const fallbackPayload: any = {
-      from: `${config.from_name} <${config.fallback_email}>`,
-      to: [to],
-      subject,
-      html: htmlBody,
-    };
-    if (attachments && attachments.length > 0) fallbackPayload.attachments = attachments;
-    const res2 = await fetch("https://api.resend.com/emails", {
+    payload.from = `${config.from_name} <${config.fallback_email}>`;
+    res = await fetch("https://api.resend.com/emails", {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${config.resend_key}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(fallbackPayload),
+      headers: { Authorization: `Bearer ${config.resend_key}`, "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     });
-    const data2 = await res2.json();
-    return data2.id
-      ? { success: true, id: data2.id }
-      : { success: false, error: data2.message };
+    data = await res.json();
+    return data.id ? { success: true, id: data.id } : { success: false, error: data.message };
   }
 
   return { success: false, error: data.message || "Unknown error" };
@@ -75,52 +61,41 @@ async function sendSMS(to: string, body: string, config: any) {
 
   const res = await fetch(url, {
     method: "POST",
-    headers: {
-      Authorization: `Basic ${auth}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
+    headers: { Authorization: `Basic ${auth}`, "Content-Type": "application/x-www-form-urlencoded" },
     body: params.toString(),
   });
   const data = await res.json();
-  return data.sid
-    ? { success: true, sid: data.sid }
-    : { success: false, error: data.message || "Failed" };
+  return data.sid ? { success: true, sid: data.sid } : { success: false, error: data.message || "Failed" };
 }
 
 // ── PROCESS A SINGLE MESSAGE ──
 async function processMessage(msg: any, supabase: any, config: any) {
   let result: any;
-
   if (msg.channel === "email") {
     result = await sendEmail(msg.lead_email, msg.subject, msg.body, config);
   } else if (msg.channel === "sms" && msg.lead_phone) {
     result = await sendSMS(msg.lead_phone, msg.body, config);
   } else {
-    result = { success: false, error: `No phone number for ${msg.channel}` };
+    result = { success: false, error: `No phone or unsupported channel: ${msg.channel}` };
   }
 
-  // Update status in database
-  await supabase
-    .from("message_queue")
-    .update({
-      status: result.success ? "sent" : "failed",
-      sent_at: result.success ? new Date().toISOString() : null,
-      error: result.error || null,
-      external_id: result.id || result.sid || null,
-    })
-    .eq("id", msg.id);
+  await supabase.from("message_queue").update({
+    status: result.success ? "sent" : "failed",
+    sent_at: result.success ? new Date().toISOString() : null,
+    error: result.error || null,
+    external_id: result.id || result.sid || null,
+  }).eq("id", msg.id);
 
   return result;
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response(null, { status: 204, headers: corsHeaders });
   }
 
   try {
-    // Config from environment variables
     const config = {
       resend_key: Deno.env.get("RESEND_KEY") || "",
       twilio_sid: Deno.env.get("TWILIO_SID") || "",
@@ -137,19 +112,13 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     let body: any = {};
-    try {
-      body = await req.json();
-    } catch {
-      // No body = cron/queue processing mode
-    }
+    try { body = await req.json(); } catch { /* empty body = process_queue */ }
 
     const action = body.action || "process_queue";
 
-    // ── ACTION: Send a single message immediately ──
+    // ── Send a single message immediately ──
     if (action === "send_message") {
       const { channel, to_email, to_phone, subject, html_body, text_body, lead_name, sequence, step_index, attachments } = body;
-
-      // Insert into message_queue
       const msgData: any = {
         lead_email: to_email || "",
         lead_phone: to_phone || null,
@@ -163,21 +132,11 @@ serve(async (req) => {
         status: "sending",
       };
 
-      const { data: inserted, error: insertErr } = await supabase
-        .from("message_queue")
-        .insert([msgData])
-        .select();
-
-      if (insertErr) {
-        return new Response(JSON.stringify({ success: false, error: insertErr.message }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 400,
-        });
-      }
+      const { data: inserted, error: insertErr } = await supabase.from("message_queue").insert([msgData]).select();
+      if (insertErr) return jsonResponse({ success: false, error: insertErr.message }, 400);
 
       const msg = inserted[0];
       let result: any;
-
       if (channel === "email") {
         result = await sendEmail(to_email, subject || "", html_body || "", config, attachments);
       } else if (channel === "sms" && to_phone) {
@@ -186,61 +145,39 @@ serve(async (req) => {
         result = { success: false, error: "Invalid channel or missing recipient" };
       }
 
-      // Update status
-      await supabase
-        .from("message_queue")
-        .update({
-          status: result.success ? "sent" : "failed",
-          sent_at: result.success ? new Date().toISOString() : null,
-          error: result.error || null,
-          external_id: result.id || result.sid || null,
-        })
-        .eq("id", msg.id);
+      await supabase.from("message_queue").update({
+        status: result.success ? "sent" : "failed",
+        sent_at: result.success ? new Date().toISOString() : null,
+        error: result.error || null,
+        external_id: result.id || result.sid || null,
+      }).eq("id", msg.id);
 
-      return new Response(JSON.stringify({ success: result.success, id: msg.id, error: result.error }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return jsonResponse({ success: result.success, id: msg.id, error: result.error });
     }
 
-    // ── ACTION: Queue messages (insert only, send immediates) ──
+    // ── Queue messages (insert + send immediates) ──
     if (action === "queue_messages") {
       const { messages } = body;
       if (!messages || messages.length === 0) {
-        return new Response(JSON.stringify({ success: true, queued: 0, sent: 0 }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return jsonResponse({ success: true, queued: 0, sent: 0 });
       }
 
-      const { data: inserted, error: insertErr } = await supabase
-        .from("message_queue")
-        .insert(messages)
-        .select();
+      const { data: inserted, error: insertErr } = await supabase.from("message_queue").insert(messages).select();
+      if (insertErr) return jsonResponse({ success: false, error: insertErr.message }, 400);
 
-      if (insertErr) {
-        return new Response(JSON.stringify({ success: false, error: insertErr.message }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 400,
-        });
-      }
-
-      // Process immediate messages (status === 'sending')
       let sent = 0;
       for (const msg of inserted || []) {
         if (msg.status === "sending") {
           await processMessage(msg, supabase, config);
           sent++;
-          // Small delay between messages
           await new Promise((r) => setTimeout(r, 300));
         }
       }
 
-      return new Response(
-        JSON.stringify({ success: true, queued: (inserted || []).length, sent }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return jsonResponse({ success: true, queued: (inserted || []).length, sent });
     }
 
-    // ── ACTION: Process queue (send pending messages that are due) ──
+    // ── Process queue (send due messages) ──
     if (action === "process_queue") {
       const now = new Date().toISOString();
       const { data: messages, error: fetchErr } = await supabase
@@ -251,12 +188,7 @@ serve(async (req) => {
         .order("send_at", { ascending: true })
         .limit(20);
 
-      if (fetchErr) {
-        return new Response(JSON.stringify({ success: false, error: fetchErr.message }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 400,
-        });
-      }
+      if (fetchErr) return jsonResponse({ success: false, error: fetchErr.message }, 400);
 
       let processed = 0;
       for (const msg of messages || []) {
@@ -265,20 +197,11 @@ serve(async (req) => {
         await new Promise((r) => setTimeout(r, 300));
       }
 
-      return new Response(
-        JSON.stringify({ success: true, processed }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return jsonResponse({ success: true, processed });
     }
 
-    return new Response(JSON.stringify({ error: "Unknown action" }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 400,
-    });
+    return jsonResponse({ error: "Unknown action" }, 400);
   } catch (err) {
-    return new Response(JSON.stringify({ success: false, error: (err as Error).message }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 500,
-    });
+    return jsonResponse({ success: false, error: (err as Error).message }, 500);
   }
 });
