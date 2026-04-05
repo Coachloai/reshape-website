@@ -48,8 +48,19 @@ async function sendEmail(to: string, subject: string, htmlBody: string, config: 
 
 // ── SEND SMS via Twilio ──
 async function sendSMS(to: string, body: string, config: any) {
+  if (!config.twilio_sid || !config.twilio_auth) {
+    return { success: false, error: "Twilio SID or Auth Token not configured" };
+  }
   const url = `https://api.twilio.com/2010-04-01/Accounts/${config.twilio_sid}/Messages.json`;
-  const auth = btoa(`${config.twilio_sid}:${config.twilio_auth}`);
+  const credentials = `${config.twilio_sid}:${config.twilio_auth}`;
+  const encoder = new TextEncoder();
+  const encoded = encoder.encode(credentials);
+  let auth = "";
+  for (let i = 0; i < encoded.length; i++) {
+    auth += String.fromCharCode(encoded[i]);
+  }
+  auth = btoa(auth);
+
   const params = new URLSearchParams();
   if (config.messaging_service_sid) {
     params.append("MessagingServiceSid", config.messaging_service_sid);
@@ -59,12 +70,15 @@ async function sendSMS(to: string, body: string, config: any) {
   params.append("To", to);
   params.append("Body", body);
 
+  console.log("Twilio request:", { url, to, sid_length: config.twilio_sid.length, auth_length: config.twilio_auth.length });
+
   const res = await fetch(url, {
     method: "POST",
     headers: { Authorization: `Basic ${auth}`, "Content-Type": "application/x-www-form-urlencoded" },
     body: params.toString(),
   });
   const data = await res.json();
+  console.log("Twilio response:", JSON.stringify(data));
   return data.sid ? { success: true, sid: data.sid } : { success: false, error: data.message || "Failed" };
 }
 
