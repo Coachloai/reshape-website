@@ -112,7 +112,10 @@ Deno.serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     let body: any = {};
-    try { body = await req.json(); } catch { /* empty body = process_queue */ }
+    const rawBody = await req.text();
+    if (rawBody && rawBody.length > 0) {
+      try { body = JSON.parse(rawBody); } catch (_e) { /* not JSON */ }
+    }
 
     const action = body.action || "process_queue";
 
