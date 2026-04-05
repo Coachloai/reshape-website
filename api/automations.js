@@ -244,12 +244,12 @@ function emailTemplate(title, body, ctaText, ctaUrl) {
    NURTURE SEQUENCES
 ══════════════════════════════════════ */
 var SEQUENCES = {
-  // After form submission (no booking)
+  // After form submission (no booking) — delayed to give them time to book
   form_submitted: [
-    { delay: 0,        channel: 'email',    subject: 'Application received \u2014 here\'s what happens next',
+    { delay: 900,      channel: 'email',    subject: 'Application received \u2014 here\'s what happens next',
       body: function(lead) { return emailTemplate(
         'Hey ' + lead.first_name + ', we got your application! \uD83D\uDC4A',
-        '<p>Thanks for applying to ReShape. We\'re reviewing your details now.</p><p>In the meantime, why not book your in-person visit? Spots fill up fast.</p>',
+        '<p>Thanks for applying to ReShape. We\'re reviewing your details now.</p><p>We noticed you haven\'t booked your in-person visit yet. Spots fill up fast \u2014 don\'t miss out!</p>',
         'Book Your Visit', AUTOMATION_CONFIG.booking_url
       ); }
     },
