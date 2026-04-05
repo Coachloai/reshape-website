@@ -1183,10 +1183,16 @@ if(sessionStorage.getItem('rs_auth')==='1'){
           <input type="text" class="filter-input" style="width:200px;padding:7px 12px" placeholder="Quick search…" id="table-search" oninput="quickSearch(this.value)">
         </div>
       </div>
+      <div id="bulk-bar" style="display:none;padding:10px 16px;background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.2);border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:12px">
+        <span style="font-size:13px;font-weight:600;color:var(--text)" id="bulk-count">0 selected</span>
+        <button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:rgba(231,76,60,.3);padding:6px 14px;font-size:12px" onclick="deleteSelectedLeads()">Delete Selected</button>
+        <button class="btn btn-ghost btn-sm" style="padding:6px 14px;font-size:12px" onclick="clearSelection()">Cancel</button>
+      </div>
       <div style="overflow-x:auto">
         <table class="data-table" id="leads-table">
           <thead>
             <tr>
+              <th style="width:36px"><input type="checkbox" class="lead-check-all" onchange="toggleAllLeads(this,'leads-tbody')"></th>
               <th onclick="sortTable('#')" data-col="#"><div class="th-inner">#<span class="sort-icon">↕</span></div></th>
               <th onclick="sortTable('name')" data-col="name"><div class="th-inner">Name<span class="sort-icon">↕</span></div></th>
               <th onclick="sortTable('email')" data-col="email"><div class="th-inner">Email<span class="sort-icon">↕</span></div></th>
@@ -1301,6 +1307,7 @@ if(sessionStorage.getItem('rs_auth')==='1'){
           <table class="data-table">
             <thead>
               <tr>
+                <th style="width:36px"><input type="checkbox" class="lead-check-all" onchange="toggleAllLeads(this,'leads-view-tbody')"></th>
                 <th onclick="sortTable('#')" data-col="#"><div class="th-inner">#<span class="sort-icon">↕</span></div></th>
                 <th onclick="sortTable('name')" data-col="name"><div class="th-inner">Name<span class="sort-icon">↕</span></div></th>
                 <th onclick="sortTable('email')" data-col="email"><div class="th-inner">Email<span class="sort-icon">↕</span></div></th>
@@ -2126,6 +2133,7 @@ function renderTable() {
     const d = new Date(l.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
     return `
       <tr>
+        <td><input type="checkbox" class="lead-check" data-id="${l.id}" onchange="updateBulkBar()"></td>
         <td style="color:var(--text3)">${start + i + 1}</td>
         <td class="td-name">${l.name}</td>
         <td class="td-email">${l.email}</td>
@@ -2540,6 +2548,7 @@ function renderLeadsView() {
     const d = new Date(l.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
     return `
       <tr>
+        <td><input type="checkbox" class="lead-check" data-id="${l.id}" onchange="updateBulkBar()"></td>
         <td style="color:var(--text3)">${i+1}</td>
         <td class="td-name">${l.name}</td>
         <td class="td-email">${l.email}</td>
@@ -4191,6 +4200,45 @@ function openLeadModal(id) {
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
   document.body.style.overflow = '';
+}
+function toggleAllLeads(masterCheckbox, tbodyId) {
+  var checks = document.getElementById(tbodyId).querySelectorAll('.lead-check');
+  checks.forEach(function(cb) { cb.checked = masterCheckbox.checked; });
+  updateBulkBar();
+}
+function updateBulkBar() {
+  var checked = document.querySelectorAll('.lead-check:checked');
+  var bar = document.getElementById('bulk-bar');
+  if (checked.length > 0) {
+    bar.style.display = 'flex';
+    document.getElementById('bulk-count').textContent = checked.length + ' selected';
+  } else {
+    bar.style.display = 'none';
+  }
+}
+function clearSelection() {
+  document.querySelectorAll('.lead-check').forEach(function(cb) { cb.checked = false; });
+  document.querySelectorAll('.lead-check-all').forEach(function(cb) { cb.checked = false; });
+  updateBulkBar();
+}
+async function deleteSelectedLeads() {
+  var checked = document.querySelectorAll('.lead-check:checked');
+  var ids = [];
+  checked.forEach(function(cb) { ids.push(cb.dataset.id); });
+  if (ids.length === 0) return;
+  if (!confirm('Delete ' + ids.length + ' lead' + (ids.length > 1 ? 's' : '') + ' permanently? This cannot be undone.')) return;
+  try {
+    for (var i = 0; i < ids.length; i++) {
+      await sb.from('leads').delete().eq('id', ids[i]);
+    }
+    ALL_LEADS = ALL_LEADS.filter(function(l) { return ids.indexOf(String(l.id)) === -1; });
+    filtered = filtered.filter(function(l) { return ids.indexOf(String(l.id)) === -1; });
+    clearSelection();
+    renderTable();
+    renderLeadsView();
+    updateStats();
+    showToast(ids.length + ' lead' + (ids.length > 1 ? 's' : '') + ' deleted');
+  } catch (e) { showToast('Error deleting leads'); }
 }
 async function deleteLead(id) {
   if (!id) return;
