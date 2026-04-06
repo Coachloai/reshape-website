@@ -265,19 +265,27 @@ function replaceVars(text, lead, booking) {
 }
 
 // Wrap plain text body in email template for email channel
-function wrapEmailBody(subject, body, lead, booking) {
+function wrapEmailBody(subject, body, lead, booking, sequenceName) {
   var processedBody = replaceVars(body, lead, booking);
   var processedSubject = replaceVars(subject, lead, booking);
-  // If body already contains HTML tags, wrap it in the template
+  // Convert literal \n to actual newlines (from database storage)
+  processedBody = processedBody.replace(/\\n/g, '\n');
+  // If body is plain text, convert newlines to HTML
   if (processedBody.indexOf('<') === -1) {
-    // Plain text — convert line breaks to paragraphs
     processedBody = '<p>' + processedBody.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
+  }
+  // Only show booking CTA for form_submitted sequence, not for booking confirmations
+  var ctaText = '';
+  var ctaUrl = '';
+  if (sequenceName === 'form_submitted') {
+    ctaText = 'Book Your Visit';
+    ctaUrl = AUTOMATION_CONFIG.booking_url;
   }
   return emailTemplate(
     processedSubject || 'ReShape',
     processedBody,
-    'Book Your Visit',
-    AUTOMATION_CONFIG.booking_url
+    ctaText,
+    ctaUrl
   );
 }
 
@@ -331,9 +339,9 @@ async function queueSequence(sequenceName, lead, booking, supabaseClient) {
     var subject = replaceVars(step.subject || '', lead, booking);
     var body;
     if (step.channel === 'email') {
-      body = wrapEmailBody(step.subject, step.body, lead, booking);
+      body = wrapEmailBody(step.subject, step.body, lead, booking, sequenceName);
     } else {
-      body = replaceVars(step.body || '', lead, booking);
+      body = replaceVars(step.body || '', lead, booking).replace(/\\n/g, '\n');
     }
 
     messages.push({
