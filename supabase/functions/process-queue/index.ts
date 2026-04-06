@@ -15,35 +15,43 @@ function jsonResponse(data: any, status = 200) {
 
 // ── SEND EMAIL via Resend ──
 async function sendEmail(to: string, subject: string, htmlBody: string, config: any, attachments?: any[]) {
-  const payload: any = {
-    from: `${config.from_name} <${config.from_email}>`,
-    to: [to],
-    subject,
-    html: htmlBody,
-  };
-  if (attachments && attachments.length > 0) payload.attachments = attachments;
+  try {
+    console.log("Sending email to:", to, "subject:", subject, "body_length:", (htmlBody || "").length, "key_length:", (config.resend_key || "").length);
+    const payload: any = {
+      from: `${config.from_name} <${config.from_email}>`,
+      to: [to],
+      subject,
+      html: htmlBody,
+    };
+    if (attachments && attachments.length > 0) payload.attachments = attachments;
 
-  let res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${config.resend_key}`, "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  let data = await res.json();
-  if (data.id) return { success: true, id: data.id };
-
-  // Fallback to resend.dev domain
-  if (data.statusCode === 403 || (data.message && data.message.includes("domain"))) {
-    payload.from = `${config.from_name} <${config.fallback_email}>`;
-    res = await fetch("https://api.resend.com/emails", {
+    let res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { Authorization: `Bearer ${config.resend_key}`, "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    data = await res.json();
-    return data.id ? { success: true, id: data.id } : { success: false, error: data.message };
-  }
+    let data = await res.json();
+    console.log("Resend response:", JSON.stringify(data).substring(0, 200));
+    if (data.id) return { success: true, id: data.id };
 
-  return { success: false, error: data.message || "Unknown error" };
+    // Fallback to resend.dev domain
+    if (data.statusCode === 403 || (data.message && data.message.includes("domain"))) {
+      payload.from = `${config.from_name} <${config.fallback_email}>`;
+      res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${config.resend_key}`, "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      data = await res.json();
+      console.log("Resend fallback response:", JSON.stringify(data).substring(0, 200));
+      return data.id ? { success: true, id: data.id } : { success: false, error: data.message };
+    }
+
+    return { success: false, error: data.message || "Unknown error" };
+  } catch (e) {
+    console.error("sendEmail caught error:", (e as Error).message);
+    return { success: false, error: (e as Error).message };
+  }
 }
 
 // ── SEND SMS via Twilio ──
