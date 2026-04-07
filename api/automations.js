@@ -274,6 +274,23 @@ function wrapEmailBody(subject, body, lead, booking, sequenceName) {
   if (processedBody.indexOf('<') === -1) {
     processedBody = '<p>' + processedBody.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
   }
+  // Add Google Calendar link for booking confirmation emails
+  if (sequenceName === 'booking_confirmed' && booking && booking.datetime) {
+    var dt = new Date(booking.datetime);
+    var dur = (parseInt((JSON.parse(localStorage.getItem('gcal_settings') || '{}').duration) || '60')) * 60000;
+    var endDt = new Date(dt.getTime() + dur);
+    function gcalDate(d) { return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); }
+    var location = booking.location === 'Ipswich' ? 'ReShape, Ipswich' : booking.location === 'Colchester' ? 'ReShape, Colchester' : 'ReShape, ' + (booking.location || '');
+    var gcalUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+      '&text=' + encodeURIComponent('ReShape Visit') +
+      '&dates=' + gcalDate(dt) + '/' + gcalDate(endDt) +
+      '&location=' + encodeURIComponent(location) +
+      '&details=' + encodeURIComponent('Your in-person visit with Coach Jaime at ReShape. Wear something comfortable!');
+    processedBody += '<div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08)">' +
+      '<p style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:12px">Add this appointment to your calendar:</p>' +
+      '<a href="' + gcalUrl + '" style="display:inline-block;background:rgba(255,255,255,0.08);color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;border:1px solid rgba(255,255,255,0.12)">' +
+      '&#128197; Add to Google Calendar</a></div>';
+  }
   // Only show booking CTA for form_submitted sequence, not for booking confirmations
   var ctaText = '';
   var ctaUrl = '';
