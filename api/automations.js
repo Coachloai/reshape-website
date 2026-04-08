@@ -310,6 +310,16 @@ function wrapEmailBody(subject, body, lead, booking, sequenceName) {
 async function queueSequence(sequenceName, lead, booking, supabaseClient) {
   if (!supabaseClient) return;
 
+  // Cancel any existing pending messages for this lead + sequence (deduplication)
+  if (lead.email) {
+    await supabaseClient.from('message_queue')
+      .update({ status: 'cancelled' })
+      .eq('lead_email', lead.email)
+      .eq('sequence', sequenceName)
+      .eq('status', 'queued');
+    console.log('Cancelled any existing ' + sequenceName + ' messages for ' + lead.email);
+  }
+
   // Fetch active sequence from database
   var seqRes = await supabaseClient
     .from('automation_sequences')
